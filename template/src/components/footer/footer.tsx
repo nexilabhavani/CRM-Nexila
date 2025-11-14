@@ -14,11 +14,11 @@ const Footer = () => {
             Nexila Technologies
           </Link>
         </p>
-        <div className="d-flex align-items-center gap-2 footer-links justify-content-center justify-content-md-end">
+        {/* <div className="d-flex align-items-center gap-2 footer-links justify-content-center justify-content-md-end">
           <Link to="#">About</Link>
           <Link to="#">Terms</Link>
           <Link to="#">Contact Us</Link>
-        </div>
+        </div> */}
       </footer>
       {/* End Footer */}
     </>

@@ -107,7 +107,7 @@ const Login = () => {
                   )}
 
                   <div className="d-flex align-items-center justify-content-between mb-3">
-                    <div className="form-check form-check-md d-flex align-items-center">
+                    {/* <div className="form-check form-check-md d-flex align-items-center">
                       <input
                         className="form-check-input mt-0"
                         type="checkbox"
@@ -120,15 +120,15 @@ const Login = () => {
                       >
                         Remember Me
                       </label>
-                    </div>
-                    <div className="text-end">
+                    </div> */}
+                    {/* <div className="text-end">
                       <Link
                         to={all_routes.forgotPassword}
                         className="link-danger fw-medium link-hover"
                       >
                         Forgot Password?
                       </Link>
-                    </div>
+                    </div> */}
                   </div>
 
                   {/* ✅ submit button */}
@@ -138,7 +138,7 @@ const Login = () => {
                     </button>
                   </div>
 
-                  <div className="mb-3">
+                  {/* <div className="mb-3">
                     <p className="mb-0">
                       New on our platform?
                       <Link
@@ -149,16 +149,16 @@ const Login = () => {
                         Create an account
                       </Link>
                     </p>
-                  </div>
-
+                  </div> */}
+{/* 
                   <div className="or-login text-center position-relative mb-3">
                     <h6 className="fs-14 mb-0 position-relative text-body">
                       OR
                     </h6>
-                  </div>
+                  </div> */}
 
                   {/* social login (optional) */}
-                  <div className="d-flex align-items-center justify-content-center flex-wrap gap-2 mb-3">
+                  {/* <div className="d-flex align-items-center justify-content-center flex-wrap gap-2 mb-3">
                     <div className="text-center flex-fill">
                       <Link to="#" className="p-2 btn btn-info">
                         <ImageWithBasePath
@@ -186,7 +186,7 @@ const Login = () => {
                         />
                       </Link>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="text-center pb-4">

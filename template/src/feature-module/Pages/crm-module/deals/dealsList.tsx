@@ -2,15 +2,87 @@ import { Link } from "react-router";
 import Footer from "../../../../components/footer/footer";
 import PageHeader from "../../../../components/page-header/pageHeader";
 import SearchInput from "../../../../components/dataTable/dataTableSearch";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { all_routes } from "../../../../routes/all_routes";
 import { DealsListData } from "../../../../core/json/dealsListData";
 import PredefinedDatePicker from "../../../../components/common-dateRangePicker/PredefinedDatePicker";
 import Datatable from "../../../../components/dataTable";
 import ModalDeals from "./modal/modalDeals";
+import axios from "axios";
+import API_URL from "../../../../api/apiconfig";
+import dayjs from "dayjs";
+
+interface Deal {
+  _id: string;
+  name: string;
+  domain: string;
+  phone: string;
+  category: string;
+  leadsource: string;
+  location: string;
+  assignfrom: string;
+  assignto: string;
+  leadstatus: string;
+  date?: string;
+  time?: string;
+  followdate?:string;
+  demodate?:string;
+  createdAt?: string;
+}
 
 const DealsList = () => {
 const [filledStars, setFilledStars] = useState<{ [key: string]: boolean }>({});
+
+ const [data, setData] = useState<Deal[]>([]);
+
+const fetchLeads = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.error("🚫 No token found in localStorage");
+      return;
+    }
+
+   const res = await axios.get(`${API_URL}/deals`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+      
+      const dealsData = Array.isArray(res.data)
+        ? res.data
+        : res.data.deals || [];
+
+      const formatted = dealsData.map((deal: any) => ({
+        key: deal._id,
+        _id: deal._id,
+        name: deal.name || "N/A",
+        phone: deal.phone || "N/A",
+        leadstatus:  deal.leadstatus || "Pending",
+        leadsource: deal.leadsource || "N/A",
+        category: deal.category || "N/A",
+        location: deal.location || "N/A",
+        domain: deal.domain || "N/A",
+        assignfrom: deal.assignfrom?.name || "N/A",
+        assignto: deal.assignto?.name || "N/A",
+        followdate:deal.followdate,
+        demodate:deal.demodate,
+        createdAt:deal.createdAt,
+        
+      }));
+
+      setData(formatted);
+      console.log("✅ Deals loaded:", formatted);
+    } catch (error: any) {
+      console.error("❌ Error fetching leads:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchLeads();
+  }, []);
+
 
 const handleClick = (key: string) => {
   setFilledStars((prev) => ({
@@ -18,132 +90,212 @@ const handleClick = (key: string) => {
     [key]: !prev[key], // toggle on/off
   }));
 };
-  const data = DealsListData;
+  // const data = DealsListData;
   const columns = [
-  {
-    title: "",
-    dataIndex: "Name",
-    render: (_: any, record: any) => (
-      <div
-        className={`set-star rating-select ${
-          filledStars[record.key] ? "filled" : ""
-        }`}
-        onClick={() => handleClick(record.key)}
-      >
-        <i className="ti ti-star-filled fs-16" />
-      </div>
-    ),
-    sorter: (a: any, b: any) => a.Name.length - b.Name.length,
-  },
+  // {
+  //   title: "",
+  //   dataIndex: "Name",
+  //   render: (_: any, record: any) => (
+  //     <div
+  //       className={`set-star rating-select ${
+  //         filledStars[record.key] ? "filled" : ""
+  //       }`}
+  //       onClick={() => handleClick(record.key)}
+  //     >
+  //       <i className="ti ti-star-filled fs-16" />
+  //     </div>
+  //   ),
+  //   sorter: (a: any, b: any) => a.Name.length - b.Name.length,
+  // },
     {
-      title: "Deal Name",
-      dataIndex: "DealName",
-      render: (text: string) => (
+      title: "Demo Name",
+      dataIndex: "name",
+      render: (text: string, record: Deal) => (
         <Link to={all_routes.dealsDetails} className="title-name">
           {text}
         </Link>
       ),
-      sorter: (a: any, b: any) => a.DealName.length - b.DealName.length,
+      sorter: (a: Deal, b: Deal) => a.name.localeCompare(b.name),
+    },
+    // {
+    //   title: "Stage",
+    //   dataIndex: "Stage",
+    //   sorter: (a: any, b: any) => a.Stage.length - b.Stage.length,
+    // },
+    // {
+    //   title: "Deal Value",
+    //   dataIndex: "DealValue",
+    //   sorter: (a: any, b: any) => a.DealValue.length - b.DealValue.length,
+    // },
+    // {
+    //   title: "Tags",
+    //   dataIndex: "Tags",
+    //   render: (text: any) => (
+    //     <span
+    //       className={`badge badge-tag ${
+    //         text === "Collab"
+    //           ? "badge-soft-success"
+    //           : text === "Rated"
+    //           ? "badge-soft-warning"
+    //           : text === "Promotion"
+    //           ? "badge-soft-info"
+    //           : "badge-soft-danger"
+    //       } `}
+    //     >
+    //       {text}
+    //     </span>
+    //   ),
+    //   sorter: (a: any, b: any) => a.Tags.length - b.Tags.length,
+    // },
+    // {
+    //   title: "Expected Close Date",
+    //   dataIndex: "ExpectedCloseDate",
+    //   sorter: (a: any, b: any) =>
+    //     a.ExpectedCloseDate.length - b.ExpectedCloseDate.length,
+    // },
+    // {
+    //   title: "Probability",
+    //   dataIndex: "Probability",
+    //   sorter: (a: any, b: any) => a.Probability.length - b.Probability.length,
+    // },
+    // {
+    //   title: "Status",
+    //   dataIndex: "Status",
+    //   render: (text: any) => (
+    //     <span
+    //       className={`badge badge-pill badge-status ${
+    //         text === "Won"
+    //           ? "bg-success"
+    //           : text === "Open"
+    //           ? "bg-purple"
+    //           : "bg-danger"
+    //       } `}
+    //     >
+    //       {text}
+    //     </span>
+    //   ),
+    //   sorter: (a: any, b: any) => a.Status.length - b.Status.length,
+    // },
+    // {
+    //   title: "Action",
+    //   dataIndex: "Action",
+    //   render: () => (
+    //     <div className="dropdown table-action">
+    //       <Link
+    //         to="#"
+    //         className="action-icon btn btn-xs shadow btn-icon btn-outline-light"
+    //         data-bs-toggle="dropdown"
+    //         aria-expanded="false"
+    //       >
+    //         <i className="ti ti-dots-vertical" />
+    //       </Link>
+    //       <div className="dropdown-menu dropdown-menu-right">
+    //         <Link className="dropdown-item" to="#">
+    //           <i className="ti ti-bounce-right" /> Add Activity
+    //         </Link>
+    //         <Link
+    //           className="dropdown-item"
+    //           data-bs-toggle="offcanvas"
+    //           data-bs-target="#offcanvas_edit"
+    //           to="#"
+    //         >
+    //           <i className="ti ti-edit text-blue" /> Edit
+    //         </Link>
+    //         <Link
+    //           className="dropdown-item"
+    //           to="#"
+    //           data-bs-toggle="modal"
+    //           data-bs-target="#delete_deal"
+    //         >
+    //           <i className="ti ti-trash" /> Delete
+    //         </Link>
+    //         <Link className="dropdown-item" to={all_routes.dealsDetails}>
+    //           <i className="ti ti-eye text-blue-light" /> Preview
+    //         </Link>
+    //       </div>
+    //     </div>
+    //   ),
+    //   sorter: (a: any, b: any) => a.Action.length - b.Action.length,
+    // },
+     {
+      title: "Phone",
+      dataIndex: "phone",
+      sorter: (a: Deal, b: Deal) => a.phone.localeCompare(b.phone),
+    },
+   
+    {
+      title: "Category",
+      dataIndex: "category",
+      sorter: (a: Deal, b: Deal) =>
+        (a.category || "").localeCompare(b.category || ""),
     },
     {
-      title: "Stage",
-      dataIndex: "Stage",
-      sorter: (a: any, b: any) => a.Stage.length - b.Stage.length,
+      title: "Lead Source",
+      dataIndex: "leadsource",
+      sorter: (a: Deal, b: Deal) =>
+        (a.leadsource || "").localeCompare(b.leadsource || ""),
     },
     {
-      title: "Deal Value",
-      dataIndex: "DealValue",
-      sorter: (a: any, b: any) => a.DealValue.length - b.DealValue.length,
+      title: "Domain",
+      dataIndex: "domain",
+      sorter: (a: Deal, b: Deal) =>
+        (a.domain || "").localeCompare(b.domain || ""),
     },
     {
-      title: "Tags",
-      dataIndex: "Tags",
-      render: (text: any) => (
+      title: "Location",
+      dataIndex: "location",
+      sorter: (a: Deal, b: Deal) =>
+        (a.location || "").localeCompare(b.location || ""),
+    },
+    {
+      title: "Assigned From",
+      dataIndex: "assignfrom",
+      sorter: (a: Deal, b: Deal) =>
+        (a.assignfrom || "").localeCompare(b.assignfrom || ""),
+    },
+    {
+      title: "Assigned To",
+      dataIndex: "assignto",
+      sorter: (a: Deal, b: Deal) =>
+        (a.assignto || "").localeCompare(b.assignto || ""),
+    },
+     {
+      title: "Follow-UP Date",
+      dataIndex: "followdate",
+      render: (date: string) =>
+        date ? dayjs(date).format("DD-MM-YYYY") : "-",
+      sorter: (a: Deal, b: Deal) =>
+        (a.followdate || "").localeCompare(b.followdate || "")
+    },
+    {
+      title: "Lead Status",
+      dataIndex: "leadstatus",
+      render: (text: string) => (
         <span
-          className={`badge badge-tag ${
-            text === "Collab"
-              ? "badge-soft-success"
-              : text === "Rated"
-              ? "badge-soft-warning"
-              : text === "Promotion"
-              ? "badge-soft-info"
-              : "badge-soft-danger"
-          } `}
+          // className={`badge badge-pill badge-status ${
+          //   text === "Demo Sheduled"
+          //     ? "bg-success"
+          //     : text === "New Lead"
+          //     ? "bg-warning"
+          //     : text === "Not Contacted"
+          //     ? "bg-info"
+          //     : "bg-danger"
+          // }`}
         >
           {text}
         </span>
       ),
-      sorter: (a: any, b: any) => a.Tags.length - b.Tags.length,
+      sorter: (a: Deal, b: Deal) =>
+        (a.leadstatus || "").localeCompare(b.leadstatus || ""),
     },
+    
     {
-      title: "Expected Close Date",
-      dataIndex: "ExpectedCloseDate",
-      sorter: (a: any, b: any) =>
-        a.ExpectedCloseDate.length - b.ExpectedCloseDate.length,
-    },
-    {
-      title: "Probability",
-      dataIndex: "Probability",
-      sorter: (a: any, b: any) => a.Probability.length - b.Probability.length,
-    },
-    {
-      title: "Status",
-      dataIndex: "Status",
-      render: (text: any) => (
-        <span
-          className={`badge badge-pill badge-status ${
-            text === "Won"
-              ? "bg-success"
-              : text === "Open"
-              ? "bg-purple"
-              : "bg-danger"
-          } `}
-        >
-          {text}
-        </span>
-      ),
-      sorter: (a: any, b: any) => a.Status.length - b.Status.length,
-    },
-    {
-      title: "Action",
-      dataIndex: "Action",
-      render: () => (
-        <div className="dropdown table-action">
-          <Link
-            to="#"
-            className="action-icon btn btn-xs shadow btn-icon btn-outline-light"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="ti ti-dots-vertical" />
-          </Link>
-          <div className="dropdown-menu dropdown-menu-right">
-            <Link className="dropdown-item" to="#">
-              <i className="ti ti-bounce-right" /> Add Activity
-            </Link>
-            <Link
-              className="dropdown-item"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvas_edit"
-              to="#"
-            >
-              <i className="ti ti-edit text-blue" /> Edit
-            </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#delete_deal"
-            >
-              <i className="ti ti-trash" /> Delete
-            </Link>
-            <Link className="dropdown-item" to={all_routes.dealsDetails}>
-              <i className="ti ti-eye text-blue-light" /> Preview
-            </Link>
-          </div>
-        </div>
-      ),
-      sorter: (a: any, b: any) => a.Action.length - b.Action.length,
+      title: "Demo Date",
+      dataIndex: "demodate",
+      render: (date: string) =>
+        date ? dayjs(date).format("DD-MM-YYYY") : "-",
+      sorter: (a: Deal, b: Deal) =>
+        (a.demodate || "").localeCompare(b.demodate || "")
     },
   ];
 
@@ -162,8 +314,8 @@ const handleClick = (key: string) => {
         <div className="content pb-0">
           {/* Page Header */}
           <PageHeader
-            title="Deals"
-            badgeCount={125}
+            title="Demos"
+            // badgeCount={125}
             showModuleTile={false}
             showExport={true}
           />
@@ -177,7 +329,7 @@ const handleClick = (key: string) => {
                 </span>
                 <SearchInput value={searchText} onChange={handleSearch} />
               </div>
-              <Link
+              {/* <Link
                 to="#"
                 className="btn btn-primary"
                 data-bs-toggle="offcanvas"
@@ -185,22 +337,22 @@ const handleClick = (key: string) => {
               >
                 <i className="ti ti-square-rounded-plus-filled me-1" />
                 Add Deal
-              </Link>
+              </Link> */}
             </div>
             <div className="card-body">
               {/* table header */}
-              <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+             <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
                 <div className="d-flex align-items-center gap-2 flex-wrap">
                   <div className="dropdown">
-                    <Link
+                    {/* <Link
                       to="#"
                       className="dropdown-toggle btn btn-outline-light px-2 shadow"
                       data-bs-toggle="dropdown"
                     >
                       <i className="ti ti-sort-ascending-2 me-2" />
                       Sort By
-                    </Link>
-                    <div className="dropdown-menu">
+                    </Link> */}
+                    {/* <div className="dropdown-menu">
                       <ul>
                         <li>
                           <Link to="#" className="dropdown-item">
@@ -213,11 +365,11 @@ const handleClick = (key: string) => {
                           </Link>
                         </li>
                       </ul>
-                    </div>
+                    </div> */}
                   </div>
-                 <PredefinedDatePicker/>
+                 {/* <PredefinedDatePicker/> */}
                 </div>
-                <div className="d-flex align-items-center gap-2 flex-wrap">
+               {/*<div className="d-flex align-items-center gap-2 flex-wrap">
                   <div className="dropdown">
                     <Link
                       to="#"
@@ -648,10 +800,10 @@ const handleClick = (key: string) => {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> 
                 
                   
-                </div>
+                </div>*/}
               </div>
               {/* table header */}
               {/* Deals List */}

@@ -21,6 +21,7 @@ type Lead = {
 
 const LeadsDashboard = () => {
   const [leads, setLeads] = useState<Lead[]>([])
+  const [days, setDays] = useState(30);
 
 
  useEffect(() => {
@@ -174,16 +175,16 @@ const LeadsDashboard = () => {
                         data-bs-toggle="dropdown"
                         to="#"
                       >
-                        Last 30 Days
+                       Last {days} Days
                       </Link>
                       <div className="dropdown-menu dropdown-menu-end">
-                        <Link to="#" className="dropdown-item">
+                        <Link to="#" className="dropdown-item" onClick={() => setDays(30)}>
                           Last 30 Days
                         </Link>
-                        <Link to="#" className="dropdown-item">
+                        <Link to="#" className="dropdown-item" onClick={() => setDays(15)}>
                           Last 15 Days
                         </Link>
-                        <Link to="#" className="dropdown-item">
+                        <Link to="#" className="dropdown-item" onClick={() => setDays(7)}>
                           Last 7 Days
                         </Link>
                       </div>
@@ -192,7 +193,7 @@ const LeadsDashboard = () => {
                 </div>
                 <div className="card-body">
                   <div id="leadpiechart" className="text-center">
-                    <LeadPieChart />
+                    <LeadPieChart days={days}  />
                   </div>
                 </div>{" "}
                 {/* end card body */}

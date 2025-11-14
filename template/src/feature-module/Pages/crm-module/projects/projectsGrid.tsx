@@ -5,6 +5,7 @@ import ImageWithBasePath from "../../../../components/imageWithBasePath";
 import { all_routes } from "../../../../routes/all_routes";
 import ModalProject from "./modal/modalProject";
 import CommonDatePicker from "../../../../components/common-datePicker/commonDatePicker";
+import ProjectsList from "./projectsList";
 
 const ProjectsGrid = () => {
   return (
@@ -12,19 +13,19 @@ const ProjectsGrid = () => {
       {/* ========================
 			Start Page Content
 		========================= */}
-      <div className="page-wrapper">
+      {/* <div className="page-wrapper"> */}
         {/* Start Content */}
-        <div className="content">
+        {/* <div className="content"> */}
           {/* Page Header */}
-          <PageHeader
+          {/* <PageHeader
             title="Projects"
             badgeCount={125}
             showModuleTile={false}
             showExport={true}
-          />
+          /> */}
           {/* End Page Header */}
           {/* table header */}
-          <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+          {/* <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
             <div className="d-flex align-items-center gap-2 flex-wrap">
               <div className="dropdown">
                 <Link
@@ -694,7 +695,7 @@ const ProjectsGrid = () => {
           </div>
           {/* table header */}
           {/* Projects List */}
-          <div className="row">
+          {/*<div className="row">
             <div className="col-xxl-3 col-xl-4 col-md-6">
               <div className="card border">
                 <div className="card-body">
@@ -2497,24 +2498,26 @@ const ProjectsGrid = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div>*/} 
           {/* /Projects List */}
-          <div className="load-btn text-center">
+          {/* <div className="load-btn text-center">
             <Link to="#" className="btn btn-primary">
               <i className="ti ti-loader me-1" />
               Load More
             </Link>
           </div>
-        </div>
+        </div> */}
         {/* End Content */}
         {/* Start Footer */}
-        <Footer />
+        
+        {/* <Footer /> */}
         {/* End Footer */}
-      </div>
+      {/* </div> */}
+      <ProjectsList/>
       {/* ========================
 			End Page Content
 		========================= */}
-    <ModalProject/>
+    {/* <ModalProject/> */}
     </>
   );
 };

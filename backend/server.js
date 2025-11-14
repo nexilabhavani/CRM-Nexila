@@ -5,7 +5,9 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const User = require('./models/User');
 const bcrypt = require('bcryptjs');
-const leadstatus=require("./routes/leadstatus")
+
+
+
 
 
 const app = express();
@@ -51,6 +53,8 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/leads', require('./routes/leads'));
 app.use('/api/leadstatus', require('./routes/leadstatus'));
+app.use("/api/deals", require("./routes/deals"));
+app.use("/api/students", require("./routes/student"));
 
 app.get('/', (req, res) => res.send('Leads backend running'));
 

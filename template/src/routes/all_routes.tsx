@@ -297,3 +297,4 @@ export const all_routes = {
   Detached: "/layout-detached",
   Dark: "/layout-dark",
 };
+

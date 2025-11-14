@@ -55,6 +55,7 @@ const Register = () => {
                       </span>
                     </div>
                   </div>
+                  
                   <div className="mb-3">
                     <label className="form-label">Password</label>
                     <div className="input-group input-group-flat pass-group">
@@ -71,6 +72,7 @@ const Register = () => {
                       ></span>
                     </div>
                   </div>
+
                   <div className="mb-3">
                     <label className="form-label">Confirm Password</label>
                     <div className="input-group input-group-flat pass-group">

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { updateTheme } from "../../core/redux/themeSlice";
 import { all_routes } from "../../routes/all_routes";
 
+
 const Header = () => {
 
   const route = all_routes
@@ -19,6 +20,10 @@ const Header = () => {
   const toggleMobileSidebar = () => {
     dispatch(setMobileSidebar(!mobileSidebar));
   };
+  const handleLogout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+};
 
   const [isFullscreen, setIsFullscreen] = useState(false);
   const toggleFullscreen = () => {
@@ -256,7 +261,7 @@ const Header = () => {
               </div>
             </div> */}
             {/* Notification Dropdown */}
-            <div className="header-item">
+            {/* <div className="header-item">
               <div className="dropdown me-2">
                 <button
                   className="topbar-link btn topbar-link dropdown-toggle drop-arrow-none"
@@ -282,14 +287,14 @@ const Header = () => {
                         </h6>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                   {/* Notification Body */}
-                  <div
+                  {/* <div
                     className="notification-body position-relative z-2 rounded-0"
                     data-simplebar=""
-                  >
+                  > */}
                     {/* Item*/}
-                    <div
+                    {/* <div
                       className="dropdown-item notification-item py-3 text-wrap border-bottom"
                       id="notification-1"
                     >
@@ -332,9 +337,9 @@ const Header = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     {/* Item*/}
-                    <div
+                    {/* <div
                       className="dropdown-item notification-item py-3 text-wrap border-bottom"
                       id="notification-2"
                     >
@@ -378,9 +383,9 @@ const Header = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     {/* Item*/}
-                    <div
+                    {/* <div
                       className="dropdown-item notification-item py-3 text-wrap border-bottom"
                       id="notification-3"
                     >
@@ -426,9 +431,9 @@ const Header = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     {/* Item*/}
-                    <div
+                    {/* <div
                       className="dropdown-item notification-item py-3 text-wrap"
                       id="notification-4"
                     >
@@ -475,9 +480,9 @@ const Header = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                   {/* View All*/}
-                  <div className="p-2 rounded-bottom border-top text-center">
+                  {/* <div className="p-2 rounded-bottom border-top text-center">
                     <Link
                       to={route.notificationbell}
                       className="text-center text-decoration-underline fs-14 mb-0"
@@ -487,7 +492,7 @@ const Header = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
             {/* User Dropdown */}
             <div className="dropdown profile-dropdown d-flex align-items-center justify-content-center">
               <Link
@@ -509,7 +514,7 @@ const Header = () => {
                 </span>
               </Link>
               <div className="dropdown-menu dropdown-menu-end dropdown-menu-md p-2">
-                <div className="d-flex align-items-center bg-light rounded-3 p-2 mb-2">
+                {/* <div className="d-flex align-items-center bg-light rounded-3 p-2 mb-2">
                   <ImageWithBasePath
                     src="assets/img/users/user-40.jpg"
                     className="rounded-circle"
@@ -521,14 +526,14 @@ const Header = () => {
                     <p className="fw-medium text-dark mb-0">Katherine Brooks</p>
                     <span className="d-block fs-13">Installer</span>
                   </div>
-                </div>
+                </div> */}
                 {/* Item*/}
-                <Link to={route.profile} className="dropdown-item">
+                {/* <Link to={route.profile} className="dropdown-item">
                   <i className="ti ti-user-circle me-1 align-middle" />
                   <span className="align-middle">Profile Settings</span>
-                </Link>
+                </Link> */}
                 {/* item */}
-                <div className="form-check form-switch form-check-reverse d-flex align-items-center justify-content-between dropdown-item mb-0">
+                {/* <div className="form-check form-switch form-check-reverse d-flex align-items-center justify-content-between dropdown-item mb-0">
                   <label className="form-check-label" htmlFor="notify">
                     <i className="ti ti-bell" />
                     Notifications
@@ -539,20 +544,20 @@ const Header = () => {
                     role="switch"
                     id="notify"
                   />
-                </div>
+                </div> */}
                 {/* Item*/}
-                <Link to="#" className="dropdown-item">
+                {/* <Link to="#" className="dropdown-item">
                   <i className="ti ti-help-circle me-1 align-middle" />
                   <span className="align-middle">Help &amp; Support</span>
-                </Link>
+                </Link> */}
                 {/* Item*/}
-                <Link to={route.profile} className="dropdown-item">
+                {/* <Link to={route.profile} className="dropdown-item">
                   <i className="ti ti-settings me-1 align-middle" />
                   <span className="align-middle">Settings</span>
-                </Link>
+                </Link> */}
                 {/* Item*/}
                 <div className="pt-2 mt-2 border-top">
-                  <Link to={route.login} className="dropdown-item text-danger">
+                  <Link to={route.login} className="dropdown-item text-danger" onClick={handleLogout}>
                     <i className="ti ti-logout me-1 fs-17 align-middle" />
                     <span className="align-middle">Sign Out</span>
                   </Link>

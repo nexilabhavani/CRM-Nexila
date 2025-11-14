@@ -19,14 +19,13 @@ import {
 } from "../../../../../core/json/selectOption";
 import CommonSelect from "../../../../../components/common-select/commonSelect";
 import ImageWithBasePath from "../../../../../components/imageWithBasePath";
+import CommonDatePicker from "../../../../../components/common-datePicker/commonDatePicker";
 import { useState,useEffect} from "react";
-import MultipleSelect from "../../../../../components/multiple-Select/multipleSelect";
-import CommonTagInputs from "../../../../../components/common-tagInput/commonTagInputs";
-import CommonPhoneInput from "../../../../../components/common-phoneInput/commonPhoneInput";
 import { createLead } from "../../../../../api/leadApi";
-
 import axios from "axios";
 import LeadStatus from "./LeadStatus";
+import dayjs from "dayjs";
+import API_URL from "../../../../../api/apiconfig";
 
 interface Lead {
   _id?: string;
@@ -42,6 +41,8 @@ interface Lead {
   assignfrom?: string;
   assignto?: string;
   graduate?: string;
+  followdate?:string;
+  demodate?:string;
 }
 
 interface ModalLeadsProps {
@@ -105,7 +106,10 @@ const ModalLeads: React.FC<ModalLeadsProps> = ({
 
   
 
-   const [formData, setFormData] = useState({
+   
+
+  const [leadStatusOptions, setLeadStatusOptions] = useState([]);
+ const [lead, setLead] = useState<Lead>({
     name: "",
     phone: "",
     email: "",
@@ -118,19 +122,90 @@ const ModalLeads: React.FC<ModalLeadsProps> = ({
     assignfrom: "",
     assignto: "",
     graduate: "",
+    followdate: "",
+    demodate: "",
   });
-
-  const [leadStatusOptions, setLeadStatusOptions] = useState([]);
-  const [lead, setLead] = useState<Lead | null>(null);
-   
+  const [userList, setUserList] = useState<any[]>([]); 
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+const [formData, setFormData] = useState<Lead>({
+    name: "",
+    phone: "",
+    email: "",
+    collegename: "",
+    location: "",
+    category: "",
+    leadsource: "",
+    leadstatus: "",
+    domain: "",
+    assignfrom: "",
+    assignto: "",
+    graduate: "",
+    followdate: "",
+    demodate: ""
+  });
+  //Leadstaus option getting
+useEffect(() => {
+  const fetchLeadStatuses = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${API_URL}/leadstatus`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Convert backend data to dropdown-friendly format
+      const formatted = res.data.map((item) => ({
+        value: item.name,
+        label: item.name,
+      }));
+
+      setLeadStatusOptions(formatted);
+    } catch (err) {
+      console.error("Error fetching lead statuses", err);
+    }
+  };
+
+  fetchLeadStatuses();
+}, []);
+//all user display and fetching
+useEffect(() => {
+  const fetchUsers = async () => {
+    try {
+      const token = localStorage.getItem("token"); // ✅ get token from localStorage
+
+      const res = await axios.get(`${API_URL}/users/list`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // ✅ include JWT in header
+        },
+      });
+
+      console.log("Fetched users:", res.data);
+      const formatted = res.data.map((u: any) => ({
+        label: `${u.name} `,
+        value: u._id,
+      }));
+      setUserList(formatted);
+    } catch (err: any) {
+      console.error("Failed to load users:", err.response?.data || err);
+    }
+  };
+
+  fetchUsers();
+}, []);
+
+
 
   // ✅ Validate fields
   const validateForm = () => {
+  const fieldsToIgnore = ["demodate", "followdate"];
+
   const emptyFields = Object.entries(formData).filter(
-    ([, value]) => !value || value.trim() === ""
+    ([key, value]) =>
+      !fieldsToIgnore.includes(key) &&
+      (!value || value.trim?.() === "")
   );
 
   if (emptyFields.length > 0) {
@@ -157,32 +232,6 @@ const handleSelectChange = (name: string, value: string) => {
     [name]: value,
   }));
 };
-//Leadstaus option getting
-useEffect(() => {
-  const fetchLeadStatuses = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/leadstatus", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      // Convert backend data to dropdown-friendly format
-      const formatted = res.data.map((item) => ({
-        value: item.name,
-        label: item.name,
-      }));
-
-      setLeadStatusOptions(formatted);
-    } catch (err) {
-      console.error("Error fetching lead statuses", err);
-    }
-  };
-
-  fetchLeadStatuses();
-}, []);
-
 
   // ✅ Submit form
 const handleSubmit = async (e: React.FormEvent) => {
@@ -199,6 +248,8 @@ const handleSubmit = async (e: React.FormEvent) => {
     if (res.success) {
       alert("✅ Lead stored successfully!");
       console.log("Created lead:", res);
+      // 🔹 Immediately refresh the list without page reload
+      onUpdate();
       setFormData({
         name: "",
         phone: "",
@@ -212,6 +263,10 @@ const handleSubmit = async (e: React.FormEvent) => {
         assignfrom: "",
         assignto: "",
         graduate: "",
+        followdate:"",
+        demodate:"",
+      
+        
       });
     } else {
       alert("❌ Failed to store lead: " + (res.message || "Unknown error"));
@@ -228,10 +283,18 @@ useEffect(() => {
 }, [formData]);
 
 
-
+// 🟢 Load selectedLead into form
 useEffect(() => {
     if (selectedLead) {
-      setLead(selectedLead);
+      setLead({
+      ...selectedLead,
+      demodate: selectedLead.demodate
+        ? selectedLead.demodate.split("T")[0]
+        : "",
+      followdate: selectedLead.followdate
+        ? selectedLead.followdate.split("T")[0]
+        : "",
+    });
     }
   }, [selectedLead])
 
@@ -254,7 +317,17 @@ useEffect(() => {
     if (!lead || !lead._id) return;
 
     try {
-      await axios.put(`http://localhost:5000/api/leads/${lead._id}`, lead);
+      const token = localStorage.getItem("token");
+      await axios.put(`${API_URL}/leads/${lead._id}`,{
+    ...lead,
+    demodate: lead.demodate || null,
+    followdate: lead.followdate || null,
+  },
+        {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       alert("✅ Lead updated successfully");
       onUpdate();
     } catch (err) {
@@ -269,7 +342,7 @@ const handleDelete = async () => {
 
   try {
     const res = await axios.delete(
-      `http://localhost:5000/api/leads/${lead._id}`,
+      `${API_URL}/leads/${lead._id}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`, // ✅ include token
@@ -290,80 +363,6 @@ const handleDelete = async () => {
   }
 };
 
-// const handleSubmit = async (e: React.FormEvent) => {
-//   e.preventDefault();
-
-//   if (!validateForm()) return;
-//   setLoading(true);
-//   setMessage("");
-
-//   try {
-//     const res = await createLead(formData);
-//     console.log("✅ API Response:", res);
-
-//     if (res.success) {
-//       alert("Lead added successfully ✅");
-//       setMessage("✅ Lead added successfully!");
-
-//       // clear form
-//       setFormData({
-//         name: "",
-//         phone: "",
-//         email: "",
-//         collegename: "",
-//         location: "",
-//         category: "",
-//         leadsource: "",
-//         leadstatus: "",
-//         domain: "",
-//         assignfrom: "",
-//         assignto: "",
-//         graduate: "",
-//       });
-//     } else {
-//       alert("Failed to create lead ❌");
-//       console.error("Error:", res.message);
-//     }
-//   } catch (error) {
-//     console.error("Frontend error creating lead:", error);
-//     alert("Something went wrong while creating lead ❌");
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (!validateForm()) return;
-  //   setLoading(true);
-  //   setMessage("");
-
-  //   try {
-  //     const res = await createLead(formData);
-  //     setMessage("✅ Lead added successfully!");
-  //     setFormData({
-  //       name: "",
-  //       phone: "",
-  //       email: "",
-  //       collegename: "",
-  //       location: "",
-  //       category: "",
-  //       leadsource: "",
-  //       leadstatus: "",
-  //       domain: "",
-  //       assignfrom: "",
-  //       assignto: "",
-  //       graduate: "",
-  //     });
-  //     console.log("Created lead:", res);
-      
-  //   } catch (error) {
-  //    console.error("Error creating lead:", error);
-  //     alert("Failed to create lead.");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const options = [
     {
@@ -814,9 +813,24 @@ const handleDelete = async () => {
                   name="assignfrom"
                    value={formData.assignfrom}
                     onChange={handleSelectChange}
-                    options={Assign_From}
+                    options={userList}
                     className="select"
                     defaultValue={Assign_From[0]}
+                  />
+                </div>
+              </div>
+               <div className="col-md-6">
+                <div className="mb-3">
+                    <label className="form-label">
+                  Assign To<span className="text-danger">*</span> 
+                  </label>
+                  <CommonSelect
+                  name="assignto"
+                   value={formData.assignto}
+                    onChange={handleSelectChange}
+                    options={userList}
+                    className="select"
+                    defaultValue={Assign_To[0]}
                   />
                 </div>
               </div>
@@ -846,21 +860,49 @@ const handleDelete = async () => {
                   />
                 </div>
               </div>
-               <div className="col-md-6">
-                <div className="mb-3">
-                    <label className="form-label">
-                  Assign To<span className="text-danger">*</span> 
-                  </label>
-                  <CommonSelect
-                  name="assignto"
-                   value={formData.assignto}
-                    onChange={handleSelectChange}
-                    options={Assign_To}
-                    className="select"
-                    defaultValue={Assign_To[0]}
-                  />
-                </div>
+              <div className="col-md-6">
+            <div className="mb-3">
+              <label className="form-label">
+                Follow-UP Date <span className="text-danger">*</span>
+              </label>
+              <div className="input-group w-auto input-group-flat">
+                <CommonDatePicker
+        placeholder="dd/mm/yyyy"
+        format="DD/MM/YYYY"
+        value={formData.followdate ? dayjs(formData.followdate) : null}
+        onChange={(date) =>
+          setFormData((prev) => ({
+            ...prev,
+            followdate: date ? date.format("YYYY-MM-DD") : "",
+          }))
+        }
+      />
+
               </div>
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label className="form-label">
+                Demo Date <span className="text-danger">*</span>
+              </label>
+              <div className="input-group w-auto input-group-flat">
+                <CommonDatePicker
+        placeholder="dd/mm/yyyy"
+        format="DD/MM/YYYY"
+        value={formData.demodate ? dayjs(formData.demodate) : null}
+        onChange={(date) =>
+          setFormData((prev) => ({
+            ...prev,
+            demodate: date ? date.format("YYYY-MM-DD") : "",
+          }))
+        }
+      />
+
+              </div>
+            </div>
+          </div>
+              
              <div className="col-md-6">
         {/* <div className="mb-3">
           <div className="d-flex align-items-center justify-content-between">
@@ -1253,6 +1295,48 @@ const handleDelete = async () => {
                   />
                 </div>
               </div>
+                  <div className="col-md-6">
+            <div className="mb-3">
+              <label className="form-label">
+                Follow-UP Date <span className="text-danger">*</span>
+              </label>
+              <div className="input-group w-auto input-group-flat">
+                <CommonDatePicker
+        placeholder="dd/mm/yyyy"
+        format="DD/MM/YYYY"
+        value={lead.followdate ? dayjs(lead.followdate) : null}
+        onChange={(date) =>
+          setLead((prev) => ({
+            ...prev,
+            followdate: date ? date.format("YYYY-MM-DD") : "",
+          }))
+        }
+      />
+
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label className="form-label">
+                Demo Date <span className="text-danger">*</span>
+              </label>
+              <div className="input-group w-auto input-group-flat">
+                <CommonDatePicker
+        placeholder="dd/mm/yyyy"
+        format="DD/MM/YYYY"
+        value={lead.demodate ? dayjs(lead.demodate) :  null}
+        onChange={(date) =>
+          setLead((prev) => ({
+            ...prev,
+            demodate: date ? date.format("YYYY-MM-DD") : "",
+          }))
+        }
+      />
+
+              </div>
+            </div>
+          </div>
                <div className="col-md-6">
                 <div className="mb-3">
                     <label className="form-label">
@@ -1262,7 +1346,7 @@ const handleDelete = async () => {
                   name="assignfrom"
                    value={lead.assignfrom || ""}
                     onChange={handleselectchange}
-                    options={Assign_From}
+                    options={userList}
                     className="select"
                     
                   />
@@ -1277,7 +1361,7 @@ const handleDelete = async () => {
                   name="assignto"
                     value={lead.assignto || ""}
                     onChange={handleselectchange}
-                    options={Assign_To}
+                    options={userList}
                     className="select"
                     
                   />

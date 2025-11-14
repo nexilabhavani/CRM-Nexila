@@ -15,9 +15,18 @@ const LeadSchema = new mongoose.Schema({
 
   // assignfrom: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   // assignto: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-assignfrom: {type: String},
-assignto: {type: String},
+assignfrom:  { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+assignto:  { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 notes: { type: String },
+followdate: {
+      type: Date,
+      default: null,
+    },
+demodate: {
+      type: Date,
+      default: null,
+    },
+
 
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   createdAt: { type: Date, default: Date.now },

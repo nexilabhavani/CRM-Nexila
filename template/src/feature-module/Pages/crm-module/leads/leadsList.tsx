@@ -11,8 +11,8 @@ import ModalLeads from "./modal/modalLeads";
 import CommonDatePicker from "../../../../components/common-datePicker/commonDatePicker";
 import axios from "axios";
 // 🔹 Define the type for each lead
-
-
+import API_URL from "../../../../api/apiconfig";
+import dayjs from "dayjs";
 
 interface Lead {
   _id: string;
@@ -29,6 +29,8 @@ interface Lead {
   assignto?: string;
   graduate?: string;
   createdAt?:string;
+  followdate?:string;
+  demodate?:string;
 }
 
 const LeadsList = () => {
@@ -111,7 +113,19 @@ const LeadsList = () => {
   // ✅ Fetch Leads from backend
   const fetchLeads = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/leads");
+       const token = localStorage.getItem("token");
+        
+    if (!token) {
+      console.error("🚫 No token found in localStorage");
+      return;
+    }
+
+    const res = await axios.get(`${API_URL}/leads`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+      
       const leadsData = Array.isArray(res.data)
         ? res.data
         : res.data.leads || [];
@@ -128,12 +142,15 @@ const LeadsList = () => {
         category: lead.category || "N/A",
         location: lead.location || "N/A",
         domain: lead.domain || "N/A",
-        assignfrom: lead.assignFrom || lead.assignfrom || "N/A",
-        assignto: lead.assignTo || lead.assignto || "N/A",
+        assignfrom: lead.assignFrom ||  lead.assignfrom?.name || "N/A",
+        assignto: lead.assignTo ||    lead.assignto?.name || "N/A",
         graduate: lead.graduate || "N/A",
+        followdate:lead.followdate,
+        demodate:lead.demodate,
         createdAt:lead.createdAt,
         
       }));
+      
 
       setData(formatted);
       console.log("✅ Leads loaded:", formatted);
@@ -160,21 +177,21 @@ const LeadsList = () => {
 
 
   const columns = [
-    {
-      title: "",
-      dataIndex: "Name",
-      render: (_: any, record: any) => (
-        <div
-          className={`set-star rating-select ${
-            filledStars[record.key] ? "filled" : ""
-          }`}
-          onClick={() => handleClick(record.key)}
-        >
-          <i className="ti ti-star-filled fs-16" />
-        </div>
-      ),
-      // sorter: (a: any, b: any) => a.Name.length - b.Name.length,
-    },
+    // {
+    //   title: "",
+    //   dataIndex: "Name",
+    //   render: (_: any, record: any) => (
+    //     <div
+    //       className={`set-star rating-select ${
+    //         filledStars[record.key] ? "filled" : ""
+    //       }`}
+    //       onClick={() => handleClick(record.key)}
+    //     >
+    //       <i className="ti ti-star-filled fs-16" />
+    //     </div>
+    //   ),
+    //   // sorter: (a: any, b: any) => a.Name.length - b.Name.length,
+    // },
     {
       title: "Lead Name",
       dataIndex: "name",
@@ -298,6 +315,22 @@ const LeadsList = () => {
       sorter: (a: Lead, b: Lead) =>
         (a.leadstatus || "").localeCompare(b.leadstatus || ""),
     },
+     {
+  title: "Follow-UP Date",
+  dataIndex: "followdate",
+  render: (date: string) =>
+    date ? dayjs(date).format("DD-MM-YYYY") : "-",
+  sorter: (a: Lead, b: Lead) =>
+    (a.followdate || "").localeCompare(b.followdate || "")
+},
+{
+  title: "Demo Date",
+  dataIndex: "demodate",
+  render: (date: string) =>
+    date ? dayjs(date).format("DD-MM-YYYY") : "-",
+  sorter: (a: Lead, b: Lead) =>
+    (a.demodate || "").localeCompare(b.demodate || "")
+},
     //  {
     //   title: "AssignFrom",
     //   dataIndex: "assignfrom",
@@ -368,7 +401,7 @@ const LeadsList = () => {
           {/* Page Header */}
           <PageHeader
             title="Leads"
-            badgeCount={125}
+            // badgeCount={125}
             showModuleTile={false}
             showExport={true}
           />
@@ -396,7 +429,7 @@ const LeadsList = () => {
               {/* table header */}
               <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
                 <div className="d-flex align-items-center gap-2 flex-wrap">
-                  <div className="dropdown">
+                  {/* <div className="dropdown">
                     <Link
                       to="#"
                       className="dropdown-toggle btn btn-outline-light px-2 shadow"
@@ -419,8 +452,8 @@ const LeadsList = () => {
                         </li>
                       </ul>
                     </div>
-                  </div>
-                  <div
+                  </div> */}
+                  {/* <div
                     id="reportrange"
                     className="reportrange-picker d-flex align-items-center shadow"
                   >
@@ -428,9 +461,9 @@ const LeadsList = () => {
                     <span className="reportrange-picker-field">
                       9 Jun 25 - 9 Jun 25
                     </span>
-                  </div>
+                  </div> */}
                 </div>
-                <div className="d-flex align-items-center gap-2 flex-wrap">
+                {/* <div className="d-flex align-items-center gap-2 flex-wrap">
                   <div className="dropdown">
                     <Link
                       to="#"
@@ -1164,7 +1197,7 @@ const LeadsList = () => {
                         </li>
                       </ul>
                     </div>
-                  </div>
+                  </div> */}
                   {/* <div className="d-flex align-items-center shadow p-1 rounded border view-icons bg-white">
                     <Link
                       to={all_routes.leadsList}
@@ -1178,8 +1211,8 @@ const LeadsList = () => {
                     >
                       <i className="ti ti-grid-dots" />
                     </Link>
-                  </div> */}
-                </div>
+                  </div> 
+                </div>*/}
               </div>
               {/* table header */}
               {/* leads List */}

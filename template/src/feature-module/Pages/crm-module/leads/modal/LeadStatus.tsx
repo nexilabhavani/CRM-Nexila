@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import API_URL from "../../../../../api/apiconfig";
+
 const token = localStorage.getItem("token"); // Or however you store it
 const config = {
   headers: {
     Authorization: `Bearer ${token}`,
   },
 };
+
 
 const LeadStatus = () => {
   const [leadStatuses, setLeadStatuses] = useState([]);
@@ -15,7 +18,7 @@ const LeadStatus = () => {
   // ✅ Fetch existing statuses
   const fetchLeadStatuses = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/leadstatus", config);
+      const res = await axios.get(`${API_URL}/leadstatus`, config);
       setLeadStatuses(res.data);
     } catch (err) {
       console.error("Error fetching lead statuses", err);
@@ -32,12 +35,12 @@ const LeadStatus = () => {
 
     try {
       if (editingId) {
-        await axios.put(`http://localhost:5000/api/leadstatus/${editingId}`, {
+        await axios.put(`${API_URL}/leadstatus/${editingId}`, {
           name: statusName,
         },config);
         alert("Lead Status updated successfully");
       } else {
-        await axios.post("http://localhost:5000/api/leadstatus", {
+        await axios.post(`${API_URL}/leadstatus`, {
           name: statusName,
         },config);
         alert("Lead Status added successfully");
@@ -56,7 +59,7 @@ const LeadStatus = () => {
     if (!window.confirm("Are you sure you want to delete this status?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/leadstatus/${id}`,config);
+      await axios.delete(`${API_URL}/leadstatus/${id}`,config);
       alert("Deleted successfully");
       fetchLeadStatuses();
     } catch (err) {

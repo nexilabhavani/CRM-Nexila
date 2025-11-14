@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import Footer from "../../../../components/footer/footer";
 import PageHeader from "../../../../components/page-header/pageHeader";
 import SearchInput from "../../../../components/dataTable/dataTableSearch";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import PredefinedDatePicker from "../../../../components/common-dateRangePicker/PredefinedDatePicker";
 import { ProjectListData } from "../../../../core/json/projectsListData";
 import { all_routes } from "../../../../routes/all_routes";
@@ -10,9 +10,81 @@ import ImageWithBasePath from "../../../../components/imageWithBasePath";
 import Datatable from "../../../../components/dataTable";
 import ModalProject from "./modal/modalProject";
 import CommonDatePicker from "../../../../components/common-datePicker/commonDatePicker";
+import axios from "axios";
+import API_URL from "../../../../api/apiconfig";
+import dayjs from "dayjs";
+interface Student {
+  _id: string;
+  name: string;
+  domain: string;
+  phone: string;
+  category: string;
+  leadsource: string;
+  location: string;
+  assignfrom: string;
+  assignto: string;
+  leadstatus: string;
+  date?: string;
+  time?: string;
+  followdate?:string;
+  demodate?:string;
+  createdAt?: string;
+}
 
 const ProjectsList = () => {
   const [searchText, setSearchText] = useState<string>("");
+
+  const [data, setData] = useState<Student[]>([]);
+
+const fetchLeads = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.error("🚫 No token found in localStorage");
+      return;
+    }
+
+    const res = await axios.get(`${API_URL}/students`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // ✅ FIXED: Detect correct array field
+    const studentsData = Array.isArray(res.data)
+      ? res.data
+      : res.data.students || [];
+
+    const formatted = studentsData.map((student: any) => ({
+      key: student._id,
+      _id: student._id,
+      name: student.name || "N/A",
+      phone: student.phone || "N/A",
+      leadstatus: student.leadstatus || "Pending",
+      leadsource: student.leadSource || student.leadsource || "N/A",
+      category: student.category || "N/A",
+      location: student.location || "N/A",
+      domain: student.domain || "N/A",
+      assignfrom: student.assignfrom?.name || "N/A",
+      assignto: student.assignto?.name || "N/A",
+      followdate:student.followdate,
+      demodate:student.demodate,
+      createdAt: student.createdAt,
+    }));
+
+    setData(formatted);
+    console.log("✅ students loaded:", formatted);
+  } catch (error: any) {
+    console.error("❌ Error fetching students:", error.message);
+  }
+};
+
+useEffect(() => {
+  fetchLeads();
+}, []);
+
+
 
   const handleSearch = (value: string) => {
     setSearchText(value);
@@ -27,177 +99,246 @@ const ProjectsList = () => {
       [key]: !prev[key], // toggle on/off
     }));
   };
-  const data = ProjectListData;
+  // const data = ProjectListData;
   const columns = [
+    // {
+    //   title: "",
+    //   dataIndex: "Name",
+    //   render: (_: any, record: any) => (
+    //     <div
+    //       className={`set-star rating-select ${
+    //         filledStars[record.key] ? "filled" : ""
+    //       }`}
+    //       onClick={() => handleClick(record.key)}
+    //     >
+    //       <i className="ti ti-star-filled fs-16" />
+    //     </div>
+    //   ),
+    //   sorter: (a: any, b: any) => a.Name.length - b.Name.length,
+    // },
     {
-      title: "",
-      dataIndex: "Name",
-      render: (_: any, record: any) => (
-        <div
-          className={`set-star rating-select ${
-            filledStars[record.key] ? "filled" : ""
-          }`}
-          onClick={() => handleClick(record.key)}
-        >
-          <i className="ti ti-star-filled fs-16" />
-        </div>
-      ),
-      sorter: (a: any, b: any) => a.Name.length - b.Name.length,
+      title: "Students Name",
+            dataIndex: "name",
+            render: (text: string, record: Student) => (
+              <Link to={all_routes.dealsDetails} className="title-name">
+                {text}
+              </Link>
+            ),
+            sorter: (a: Student, b: Student) => a.name.localeCompare(b.name),
     },
-    {
-      title: "Name",
-      dataIndex: "Name",
-      render: (text: string, render: any) => (
-        <h6 className="d-flex align-items-center fs-14 fw-medium">
-          <Link
-            to={all_routes.projectDetails}
-            className="avatar border rounded-circle me-2"
-          >
-            <ImageWithBasePath
-              className="w-auto h-auto"
-              src={`assets/img/projects/${render.Image}`}
-              alt="User Image"
-            />
-          </Link>
-          <Link to={all_routes.projectDetails}>{text}</Link>
-        </h6>
-      ),
-      sorter: (a: any, b: any) => a.Name.length - b.Name.length,
-    },
-    {
-      title: "Client",
-      dataIndex: "Client",
-      render: (text: string, render: any) => (
-        <h6 className="d-flex align-items-center fs-14 fw-medium">
-          <Link
-            to={all_routes.companiesDetails}
-            className="avatar avatar-sm border rounded-circle me-2"
-          >
-            <ImageWithBasePath
-              className="w-auto h-auto"
-              src={`assets/img/company/${render.ClientImage}`}
-              alt="User Image"
-            />
-          </Link>
-          <Link to={all_routes.companyDetails}>{text}</Link>
-        </h6>
-      ),
-      sorter: (a: any, b: any) => a.Client.length - b.Client.length,
-    },
-    {
-      title: "Priority",
-      dataIndex: "Priority",
-      render: (text: any) => (
-        <span
-          className={`priority badge badge-tag ${
-            text === "High"
-              ? "badge-soft-danger"
-              : text === "Medium"
-              ? "badge-soft-warning"
-              : "badge-soft-success"
-          }`}
-        >
-          <i className="ti ti-square-rounded-filled me-1"></i>
-          {text}
-        </span>
-      ),
-      sorter: (a: any, b: any) => a.Priority.length - b.Priority.length,
-    },
-    {
-      title: "Start Date",
-      dataIndex: "StartDate",
-      sorter: (a: any, b: any) => a.StartDate.length - b.StartDate.length,
-    },
-    {
-      title: "End Date",
-      dataIndex: "EndDate",
-      sorter: (a: any, b: any) => a.EndDate.length - b.EndDate.length,
-    },
-    {
-      title: "Pipeline Stage",
-      dataIndex: "PipelineStage",
-      render: (text: string) => (
-        <div className="pipeline-progress d-flex align-items-center">
-          <div className="progress">
-            <div
-              className={`progress-bar  ${
-                text === "Plan"
-                  ? "progress-bar-violet"
-                  : text === "Develop"
-                  ? "progress-bar-info"
-                  : text === "Design"
-                  ? "progress-bar-warning"
-                  : "progress-bar-success"
-              }`}
-              role="progressbar"
-            />
-          </div>
-          <span>{text}</span>
-        </div>
-      ),
-      sorter: (a: any, b: any) =>
-        a.PipelineStage.length - b.PipelineStage.length,
-    },
-    {
-      title: "Status",
-      dataIndex: "Status",
-      render: (text: any) => (
-        <span
-          className={`badge badge-pill badge-status  ${
-            text === "Active" ? "bg-success" : "bg-danger"
-          } `}
-        >
-          {text}
-        </span>
-      ),
-      sorter: (a: any, b: any) => a.Status.length - b.Status.length,
-    },
+    // {
+    //   title: "Client",
+    //   dataIndex: "Client",
+    //   render: (text: string, render: any) => (
+    //     <h6 className="d-flex align-items-center fs-14 fw-medium">
+    //       <Link
+    //         to={all_routes.companiesDetails}
+    //         className="avatar avatar-sm border rounded-circle me-2"
+    //       >
+    //         <ImageWithBasePath
+    //           className="w-auto h-auto"
+    //           src={`assets/img/company/${render.ClientImage}`}
+    //           alt="User Image"
+    //         />
+    //       </Link>
+    //       <Link to={all_routes.companyDetails}>{text}</Link>
+    //     </h6>
+    //   ),
+    //   sorter: (a: any, b: any) => a.Client.length - b.Client.length,
+    // },
+    // {
+    //   title: "Priority",
+    //   dataIndex: "Priority",
+    //   render: (text: any) => (
+    //     <span
+    //       className={`priority badge badge-tag ${
+    //         text === "High"
+    //           ? "badge-soft-danger"
+    //           : text === "Medium"
+    //           ? "badge-soft-warning"
+    //           : "badge-soft-success"
+    //       }`}
+    //     >
+    //       <i className="ti ti-square-rounded-filled me-1"></i>
+    //       {text}
+    //     </span>
+    //   ),
+    //   sorter: (a: any, b: any) => a.Priority.length - b.Priority.length,
+    // },
+    // {
+    //   title: "Start Date",
+    //   dataIndex: "StartDate",
+    //   sorter: (a: any, b: any) => a.StartDate.length - b.StartDate.length,
+    // },
+    // {
+    //   title: "End Date",
+    //   dataIndex: "EndDate",
+    //   sorter: (a: any, b: any) => a.EndDate.length - b.EndDate.length,
+    // },
+    // {
+    //   title: "Pipeline Stage",
+    //   dataIndex: "PipelineStage",
+    //   render: (text: string) => (
+    //     <div className="pipeline-progress d-flex align-items-center">
+    //       <div className="progress">
+    //         <div
+    //           className={`progress-bar  ${
+    //             text === "Plan"
+    //               ? "progress-bar-violet"
+    //               : text === "Develop"
+    //               ? "progress-bar-info"
+    //               : text === "Design"
+    //               ? "progress-bar-warning"
+    //               : "progress-bar-success"
+    //           }`}
+    //           role="progressbar"
+    //         />
+    //       </div>
+    //       <span>{text}</span>
+    //     </div>
+    //   ),
+    //   sorter: (a: any, b: any) =>
+    //     a.PipelineStage.length - b.PipelineStage.length,
+    // },
+    // {
+    //   title: "Status",
+    //   dataIndex: "Status",
+    //   render: (text: any) => (
+    //     <span
+    //       className={`badge badge-pill badge-status  ${
+    //         text === "Active" ? "bg-success" : "bg-danger"
+    //       } `}
+    //     >
+    //       {text}
+    //     </span>
+    //   ),
+    //   sorter: (a: any, b: any) => a.Status.length - b.Status.length,
+    // },
 
+    // {
+    //   title: "Action",
+    //   dataIndex: "Action",
+    //   render: () => (
+    //     <div className="dropdown table-action">
+    //       <Link
+    //         to="#"
+    //         className="action-icon btn btn-xs shadow btn-icon btn-outline-light"
+    //         data-bs-toggle="dropdown"
+    //         aria-expanded="false"
+    //       >
+    //         <i className="ti ti-dots-vertical" />
+    //       </Link>
+    //       <div className="dropdown-menu dropdown-menu-right">
+    //         <Link
+    //           className="dropdown-item "
+    //           data-bs-toggle="offcanvas"
+    //           data-bs-target="#offcanvas_edit"
+    //           to="#"
+    //         >
+    //           <i className="ti ti-edit text-blue" /> Edit
+    //         </Link>
+    //         <Link
+    //           className="dropdown-item"
+    //           to="#"
+    //           data-bs-toggle="modal"
+    //           data-bs-target="#delete_project"
+    //         >
+    //           <i className="ti ti-trash" /> Delete
+    //         </Link>
+    //         <Link className="dropdown-item" to="#">
+    //           <i className="ti ti-clipboard-copy text-green" /> Clone this
+    //           Project
+    //         </Link>
+    //         <Link className="dropdown-item" to="#">
+    //           <i className="ti ti-printer" /> Print
+    //         </Link>
+    //         <Link className="dropdown-item" to="#">
+    //           <i className="ti ti-subtask" /> Add New Task
+    //         </Link>
+    //       </div>
+    //     </div>
+    //   ),
+    //   sorter: (a: any, b: any) => a.Action.length - b.Action.length,
+    // },
     {
-      title: "Action",
-      dataIndex: "Action",
-      render: () => (
-        <div className="dropdown table-action">
-          <Link
-            to="#"
-            className="action-icon btn btn-xs shadow btn-icon btn-outline-light"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="ti ti-dots-vertical" />
-          </Link>
-          <div className="dropdown-menu dropdown-menu-right">
-            <Link
-              className="dropdown-item "
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvas_edit"
-              to="#"
-            >
-              <i className="ti ti-edit text-blue" /> Edit
-            </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#delete_project"
-            >
-              <i className="ti ti-trash" /> Delete
-            </Link>
-            <Link className="dropdown-item" to="#">
-              <i className="ti ti-clipboard-copy text-green" /> Clone this
-              Project
-            </Link>
-            <Link className="dropdown-item" to="#">
-              <i className="ti ti-printer" /> Print
-            </Link>
-            <Link className="dropdown-item" to="#">
-              <i className="ti ti-subtask" /> Add New Task
-            </Link>
-          </div>
-        </div>
-      ),
-      sorter: (a: any, b: any) => a.Action.length - b.Action.length,
+      title: "Phone",
+      dataIndex: "phone",
+      sorter: (a: Student, b: Student) => a.phone.localeCompare(b.phone),
     },
+   
+    {
+      title: "Category",
+      dataIndex: "category",
+      sorter: (a: Student, b: Student) =>
+        (a.category || "").localeCompare(b.category || ""),
+    },
+    {
+      title: "Lead Source",
+      dataIndex: "leadsource",
+      sorter: (a: Student, b: Student) =>
+        (a.leadsource || "").localeCompare(b.leadsource || ""),
+    },
+    {
+      title: "Domain",
+      dataIndex: "domain",
+      sorter: (a: Student, b: Student) =>
+        (a.domain || "").localeCompare(b.domain || ""),
+    },
+    {
+      title: "Location",
+      dataIndex: "location",
+      sorter: (a: Student, b: Student) =>
+        (a.location || "").localeCompare(b.location || ""),
+    },
+    {
+      title: "Assigned From",
+      dataIndex: "assignfrom",
+      sorter: (a: Student, b: Student) =>
+        (a.assignfrom || "").localeCompare(b.assignfrom || ""),
+    },
+    {
+      title: "Assigned To",
+      dataIndex: "assignto",
+      sorter: (a: Student, b: Student) =>
+        (a.assignto || "").localeCompare(b.assignto || ""),
+    },
+     {
+      title: "Follow-UP Date",
+      dataIndex: "followdate",
+      render: (date: string) =>
+        date ? dayjs(date).format("DD-MM-YYYY") : "-",
+      sorter: (a: Student, b: Student) =>
+        (a.followdate || "").localeCompare(b.followdate || "")
+    },
+    {
+      title: "Lead Status",
+      dataIndex: "leadstatus",
+      render: (text: string) => (
+        <span
+          // className={`badge badge-pill badge-status ${
+          //   text === "Demo Sheduled"
+          //     ? "bg-success"
+          //     : text === "New Lead"
+          //     ? "bg-warning"
+          //     : text === "Not Contacted"
+          //     ? "bg-info"
+          //     : "bg-danger"
+          // }`}
+        >
+          {text}
+        </span>
+      ),
+      sorter: (a: Student, b: Student) =>
+        (a.leadstatus || "").localeCompare(b.leadstatus || ""),
+    },
+      {
+          title: "Demo Date",
+          dataIndex: "demodate",
+          render: (date: string) =>
+            date ? dayjs(date).format("DD-MM-YYYY") : "-",
+          sorter: (a: Student, b: Student) =>
+            (a.demodate || "").localeCompare(b.demodate || "")
+        },
   ];
   return (
     <>
@@ -209,8 +350,8 @@ const ProjectsList = () => {
         <div className="content pb-0">
           {/* Page Header */}
           <PageHeader
-            title="Projects"
-            badgeCount={125}
+            title="Students"
+            // badgeCount={125}
             showModuleTile={false}
             showExport={true}
           />
@@ -224,7 +365,7 @@ const ProjectsList = () => {
                 </span>
                 <SearchInput value={searchText} onChange={handleSearch} />
               </div>
-              <Link
+              {/* <Link
                 to="#"
                 className="btn btn-primary"
                 data-bs-toggle="offcanvas"
@@ -232,13 +373,13 @@ const ProjectsList = () => {
               >
                 <i className="ti ti-square-rounded-plus-filled me-1" />
                 Add New Project
-              </Link>
+              </Link> */}
             </div>
             <div className="card-body">
               {/* table header */}
               <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
                 <div className="d-flex align-items-center gap-2 flex-wrap">
-                  <div className="dropdown">
+                  {/* <div className="dropdown">
                     <Link
                       to="#"
                       className="dropdown-toggle btn btn-outline-light px-2 shadow"
@@ -260,12 +401,12 @@ const ProjectsList = () => {
                           </Link>
                         </li>
                       </ul>
-                    </div>
+                    </div> 
                   </div>
-                  <PredefinedDatePicker/>
+                  {/* <PredefinedDatePicker/> */}
                 </div>
-                <div className="d-flex align-items-center gap-2 flex-wrap">
-                  <div className="dropdown">
+                 <div className="d-flex align-items-center gap-2 flex-wrap">
+                  {/*<div className="dropdown">
                     <Link
                       to="#"
                       className="btn btn-outline-light shadow px-2"
@@ -1047,7 +1188,7 @@ const ProjectsList = () => {
                     >
                       <i className="ti ti-grid-dots" />
                     </Link>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               {/* table header */}

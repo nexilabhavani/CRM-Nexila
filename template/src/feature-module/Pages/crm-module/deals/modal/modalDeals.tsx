@@ -369,7 +369,7 @@ const options2 = [
               <input className="form-control" type="text" />
             </div>
           </div>
-          <div className="col-md-12">
+          {/* <div className="col-md-12">
             <div className="mb-3">
               <label className="form-label">
                 Contact <span className="text-danger">*</span>
@@ -390,8 +390,8 @@ const options2 = [
                             onTagsChange={handleTagsChange}
                           />
             </div>
-          </div>
-          <div className="col-md-6">
+          </div> */}
+          {/* <div className="col-md-6">
             <div className="mb-3">
               <label className="form-label">
                 Due Date <span className="text-danger">*</span>
@@ -401,8 +401,8 @@ const options2 = [
 
               </div>
             </div>
-          </div>
-          <div className="col-md-6">
+          </div> */}
+          {/* <div className="col-md-6">
             <div className="mb-3">
               <label className="form-label">
                 Expected Closing Date <span className="text-danger">*</span>
@@ -411,8 +411,8 @@ const options2 = [
                 <CommonDatePicker placeholder="dd/mm/yyyy" />
               </div>
             </div>
-          </div>
-          <div className="col-md-12">
+          </div> */}
+          {/* <div className="col-md-12">
             <div className="mb-3">
               <label className="form-label">
                 Assignee <span className="text-danger">*</span>
@@ -424,7 +424,7 @@ const options2 = [
                     placeholder="Select"
                   />
             </div>
-          </div>
+          </div> */}
           <div className="col-md-6">
             <div className="mb-3">
               <label className="form-label">
@@ -447,7 +447,7 @@ const options2 = [
                           />
             </div>
           </div>
-          <div className="col-md-6">
+          {/* <div className="col-md-6">
             <div className="mb-3">
               <label className="form-label">
                 Tags <span className="text-danger">*</span>
@@ -457,7 +457,7 @@ const options2 = [
                             onTagsChange={handleTagsChange2}
                           />
             </div>
-          </div>
+          </div> */}
           <div className="col-md-6">
             <div className="mb-3">
               <label className="form-label">
@@ -470,7 +470,7 @@ const options2 = [
                           />
             </div>
           </div>
-          <div className="col-lg-12">
+          {/* <div className="col-lg-12">
             <div className="mb-3">
               <label className="form-label">
                 Description <span className="text-danger">*</span>
@@ -479,7 +479,7 @@ const options2 = [
                 <TextEditor/>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="d-flex align-items-center justify-content-end">
           <button

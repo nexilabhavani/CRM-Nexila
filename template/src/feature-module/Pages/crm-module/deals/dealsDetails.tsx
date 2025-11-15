@@ -176,6 +176,7 @@ const DealsDetails = () => {
               <h6 className="mb-3 fw-semibold">Priority</h6>
               <div className="border-bottom mb-3 pb-3">
                 <CommonSelect
+                name=""
                     options={Priority}
                     className="select"
                     defaultValue={Priority[0]}
@@ -521,6 +522,7 @@ const DealsDetails = () => {
                                       <span className="text-danger">*</span>
                                     </label>
                                     <CommonSelect
+                                    name=""
                             options={Reminder}
                             className="select"
                             defaultValue={Reminder[0]}
@@ -534,6 +536,7 @@ const DealsDetails = () => {
                                       <span className="text-danger">*</span>
                                     </label>
                                      <CommonSelect
+                                     name=""
                             options={Task_Priority}
                             className="select"
                             defaultValue={Task_Priority[0]}
@@ -547,6 +550,7 @@ const DealsDetails = () => {
                                       <span className="text-danger">*</span>
                                     </label>
                                     <CommonSelect
+                                    name=""
                             options={Assigned_To}
                             className="select"
                             defaultValue={Assigned_To[0]}

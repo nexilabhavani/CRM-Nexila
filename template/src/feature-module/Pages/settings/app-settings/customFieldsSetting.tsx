@@ -302,7 +302,7 @@ const CustomFieldsSetting = () => {
                   <label className="form-label">
                     Module <span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=" "
                             options={Module}
                             className="select"
                             defaultValue={Module[0]}
@@ -312,7 +312,7 @@ const CustomFieldsSetting = () => {
                   <label className="form-label">
                     Input Type <span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=" "
                             options={Input_Type}
                             className="select"
                             defaultValue={Input_Type[0]}
@@ -381,7 +381,7 @@ const CustomFieldsSetting = () => {
                   <label className="form-label">
                     Module <span className="text-danger">*</span>
                   </label>
-                 <CommonSelect
+                 <CommonSelect name=" "
                             options={Module}
                             className="select"
                             defaultValue={Module[1]}
@@ -391,7 +391,7 @@ const CustomFieldsSetting = () => {
                   <label className="form-label">
                     Input Type <span className="text-danger">*</span>
                   </label>
-                 <CommonSelect
+                 <CommonSelect name=" "
                             options={Input_Type}
                             className="select"
                             defaultValue={Input_Type[1]}

@@ -150,7 +150,7 @@ const InvoiceSettings = () => {
                       <div className="mb-3">
                         <div className="d-flex align-items-center inv-days">
                           <div className="me-2">
-                            <CommonSelect
+                            <CommonSelect name=" "
                             options={Invoice_Due}
                             className="select"
                             defaultValue={Invoice_Due[0]}
@@ -182,7 +182,7 @@ const InvoiceSettings = () => {
                             />
                           </div>
                           <div className="w-100">
-                           <CommonSelect
+                           <CommonSelect name=" "
                             options={RoundUp}
                             className="select"
                             defaultValue={RoundUp[0]}

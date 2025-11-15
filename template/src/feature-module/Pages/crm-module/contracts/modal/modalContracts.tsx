@@ -60,6 +60,7 @@ const ModalContracts = () => {
                       Client <span className="text-danger">*</span>
                     </label>
                     <CommonSelect
+                    name=""
                       options={Client}
                       className="select"
                       defaultValue={Client[0]}
@@ -72,6 +73,7 @@ const ModalContracts = () => {
                       Contract Type<span className="text-danger">*</span>
                     </label>
                     <CommonSelect
+                    name=""
                       options={Contract_Type}
                       className="select"
                       defaultValue={Contract_Type[0]}
@@ -510,6 +512,7 @@ const ModalContracts = () => {
                       Client <span className="text-danger">*</span>
                     </label>
                     <CommonSelect
+                    name=""
                       options={Client}
                       className="select"
                       defaultValue={Client[1]}
@@ -522,6 +525,7 @@ const ModalContracts = () => {
                       Contract Type<span className="text-danger">*</span>
                     </label>
                     <CommonSelect
+                    name=""
                       options={Contract_Type}
                       className="select"
                       defaultValue={Contract_Type[1]}

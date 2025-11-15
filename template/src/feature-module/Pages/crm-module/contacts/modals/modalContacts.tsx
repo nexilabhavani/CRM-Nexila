@@ -378,6 +378,7 @@ const options2 = [
                             <span className="text-danger ms-1">*</span>
                           </label>
                           <CommonSelect
+                          name=""
                             options={Company_Name}
                             className="select"
                             defaultValue={Company_Name[0]}
@@ -446,6 +447,7 @@ const options2 = [
                             </Link>
                           </div>
                           <CommonSelect
+                          name=""
                             options={Deals}
                             className="select"
                             defaultValue={Deals[0]}
@@ -475,6 +477,7 @@ const options2 = [
                         <div className="mb-3">
                           <label className="form-label">Owner</label>
                           <CommonSelect
+                          name=""
                             options={Owner}
                             className="select"
                             defaultValue={Owner[0]}
@@ -499,6 +502,7 @@ const options2 = [
                             Source <span className="text-danger">*</span>
                           </label>
                           <CommonSelect
+                          name=""
                             options={Source}
                             className="select"
                             defaultValue={Source[0]}
@@ -511,6 +515,7 @@ const options2 = [
                             Industry <span className="text-danger">*</span>
                           </label>
                           <CommonSelect
+                          name=""
                             options={Industry}
                             className="select"
                             defaultValue={Industry[0]}
@@ -523,6 +528,7 @@ const options2 = [
                             Currency <span className="text-danger">*</span>
                           </label>
                           <CommonSelect
+                          name=""
                             options={Currency}
                             className="select"
                             defaultValue={Currency[0]}
@@ -535,6 +541,7 @@ const options2 = [
                             Language <span className="text-danger">*</span>
                           </label>
                           <CommonSelect
+                          name=""
                             options={Language}
                             className="select"
                             defaultValue={Language[0]}
@@ -590,6 +597,7 @@ const options2 = [
                         <div className="mb-3">
                           <label className="form-label">Country</label>
                           <CommonSelect
+                          name=""
                             options={Country}
                             className="select"
                             defaultValue={Country[0]}
@@ -602,6 +610,7 @@ const options2 = [
                             State / Province{" "}
                           </label>
                           <CommonSelect
+                          name=""
                             options={State}
                             className="select"
                             defaultValue={State[0]}
@@ -612,6 +621,7 @@ const options2 = [
                         <div className="mb-3 mb-md-0">
                           <label className="form-label">City </label>
                           <CommonSelect
+                          name=""
                             options={City}
                             className="select"
                             defaultValue={City[0]}
@@ -905,6 +915,7 @@ const options2 = [
                             <span className="text-danger ms-1">*</span>
                           </label>
                           <CommonSelect
+                          name=""
                             options={Company_Name}
                             className="select"
                             defaultValue={Company_Name[1]}
@@ -977,6 +988,7 @@ const options2 = [
                             </Link>
                           </div>
                           <CommonSelect
+                          name=""
                             options={Deals}
                             className="select"
                             defaultValue={Deals[1]}
@@ -1014,6 +1026,7 @@ const options2 = [
                         <div className="mb-3">
                           <label className="form-label">Owner</label>
                           <CommonSelect
+                          name=""
                             options={Owner}
                             className="select"
                             defaultValue={Owner[0]}
@@ -1039,6 +1052,7 @@ const options2 = [
                             Source <span className="text-danger">*</span>
                           </label>
                           <CommonSelect
+                          name=""
                             options={Source}
                             className="select"
                             defaultValue={Source[0]}
@@ -1051,6 +1065,7 @@ const options2 = [
                             Industry <span className="text-danger">*</span>
                           </label>
                           <CommonSelect
+                          name=""
                             options={Industry}
                             className="select"
                             defaultValue={Industry[0]}
@@ -1063,6 +1078,7 @@ const options2 = [
                             Currency <span className="text-danger">*</span>
                           </label>
                           <CommonSelect
+                          name=""
                             options={Currency}
                             className="select"
                             defaultValue={Currency[0]}
@@ -1075,6 +1091,7 @@ const options2 = [
                             Language <span className="text-danger">*</span>
                           </label>
                           <CommonSelect
+                          name=""
                             options={Language}
                             className="select"
                             defaultValue={Language[0]}
@@ -1132,6 +1149,7 @@ const options2 = [
                         <div className="mb-3">
                           <label className="form-label">Country</label>
                           <CommonSelect
+                          name=""
                             options={Country}
                             className="select"
                             defaultValue={Country[0]}
@@ -1144,6 +1162,7 @@ const options2 = [
                             State / Province{" "}
                           </label>
                           <CommonSelect
+                          name=""
                             options={State}
                             className="select"
                             defaultValue={State[0]}
@@ -1154,6 +1173,7 @@ const options2 = [
                         <div className="mb-3 mb-md-0">
                           <label className="form-label">City </label>
                           <CommonSelect
+                          name=""
                             options={City}
                             className="select"
                             defaultValue={City[0]}
@@ -1364,6 +1384,7 @@ const options2 = [
                     </label>
                   </div>
                   <CommonSelect
+                  name=""
                     options={Pipeine}
                     className="select"
                     defaultValue={Pipeine[0]}
@@ -1376,6 +1397,7 @@ const options2 = [
                     Status <span className="text-danger">*</span>
                   </label>
                   <CommonSelect
+                  name=""
                     options={Status_Open}
                     className="select"
                     defaultValue={Status_Open[0]}
@@ -1396,6 +1418,7 @@ const options2 = [
                     Currency <span className="text-danger">*</span>
                   </label>
                   <CommonSelect
+                  name=""
                     options={Currency}
                     className="select"
                     defaultValue={Currency[0]}
@@ -1408,6 +1431,7 @@ const options2 = [
                     Period <span className="text-danger">*</span>
                   </label>
                   <CommonSelect
+                  name=""
                     options={Period}
                     className="select"
                     defaultValue={Period[0]}
@@ -1497,6 +1521,7 @@ const options2 = [
                     Source <span className="text-danger">*</span>
                   </label>
                   <CommonSelect
+                  name=""
                     options={Source}
                     className="select"
                     defaultValue={Source[0]}
@@ -1520,6 +1545,7 @@ const options2 = [
                     Priority <span className="text-danger">*</span>
                   </label>
                   <CommonSelect
+                  name=""
                     options={Priority}
                     className="select"
                     defaultValue={Priority[0]}

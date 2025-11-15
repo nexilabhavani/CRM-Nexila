@@ -165,7 +165,7 @@ const ModalTask = () => {
               </div>
               <div className="mb-3">
                 <label className="form-label">Category</label>
-                 <CommonSelect
+                 <CommonSelect name=""
                             options={Category}
                             className="select"
                             defaultValue={Category[0]}
@@ -221,7 +221,7 @@ const ModalTask = () => {
             <div className="col-md-6">
               <div className="mb-3">
                 <label className="form-label">Priority</label>
-                 <CommonSelect
+                 <CommonSelect name=""
                             options={Priority}
                             className="select"
                             defaultValue={Priority[0]}
@@ -231,7 +231,7 @@ const ModalTask = () => {
             <div className="col-md-6">
               <div className="mb-3">
                 <label className="form-label">Status</label>
-               <CommonSelect
+               <CommonSelect name=""
                             options={StatusActive}
                             className="select"
                             defaultValue={StatusActive[0]}
@@ -296,7 +296,7 @@ const ModalTask = () => {
               </div>
               <div className="mb-3">
                 <label className="form-label">Category</label>
-               <CommonSelect
+               <CommonSelect name=""
                             options={Category}
                             className="select"
                             defaultValue={Category[1]}
@@ -352,7 +352,7 @@ const ModalTask = () => {
             <div className="col-md-6">
               <div className="mb-3">
                 <label className="form-label">Priority</label>
-                <CommonSelect
+                <CommonSelect name=""
                             options={Priority}
                             className="select"
                             defaultValue={Priority[1]}
@@ -362,7 +362,7 @@ const ModalTask = () => {
             <div className="col-md-6">
               <div className="mb-3">
                 <label className="form-label">Status</label>
-                <CommonSelect
+                <CommonSelect name=""
                             options={StatusActive}
                             className="select"
                             defaultValue={StatusActive[1]}

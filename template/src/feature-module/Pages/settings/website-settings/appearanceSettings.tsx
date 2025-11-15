@@ -206,7 +206,7 @@ const AppearanceSettings = () => {
                         {/* end col */}
                         <div className="col-md-4">
                           <div className="mb-3">
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={Sidebar_Size}
                               className="select"
                               defaultValue={Sidebar_Size[0]}
@@ -231,7 +231,7 @@ const AppearanceSettings = () => {
                         {/* end col */}
                         <div className="col-md-4">
                           <div className="mb-3">
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={Font_Family}
                               className="select"
                               defaultValue={Font_Family[0]}

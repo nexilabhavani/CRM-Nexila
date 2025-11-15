@@ -509,6 +509,7 @@ const EditInoivce = () => {
                         <h6 className="fs-14 fw-normal text-dark">Discount</h6>
                         <h6 className="fs-14 fw-semibold text-dark">
                           <CommonSelect
+                            name="" 
                             options={Discount}
                             className="select"
                             defaultValue={Discount[0]}

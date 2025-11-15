@@ -868,7 +868,7 @@ const SecuritySettings = () => {
                       <label className="form-label">
                         Reason<span className="text-danger ms-1">*</span>
                       </label>
-                       <CommonSelect
+                       <CommonSelect name=" "
                             options={Reason}
                             className="select"
                             defaultValue={Reason[0]}

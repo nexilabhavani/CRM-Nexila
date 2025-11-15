@@ -31,7 +31,7 @@ const Login = () => {
     if (data.token) {
       localStorage.setItem("token", data.token);
       setError("");
-      navigate(all_routes.dealsDashboard); // ✅ redirect on success
+      navigate(all_routes.leadsList); // ✅ redirect on success
     } else {
       setError(data.message || "Invalid credentials");
     }

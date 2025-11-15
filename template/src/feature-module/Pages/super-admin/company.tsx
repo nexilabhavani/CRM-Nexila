@@ -923,7 +923,7 @@ const Company = () => {
                           <label className="form-label">
                             Plan Name <span className="text-danger">*</span>
                           </label>
-                          <CommonSelect
+                          <CommonSelect name=" "
                             options={Plan_Name}
                             className="select"
                             defaultValue={Plan_Name[0]}
@@ -935,7 +935,7 @@ const Company = () => {
                           <label className="form-label">
                             Plan Type <span className="text-danger">*</span>
                           </label>
-                          <CommonSelect
+                          <CommonSelect name=" "
                             options={PlanType}
                             className="select"
                             defaultValue={PlanType[0]}
@@ -1147,7 +1147,7 @@ const Company = () => {
                       <label className="form-label">
                         Plan Name <span className="text-danger"> *</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={Plan_Name}
                         className="select"
                         defaultValue={Plan_Name[0]}
@@ -1159,7 +1159,7 @@ const Company = () => {
                       <label className="form-label">
                         Plan Type <span className="text-danger"> *</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={PlanType}
                         className="select"
                         defaultValue={PlanType[0]}
@@ -1171,7 +1171,7 @@ const Company = () => {
                       <label className="form-label">
                         Currency <span className="text-danger"> *</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={Currency}
                         className="select"
                         defaultValue={Currency[0]}
@@ -1183,7 +1183,7 @@ const Company = () => {
                       <label className="form-label">
                         Language <span className="text-danger"> *</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={Language}
                         className="select"
                         defaultValue={Language[0]}
@@ -1397,7 +1397,7 @@ const Company = () => {
                       <label className="form-label">
                         Plan Name <span className="text-danger"> *</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={Plan_Name}
                         className="select"
                         defaultValue={Plan_Name[1]}
@@ -1409,7 +1409,7 @@ const Company = () => {
                       <label className="form-label">
                         Plan Type <span className="text-danger"> *</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={PlanType}
                         className="select"
                         defaultValue={PlanType[1]}
@@ -1421,7 +1421,7 @@ const Company = () => {
                       <label className="form-label">
                         Currency <span className="text-danger"> *</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={Currency}
                         className="select"
                         defaultValue={Currency[1]}
@@ -1433,7 +1433,7 @@ const Company = () => {
                       <label className="form-label">
                         Language <span className="text-danger"> *</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={Language}
                         className="select"
                         defaultValue={Language[0]}

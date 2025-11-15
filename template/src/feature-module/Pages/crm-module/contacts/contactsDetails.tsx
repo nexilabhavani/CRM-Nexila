@@ -619,6 +619,7 @@ const ContactsDetails = () => {
                                           <span className="text-danger">*</span>
                                         </label>
                                         <CommonSelect
+                                        name=""
                                           options={Reminder}
                                           className="select"
                                           defaultValue={Reminder[0]}
@@ -632,6 +633,7 @@ const ContactsDetails = () => {
                                           <span className="text-danger">*</span>
                                         </label>
                                         <CommonSelect
+                                        name=""
                                           options={Task_Priority}
                                           className="select"
                                           defaultValue={Task_Priority[0]}
@@ -645,6 +647,7 @@ const ContactsDetails = () => {
                                           <span className="text-danger">*</span>
                                         </label>
                                         <CommonSelect
+                                        name=""
                                           options={Assigned_To}
                                           className="select"
                                           defaultValue={Assigned_To[0]}

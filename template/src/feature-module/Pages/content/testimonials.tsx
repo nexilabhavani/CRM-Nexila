@@ -263,6 +263,7 @@ const Testimonials = () => {
                       Ratings <span className="text-danger">*</span>
                     </label>
                      <CommonSelect
+                          name=""
                             options={Ratings}
                             className="select"
                             defaultValue={Ratings[0]}
@@ -374,6 +375,7 @@ const Testimonials = () => {
                       Ratings <span className="text-danger">*</span>
                     </label>
                       <CommonSelect
+                            name=""
                             options={Ratings}
                             className="select"
                             defaultValue={Ratings[5]}

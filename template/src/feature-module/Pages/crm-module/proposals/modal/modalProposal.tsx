@@ -197,7 +197,7 @@ const options2 = [
                     <label className="form-label">
                       Client <span className="text-danger">*</span>
                     </label>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Client}
                       className="select"
                       defaultValue={Client[0]}
@@ -220,7 +220,7 @@ const options2 = [
                         Add New
                       </Link>
                     </div>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Proposal_Project}
                       className="select"
                       defaultValue={Proposal_Project[0]}
@@ -232,7 +232,7 @@ const options2 = [
                     <label className="form-label">
                       Related to <span className="text-danger">*</span>
                     </label>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Related_TO}
                       className="select"
                       defaultValue={Related_TO[0]}
@@ -255,7 +255,7 @@ const options2 = [
                         Add New
                       </Link>
                     </div>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Deals}
                       className="select"
                       defaultValue={Deals[0]}
@@ -267,7 +267,7 @@ const options2 = [
                     <label className="form-label">
                       Currency <span className="text-danger">*</span>
                     </label>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Currency}
                       className="select"
                       defaultValue={Currency[0]}
@@ -279,7 +279,7 @@ const options2 = [
                     <label className="form-label">
                       Status <span className="text-danger">*</span>
                     </label>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Status_Accepted}
                       className="select"
                       defaultValue={Status_Accepted[0]}
@@ -418,7 +418,7 @@ const options2 = [
                     <label className="form-label">
                       Client <span className="text-danger">*</span>
                     </label>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Client}
                       className="select"
                       defaultValue={Client[0]}
@@ -441,7 +441,7 @@ const options2 = [
                         Add New
                       </Link>
                     </div>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Proposal_Project}
                       className="select"
                       defaultValue={Proposal_Project[0]}
@@ -453,7 +453,7 @@ const options2 = [
                     <label className="form-label">
                       Related to <span className="text-danger">*</span>
                     </label>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Related_TO}
                       className="select"
                       defaultValue={Related_TO[0]}
@@ -476,7 +476,7 @@ const options2 = [
                         Add New
                       </Link>
                     </div>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Deals}
                       className="select"
                       defaultValue={Deals[1]}
@@ -488,7 +488,7 @@ const options2 = [
                     <label className="form-label">
                       Currency <span className="text-danger">*</span>
                     </label>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Currency}
                       className="select"
                       defaultValue={Currency[1]}
@@ -500,7 +500,7 @@ const options2 = [
                     <label className="form-label">
                       Status <span className="text-danger">*</span>
                     </label>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Status_Accepted}
                       className="select"
                       defaultValue={Status_Accepted[1]}

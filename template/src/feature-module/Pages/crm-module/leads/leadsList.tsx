@@ -163,7 +163,8 @@ const LeadsList = () => {
     fetchLeads();
   }, []);
 
-  
+  const totalLeads = data.length;
+
   // ✅ Edit lead handler
   const handleEditClick = (lead: Lead) => {
     setSelectedLead(lead);
@@ -401,7 +402,7 @@ const LeadsList = () => {
           {/* Page Header */}
           <PageHeader
             title="Leads"
-            // badgeCount={125}
+            badgeCount={totalLeads}
             showModuleTile={false}
             showExport={true}
           />

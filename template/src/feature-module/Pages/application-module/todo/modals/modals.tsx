@@ -39,6 +39,7 @@ const Modals = () => {
                     <div className="mb-3">
                       <label className="form-label">Tag</label>
                       <CommonSelect
+                      name=""
                         options={Tag}
                         className="select"
                         defaultValue={Tag[0]}
@@ -49,6 +50,7 @@ const Modals = () => {
                     <div className="mb-3">
                       <label className="form-label">Priority</label>
                       <CommonSelect
+                       name=""
                         options={Priority}
                         className="select"
                         defaultValue={Priority[0]}
@@ -67,6 +69,7 @@ const Modals = () => {
                     <div className="mb-3">
                       <label className="form-label">Add Assignee</label>
                       <CommonSelect
+                         name=""
                         options={Add_Assignee}
                         className="select"
                         defaultValue={Add_Assignee[0]}
@@ -77,6 +80,7 @@ const Modals = () => {
                     <div className="mb-0">
                       <label className="form-label">Status</label>
                       <CommonSelect
+                         name=""
                         options={Status_Completed}
                         className="select"
                         defaultValue={Status_Completed[0]}
@@ -132,6 +136,7 @@ const Modals = () => {
                     <div className="mb-3">
                       <label className="form-label">Tag</label>
                       <CommonSelect
+                       name=""
                         options={Tag}
                         className="select"
                         defaultValue={Tag[1]}
@@ -142,6 +147,7 @@ const Modals = () => {
                     <div className="mb-3">
                       <label className="form-label">Priority</label>
                       <CommonSelect
+                        name=""
                         options={Priority}
                         className="select"
                         defaultValue={Priority[1]}
@@ -160,6 +166,7 @@ const Modals = () => {
                     <div className="mb-3">
                       <label className="form-label">Add Assignee</label>
                       <CommonSelect
+                         name=""
                         options={Add_Assignee}
                         className="select"
                         defaultValue={Add_Assignee[1]}
@@ -170,6 +177,7 @@ const Modals = () => {
                     <div className="mb-0">
                       <label className="form-label">Status</label>
                       <CommonSelect
+                        name=""
                         options={Status_Completed}
                         className="select"
                         defaultValue={Status_Completed[1]}

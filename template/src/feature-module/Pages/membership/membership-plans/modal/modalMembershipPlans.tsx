@@ -59,7 +59,7 @@ const ModalMembershipPlans = () => {
                       <label className="form-label">
                         Plan Type <span className="text-danger">*</span>
                       </label>
-                       <CommonSelect
+                       <CommonSelect name=" "
                             options={Plan_Type}
                             className="select"
                             defaultValue={Plan_Type[0]}
@@ -71,7 +71,7 @@ const ModalMembershipPlans = () => {
                       <label className="form-label">
                         Plan Price <span className="text-danger">*</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                             options={Plan_Price}
                             className="select"
                             defaultValue={Plan_Price[0]}

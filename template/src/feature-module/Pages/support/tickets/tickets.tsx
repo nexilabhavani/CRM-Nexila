@@ -1029,7 +1029,7 @@ const Tickets = () => {
                       <label className="form-label">
                         Priority <span className="text-danger">*</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={Priority}
                         className="select"
                         defaultValue={Priority[0]}
@@ -1042,7 +1042,7 @@ const Tickets = () => {
                       <label className="form-label">
                         Status <span className="text-danger">*</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={StatusResloved}
                         className="select"
                         defaultValue={StatusResloved[0]}
@@ -1159,7 +1159,7 @@ const Tickets = () => {
                       <label className="form-label">
                         Priority <span className="text-danger">*</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={Priority}
                         className="select"
                         defaultValue={Priority[0]}
@@ -1172,7 +1172,7 @@ const Tickets = () => {
                       <label className="form-label">
                         Status <span className="text-danger">*</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={StatusResloved}
                         className="select"
                         defaultValue={StatusResloved[0]}

@@ -84,7 +84,7 @@ useEffect(() => {
   fetchLeads();
 }, []);
 
-
+const totalStudents = data.length;
 
   const handleSearch = (value: string) => {
     setSearchText(value);
@@ -351,7 +351,7 @@ useEffect(() => {
           {/* Page Header */}
           <PageHeader
             title="Students"
-            // badgeCount={125}
+            badgeCount={totalStudents}
             showModuleTile={false}
             showExport={true}
           />

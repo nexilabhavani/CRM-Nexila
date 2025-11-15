@@ -29,7 +29,7 @@ const LeadsReportModal = () => {
                   <label className="form-label">
                     File Type <span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=" "
                     options={File_Type}
                     className="select"
                     defaultValue={File_Type[0]}
@@ -42,7 +42,7 @@ const LeadsReportModal = () => {
                   <label className="form-label">
                     File Type <span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=" "
                     options={File_Type_2}
                     className="select"
                     defaultValue={File_Type_2[0]}
@@ -52,7 +52,7 @@ const LeadsReportModal = () => {
                   <label className="form-label">
                     Position<span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=" "
                     options={Position}
                     className="select"
                     defaultValue={Position[0]}
@@ -62,7 +62,7 @@ const LeadsReportModal = () => {
                   <label className="form-label">
                     Source<span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=" "
                     options={Source}
                     className="select"
                     defaultValue={Source[0]}
@@ -72,7 +72,7 @@ const LeadsReportModal = () => {
                   <label className="form-label">
                     Select Year<span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=" "
                     options={Select_Year}
                     className="select"
                     defaultValue={Select_Year[0]}

@@ -301,7 +301,7 @@ const ModalProject = () => {
                   <label className="form-label">
                     Project Type <span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=""
                     options={Project_Type}
                     className="select"
                     defaultValue={Project_Type[0]}
@@ -313,7 +313,7 @@ const ModalProject = () => {
                   <label className="form-label">
                     Client <span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=""
                     options={Client}
                     className="select"
                     defaultValue={Client[0]}
@@ -325,7 +325,7 @@ const ModalProject = () => {
                   <label className="form-label">
                     Category <span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=""
                     options={Category}
                     className="select"
                     defaultValue={Category[0]}
@@ -337,7 +337,7 @@ const ModalProject = () => {
                   <label className="form-label">
                     Project Timing <span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=""
                     options={Project_Timing}
                     className="select"
                     defaultValue={Project_Timing[0]}
@@ -401,7 +401,7 @@ const ModalProject = () => {
               <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">Priority</label>
-                  <CommonSelect
+                  <CommonSelect name=""
                     options={Priority}
                     className="select"
                     defaultValue={Priority[0]}
@@ -411,7 +411,7 @@ const ModalProject = () => {
               <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">Status</label>
-                  <CommonSelect
+                  <CommonSelect name=""
                     options={StatusActive}
                     className="select"
                     defaultValue={StatusActive[0]}
@@ -500,7 +500,7 @@ const ModalProject = () => {
                   <label className="form-label">
                     Project Type <span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=""
                     options={Project_Type}
                     className="select"
                     defaultValue={Project_Type[1]}
@@ -511,8 +511,8 @@ const ModalProject = () => {
                 <div className="mb-3">
                   <label className="form-label">
                     Client <span className="text-danger">*</span>
-                  </label>
-                  <CommonSelect
+                  </label> 
+                  <CommonSelect name=""
                     options={Client}
                     className="select"
                     defaultValue={Client[1]}
@@ -524,7 +524,7 @@ const ModalProject = () => {
                   <label className="form-label">
                     Category <span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=""
                     options={Category}
                     className="select"
                     defaultValue={Category[1]}
@@ -536,7 +536,7 @@ const ModalProject = () => {
                   <label className="form-label">
                     Project Timing <span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=""
                     options={Project_Timing}
                     className="select"
                     defaultValue={Project_Timing[1]}
@@ -604,7 +604,7 @@ const ModalProject = () => {
               <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">Priority</label>
-                  <CommonSelect
+                  <CommonSelect name=""
                     options={Priority}
                     className="select"
                     defaultValue={Priority[1]}
@@ -614,7 +614,7 @@ const ModalProject = () => {
               <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">Status</label>
-                  <CommonSelect
+                  <CommonSelect name=""
                     options={StatusActive}
                     className="select"
                     defaultValue={StatusActive[1]}

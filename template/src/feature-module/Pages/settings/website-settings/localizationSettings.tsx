@@ -115,7 +115,7 @@ const LocalizationSettings = () => {
                         </div>
                         <div className="col-md-4">
                           <div className="mb-3">
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={Language}
                               className="select"
                               defaultValue={Language[0]}
@@ -158,7 +158,7 @@ const LocalizationSettings = () => {
                         </div>
                         <div className="col-md-4">
                           <div className="mb-3">
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={Time_zone}
                               className="select"
                               defaultValue={Time_zone[0]}
@@ -179,7 +179,7 @@ const LocalizationSettings = () => {
                         </div>
                         <div className="col-md-4">
                           <div className="mb-3">
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={Date_Format}
                               className="select"
                               defaultValue={Date_Format[0]}
@@ -200,7 +200,7 @@ const LocalizationSettings = () => {
                         </div>
                         <div className="col-md-4">
                           <div className="mb-3">
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={Time_Format}
                               className="select"
                               defaultValue={Time_Format[0]}
@@ -221,7 +221,7 @@ const LocalizationSettings = () => {
                         </div>
                         <div className="col-md-4">
                           <div className="mb-3">
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={Financial_Year}
                               className="select"
                               defaultValue={Financial_Year[0]}
@@ -242,7 +242,7 @@ const LocalizationSettings = () => {
                         </div>
                         <div className="col-md-4">
                           <div className="mb-3">
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={Starting_Month}
                               className="select"
                               defaultValue={Starting_Month[0]}
@@ -265,7 +265,7 @@ const LocalizationSettings = () => {
                         </div>
                         <div className="col-md-4">
                           <div className="mb-3">
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={Currency}
                               className="select"
                               defaultValue={Currency[0]}
@@ -284,7 +284,7 @@ const LocalizationSettings = () => {
                         </div>
                         <div className="col-md-4">
                           <div className="mb-3">
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={Currency_Symbol}
                               className="select"
                               defaultValue={Currency_Symbol[0]}
@@ -305,7 +305,7 @@ const LocalizationSettings = () => {
                         </div>
                         <div className="col-md-4">
                           <div className="mb-3">
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={Currency_Position}
                               className="select"
                               defaultValue={Currency_Position[0]}
@@ -326,7 +326,7 @@ const LocalizationSettings = () => {
                         </div>
                         <div className="col-md-4">
                           <div className="mb-3">
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={Decimal_Seperator}
                               className="select"
                               defaultValue={Decimal_Seperator[0]}
@@ -347,7 +347,7 @@ const LocalizationSettings = () => {
                         </div>
                         <div className="col-md-4">
                           <div className="mb-3">
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={Decimal_Seperator}
                               className="select"
                               defaultValue={Decimal_Seperator[0]}
@@ -374,7 +374,7 @@ const LocalizationSettings = () => {
                         </div>
                         <div className="col-md-4">
                           <div className="mb-3">
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={Countries_Restriction}
                               className="select"
                               defaultValue={Countries_Restriction[0]}

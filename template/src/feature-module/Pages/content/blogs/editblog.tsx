@@ -51,6 +51,7 @@ const Editblog = () => {
                         Category<span className="text-danger ms-1">*</span>
                       </label>
                       <CommonSelect
+                          name=""
                         options={Category}
                         className="select"
                         defaultValue={Category[0]}

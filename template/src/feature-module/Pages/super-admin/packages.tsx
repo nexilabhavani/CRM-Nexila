@@ -558,7 +558,7 @@ const Packages = () => {
                       <label className="form-label">
                         Plan Type<span className="text-danger"> *</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={PlanType}
                         className="select"
                         defaultValue={PlanType[0]}
@@ -570,7 +570,7 @@ const Packages = () => {
                       <label className="form-label">
                         Plan Position<span className="text-danger"> *</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={Plan_Position}
                         className="select"
                         defaultValue={Plan_Position[0]}
@@ -582,7 +582,7 @@ const Packages = () => {
                       <label className="form-label">
                         Plan Currency<span className="text-danger"> *</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={Plan_Currency}
                         className="select"
                         defaultValue={Plan_Currency[0]}
@@ -600,7 +600,7 @@ const Packages = () => {
                           Set 0 for free
                         </span>
                       </div>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={Plan_Fixed}
                         className="select"
                         defaultValue={Plan_Fixed[0]}
@@ -613,7 +613,7 @@ const Packages = () => {
                         Discount Type<span className="text-danger"> *</span>
                       </label>
                       <div className="pass-group">
-                        <CommonSelect
+                        <CommonSelect name=" "
                           options={Plan_Fixed}
                           className="select"
                           defaultValue={Plan_Fixed[0]}
@@ -823,7 +823,7 @@ const Packages = () => {
                       <div className="d-flex align-items-center mb-3">
                         <div className="flex-fill">
                           <label className="form-label">Trial Days</label>
-                          <CommonSelect
+                          <CommonSelect name=" "
                             options={Trial_Days}
                             className="select"
                             defaultValue={Trial_Days[0]}
@@ -836,7 +836,7 @@ const Packages = () => {
                         <label className="form-label">
                           Status<span className="text-danger"> *</span>
                         </label>
-                        <CommonSelect
+                        <CommonSelect name=" "
                           options={StatusActive}
                           className="select"
                           defaultValue={StatusActive[0]}
@@ -941,7 +941,7 @@ const Packages = () => {
                       <label className="form-label">
                         Plan Type<span className="text-danger"> *</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={PlanType}
                         className="select"
                         defaultValue={PlanType[1]}
@@ -953,7 +953,7 @@ const Packages = () => {
                       <label className="form-label">
                         Plan Position<span className="text-danger"> *</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={Plan_Position}
                         className="select"
                         defaultValue={Plan_Position[1]}
@@ -964,8 +964,8 @@ const Packages = () => {
                     <div className="mb-3 ">
                       <label className="form-label">
                         Plan Currency<span className="text-danger"> *</span>
-                      </label>
-                      <CommonSelect
+                      </label> 
+                      <CommonSelect name=" "
                         options={Plan_Currency}
                         className="select"
                         defaultValue={Plan_Currency[1]}
@@ -983,7 +983,7 @@ const Packages = () => {
                           Set 0 for free
                         </span>
                       </div>
-                      <CommonSelect
+                      <CommonSelect name=" "
                         options={Plan_Fixed}
                         className="select"
                         defaultValue={Plan_Fixed[1]}
@@ -996,7 +996,7 @@ const Packages = () => {
                         Discount Type<span className="text-danger"> *</span>
                       </label>
                       <div className="pass-group">
-                        <CommonSelect
+                        <CommonSelect name=" "
                           options={Plan_Fixed}
                           className="select"
                           defaultValue={Plan_Fixed[1]}
@@ -1210,7 +1210,7 @@ const Packages = () => {
                       <div className="d-flex align-items-center mb-3">
                         <div className="flex-fill">
                           <label className="form-label">Trial Days</label>
-                          <CommonSelect
+                          <CommonSelect name=" "
                             options={Trial_Days}
                             className="select"
                             defaultValue={Trial_Days[1]}
@@ -1223,7 +1223,7 @@ const Packages = () => {
                         <label className="form-label">
                           Status<span className="text-danger"> *</span>
                         </label>
-                        <CommonSelect
+                        <CommonSelect name=" "
                           options={StatusActive}
                           className="select"
                           defaultValue={StatusActive[1]}

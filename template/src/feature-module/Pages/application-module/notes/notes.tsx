@@ -2443,6 +2443,7 @@ const Notes = () => {
                       <div className="mb-3">
                         <label className="form-label">Assignee</label>
                         <CommonSelect
+                          name=""
                           options={Assignee}
                           className="select"
                           defaultValue={Assignee[0]}
@@ -2462,6 +2463,7 @@ const Notes = () => {
                       <div className="mb-3">
                         <label className="form-label">Priority</label>
                         <CommonSelect
+                            name=""
                           options={Priority}
                           className="select"
                           defaultValue={Priority[0]}
@@ -2489,6 +2491,7 @@ const Notes = () => {
                       <div className="mb-3">
                         <label className="form-label">Status</label>
                         <CommonSelect
+                           name=""
                           options={StatusActive}
                           className="select"
                           defaultValue={StatusActive[0]}
@@ -2553,6 +2556,7 @@ const Notes = () => {
                       <div className="mb-3">
                         <label className="form-label">Assignee</label>
                         <CommonSelect
+                          name=""
                           options={Assignee}
                           className="select"
                           defaultValue={Assignee[0]}
@@ -2572,6 +2576,7 @@ const Notes = () => {
                       <div className="mb-3">
                         <label className="form-label">Priority</label>
                         <CommonSelect
+                           name=""
                           options={Priority}
                           className="select"
                           defaultValue={Priority[0]}
@@ -2599,6 +2604,7 @@ const Notes = () => {
                       <div className="mb-3">
                         <label className="form-label">Status</label>
                         <CommonSelect
+                           name=""
                           options={StatusActive}
                           className="select"
                           defaultValue={StatusActive[0]}

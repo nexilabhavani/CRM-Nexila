@@ -149,7 +149,8 @@ const LeadsDashboard = () => {
                         ))
                           ) : (
                           <tr>
-                          <td colSpan="4" className="text-center text-muted">
+                          <td  className="text-center text-muted"> 
+                            {/* colSpan="4" */}
                            No recent leads found
                           </td>
                           </tr>

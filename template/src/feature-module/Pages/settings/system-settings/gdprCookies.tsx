@@ -88,7 +88,7 @@ const GdprCookies = () => {
                     </div>
                     <div className="col-md-4">
                       <div className="mb-3">
-                         <CommonSelect
+                         <CommonSelect name=" "
                             options={Cookies_Position}
                             className="select"
                             defaultValue={Cookies_Position[0]}

@@ -40,7 +40,7 @@ const ModalInvoice = () => {
                   Add New
                 </Link>
               </div>
-              <CommonSelect
+              <CommonSelect name=""
                             options={Client}
                             className="select"
                             defaultValue={Client[0]}
@@ -75,7 +75,7 @@ const ModalInvoice = () => {
                   Add New
                 </Link>
               </div>
-              <CommonSelect
+              <CommonSelect name=""
                             options={Proposal_Project}
                             className="select"
                             defaultValue={Proposal_Project[0]}
@@ -94,7 +94,7 @@ const ModalInvoice = () => {
                 <label className="form-label">
                   Currency <span className="text-danger">*</span>
                 </label>
-                <CommonSelect
+                <CommonSelect name=""
                             options={Currency}
                             className="select"
                             defaultValue={Currency[0]}
@@ -123,7 +123,7 @@ const ModalInvoice = () => {
             <div className="col-md-6">
               <div className="mb-3">
                 <label className="form-label">Payment Method</label>
-                <CommonSelect
+                <CommonSelect name=""
                             options={Payment_Method}
                             className="select"
                             defaultValue={Payment_Method[0]}
@@ -133,7 +133,7 @@ const ModalInvoice = () => {
             <div className="col-md-6">
               <div className="mb-3">
                 <label className="form-label">Status</label>
-                <CommonSelect
+                <CommonSelect name=""
                             options={Status_Paid}
                             className="select"
                             defaultValue={Status_Paid[0]}
@@ -181,7 +181,7 @@ const ModalInvoice = () => {
                     </td>
                     <td>
                       <div>
-                        <CommonSelect
+                        <CommonSelect name=""
                             options={Zero}
                             className="select"
                             defaultValue={Zero[0]}
@@ -288,7 +288,7 @@ const ModalInvoice = () => {
                   Add New
                 </Link>
               </div>
-              <CommonSelect
+              <CommonSelect name=""
                             options={Client}
                             className="select"
                             defaultValue={Client[1]}
@@ -323,7 +323,7 @@ const ModalInvoice = () => {
                   Add New
                 </Link>
               </div>
-                <CommonSelect
+                <CommonSelect name=""
                             options={Proposal_Project}
                             className="select"
                             defaultValue={Proposal_Project[1]}
@@ -346,7 +346,7 @@ const ModalInvoice = () => {
                 <label className="form-label">
                   Currency <span className="text-danger">*</span>
                 </label>
-                <CommonSelect
+                <CommonSelect name=""
                             options={Currency}
                             className="select"
                             defaultValue={Currency[1]}
@@ -375,7 +375,7 @@ const ModalInvoice = () => {
             <div className="col-md-6">
               <div className="mb-3">
                 <label className="form-label">Payment Method</label>
-                 <CommonSelect
+                 <CommonSelect name=""
                             options={Payment_Method}
                             className="select"
                             defaultValue={Payment_Method[1]}
@@ -385,7 +385,7 @@ const ModalInvoice = () => {
             <div className="col-md-6">
               <div className="mb-3">
                 <label className="form-label">Status</label>
-                <CommonSelect
+                <CommonSelect name=""
                             options={Status_Paid}
                             className="select"
                             defaultValue={Status_Paid[1]}
@@ -444,8 +444,8 @@ const ModalInvoice = () => {
                       </div>
                     </td>
                     <td>
-                      <div>
-                         <CommonSelect
+                      <div> 
+                         <CommonSelect name=""
                             options={Zero}
                             className="select"
                             defaultValue={Zero[1]}

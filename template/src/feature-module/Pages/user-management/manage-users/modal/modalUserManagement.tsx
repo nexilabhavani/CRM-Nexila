@@ -177,7 +177,7 @@ const ModalUserManagement = () => {
                   <label className="form-label">
                     Location <span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=" "
                             options={Location}
                             className="select"
                             defaultValue={Location[0]}
@@ -377,7 +377,7 @@ const ModalUserManagement = () => {
                   <label className="form-label">
                     Location <span className="text-danger">*</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=" "
                             options={Location}
                             className="select"
                             defaultValue={Location[1]}

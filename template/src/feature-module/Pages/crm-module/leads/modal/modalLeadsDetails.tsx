@@ -418,7 +418,7 @@ const ModalLeadsDetails = () => {
                   <div className="col-md-6">
                     <div className="mb-3">
                       <label className="form-label">Owner</label>
-                       <CommonSelect
+                       <CommonSelect name=""
                             options={Owner}
                             className="select"
                             defaultValue={Owner[0]}
@@ -451,7 +451,7 @@ const ModalLeadsDetails = () => {
                           Add New
                         </Link>
                       </div>
-                       <CommonSelect
+                       <CommonSelect name=""
                             options={Deals}
                             className="select"
                             defaultValue={Deals[0]}
@@ -463,7 +463,7 @@ const ModalLeadsDetails = () => {
                       <label className="form-label">
                         Source <span className="text-danger">*</span>
                       </label>
-                       <CommonSelect
+                       <CommonSelect name=""
                             options={Source}
                             className="select"
                             defaultValue={Source[0]}
@@ -475,7 +475,7 @@ const ModalLeadsDetails = () => {
                       <label className="form-label">
                         Industry <span className="text-danger">*</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=""
                             options={Industry}
                             className="select"
                             defaultValue={Industry[0]}
@@ -500,7 +500,7 @@ const ModalLeadsDetails = () => {
                       <label className="form-label">
                         Currency <span className="text-danger">*</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=""
                             options={Currency}
                             className="select"
                             defaultValue={Currency[0]}
@@ -512,7 +512,7 @@ const ModalLeadsDetails = () => {
                       <label className="form-label">
                         Language <span className="text-danger">*</span>
                       </label>
-                     <CommonSelect
+                     <CommonSelect name=""
                             options={Language}
                             className="select"
                             defaultValue={Language[0]}
@@ -567,7 +567,7 @@ const ModalLeadsDetails = () => {
                   <div className="col-md-6">
                     <div className="mb-3">
                       <label className="form-label">Country</label>
-                     <CommonSelect
+                     <CommonSelect name=""
                             options={Country}
                             className="select"
                             defaultValue={Country[0]}
@@ -577,7 +577,7 @@ const ModalLeadsDetails = () => {
                   <div className="col-md-6">
                     <div className="mb-3">
                       <label className="form-label">State / Province </label>
-                      <CommonSelect
+                      <CommonSelect name=""
                             options={State}
                             className="select"
                             defaultValue={State[0]}
@@ -587,7 +587,7 @@ const ModalLeadsDetails = () => {
                   <div className="col-md-6">
                     <div className="mb-3 mb-md-0">
                       <label className="form-label">City </label>
-                     <CommonSelect
+                     <CommonSelect name=""
                             options={City}
                             className="select"
                             defaultValue={City[0]}
@@ -802,7 +802,7 @@ const ModalLeadsDetails = () => {
                   Pipeine <span className="text-danger">*</span>
                 </label>
               </div>
-              <CommonSelect
+              <CommonSelect name=""
                             options={Pipeine}
                             className="select"
                             defaultValue={Pipeine[0]}
@@ -814,7 +814,7 @@ const ModalLeadsDetails = () => {
               <label className="form-label">
                 Status <span className="text-danger">*</span>
               </label>
-              <CommonSelect
+              <CommonSelect name=""
                             options={Status_Open}
                             className="select"
                             defaultValue={Status_Open[0]}
@@ -834,7 +834,7 @@ const ModalLeadsDetails = () => {
               <label className="form-label">
                 Currency <span className="text-danger">*</span>
               </label>
-              <CommonSelect
+              <CommonSelect name=""
                             options={Currency}
                             className="select"
                             defaultValue={Currency[0]}
@@ -846,7 +846,7 @@ const ModalLeadsDetails = () => {
               <label className="form-label">
                 Period <span className="text-danger">*</span>
               </label>
-                <CommonSelect
+                <CommonSelect name=""
                             options={Period}
                             className="select"
                             defaultValue={Period[0]}
@@ -934,7 +934,7 @@ const ModalLeadsDetails = () => {
               <label className="form-label">
                 Source <span className="text-danger">*</span>
               </label>
-               <CommonSelect
+               <CommonSelect name=""
                             options={Source}
                             className="select"
                             defaultValue={Source[0]}
@@ -957,7 +957,7 @@ const ModalLeadsDetails = () => {
               <label className="form-label">
                 Priority <span className="text-danger">*</span>
               </label>
-               <CommonSelect
+               <CommonSelect name=""
                             options={Priority}
                             className="select"
                             defaultValue={Priority[0]}
@@ -1107,7 +1107,7 @@ const ModalLeadsDetails = () => {
                       <label className="form-label">
                         Company Name<span className="text-danger ms-1">*</span>
                       </label>
-                      <CommonSelect
+                      <CommonSelect name=""
                             options={Company_Name}
                             className="select"
                             defaultValue={Company_Name[1]}
@@ -1178,8 +1178,8 @@ const ModalLeadsDetails = () => {
                           <i className="ti ti-plus me-1" />
                           Add New
                         </Link>
-                      </div>
-                      <CommonSelect
+                      </div> 
+                      <CommonSelect name=""
                             options={Deals}
                             className="select"
                             defaultValue={Deals[1]}
@@ -1213,7 +1213,7 @@ const ModalLeadsDetails = () => {
                   <div className="col-md-6">
                     <div className="mb-3">
                       <label className="form-label">Owner</label>
-                       <CommonSelect
+                       <CommonSelect name=""
                             options={Owner}
                             className="select"
                             defaultValue={Owner[0]}
@@ -1237,7 +1237,7 @@ const ModalLeadsDetails = () => {
                       <label className="form-label">
                         Source <span className="text-danger">*</span>
                       </label>
-                       <CommonSelect
+                       <CommonSelect name=""
                             options={Source}
                             className="select"
                             defaultValue={Source[1]}
@@ -1249,7 +1249,7 @@ const ModalLeadsDetails = () => {
                       <label className="form-label">
                         Industry <span className="text-danger">*</span>
                       </label>
-                     <CommonSelect
+                     <CommonSelect name=""
                             options={Industry}
                             className="select"
                             defaultValue={Industry[1]}
@@ -1261,7 +1261,7 @@ const ModalLeadsDetails = () => {
                       <label className="form-label">
                         Currency <span className="text-danger">*</span>
                       </label>
-                       <CommonSelect
+                       <CommonSelect name=""
                             options={Currency}
                             className="select"
                             defaultValue={Currency[1]}
@@ -1273,7 +1273,7 @@ const ModalLeadsDetails = () => {
                       <label className="form-label">
                         Language <span className="text-danger">*</span>
                       </label>
-                     <CommonSelect
+                     <CommonSelect name=""
                             options={Language}
                             className="select"
                             defaultValue={Language[1]}
@@ -1330,7 +1330,7 @@ const ModalLeadsDetails = () => {
                   <div className="col-md-6">
                     <div className="mb-3">
                       <label className="form-label">Country</label>
-                     <CommonSelect
+                     <CommonSelect name=""
                             options={Country}
                             className="select"
                             defaultValue={Country[0]}
@@ -1340,7 +1340,7 @@ const ModalLeadsDetails = () => {
                   <div className="col-md-6">
                     <div className="mb-3">
                       <label className="form-label">State / Province </label>
-                       <CommonSelect
+                       <CommonSelect name=""
                             options={State}
                             className="select"
                             defaultValue={State[0]}
@@ -1350,7 +1350,7 @@ const ModalLeadsDetails = () => {
                   <div className="col-md-6">
                     <div className="mb-3 mb-md-0">
                       <label className="form-label">City </label>
-                     <CommonSelect
+                     <CommonSelect name=""
                             options={City}
                             className="select"
                             defaultValue={City[0]}
@@ -1874,7 +1874,7 @@ const ModalLeadsDetails = () => {
                   <label className="form-label">
                     Status <span className="text-danger"> *</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=""
                             options={Status_Busy}
                             className="select"
                             defaultValue={State[0]}
@@ -1948,7 +1948,7 @@ const ModalLeadsDetails = () => {
                   <label className="form-label">
                     Status <span className="text-danger"> *</span>
                   </label>
-                  <CommonSelect
+                  <CommonSelect name=""
                             options={Status_Busy}
                             className="select"
                             defaultValue={Status_Busy[0]}
@@ -2021,7 +2021,7 @@ const ModalLeadsDetails = () => {
             <label className="form-label">
               Account type <span className="text-danger"> *</span>
             </label>
-           <CommonSelect
+           <CommonSelect name=""
                             options={AccountType}
                             className="select"
                             defaultValue={AccountType[0]}
@@ -2144,7 +2144,7 @@ const ModalLeadsDetails = () => {
                           {" "}
                           Deal <span className="text-danger">*</span>
                         </label>
-                         <CommonSelect
+                         <CommonSelect name=""
                             options={Deals}
                             className="select"
                             defaultValue={Deals[0]}
@@ -2156,7 +2156,7 @@ const ModalLeadsDetails = () => {
                         <label className="form-label">
                           Document Type <span className="text-danger">*</span>
                         </label>
-                       <CommonSelect
+                       <CommonSelect name=""
                             options={DocumentType}
                             className="select"
                             defaultValue={DocumentType[0]}
@@ -2168,7 +2168,7 @@ const ModalLeadsDetails = () => {
                         <label className="form-label">
                           Owner <span className="text-danger">*</span>
                         </label>
-                       <CommonSelect
+                       <CommonSelect name=""
                             options={Owner}
                             className="select"
                             defaultValue={Owner[0]}

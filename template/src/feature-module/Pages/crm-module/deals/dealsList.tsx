@@ -83,7 +83,7 @@ const fetchLeads = async () => {
     fetchLeads();
   }, []);
 
-
+const totalDeals = data.length;
 const handleClick = (key: string) => {
   setFilledStars((prev) => ({
     ...prev,
@@ -315,7 +315,7 @@ const handleClick = (key: string) => {
           {/* Page Header */}
           <PageHeader
             title="Demos"
-            // badgeCount={125}
+            badgeCount={totalDeals}
             showModuleTile={false}
             showExport={true}
           />

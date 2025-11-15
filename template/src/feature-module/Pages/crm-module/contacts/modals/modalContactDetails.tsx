@@ -434,6 +434,7 @@ const ModalContactDetails = () => {
                         <div className="mb-3">
                           <label className="form-label">Owner</label>
                           <CommonSelect
+                          name=""
                             options={Owner}
                             className="select"
                             defaultValue={Owner[0]}
@@ -468,6 +469,7 @@ const ModalContactDetails = () => {
                             </Link>
                           </div>
                           <CommonSelect
+                          name=""
                             options={Deals}
                             className="select"
                             defaultValue={Deals[0]}
@@ -480,6 +482,7 @@ const ModalContactDetails = () => {
                             Source <span className="text-danger">*</span>
                           </label>
                           <CommonSelect
+                          name=""
                             options={Source}
                             className="select"
                             defaultValue={Source[0]}
@@ -492,6 +495,7 @@ const ModalContactDetails = () => {
                             Industry <span className="text-danger">*</span>
                           </label>
                           <CommonSelect
+                          name=""
                             options={Industry}
                             className="select"
                             defaultValue={Industry[0]}
@@ -517,6 +521,7 @@ const ModalContactDetails = () => {
                             Currency <span className="text-danger">*</span>
                           </label>
                           <CommonSelect
+                          name=""
                             options={Currency}
                             className="select"
                             defaultValue={Currency[0]}
@@ -529,6 +534,7 @@ const ModalContactDetails = () => {
                             Language <span className="text-danger">*</span>
                           </label>
                           <CommonSelect
+                          name=""
                             options={Language}
                             className="select"
                             defaultValue={Language[0]}
@@ -584,6 +590,7 @@ const ModalContactDetails = () => {
                         <div className="mb-3">
                           <label className="form-label">Country</label>
                           <CommonSelect
+                          name=""
                             options={Country}
                             className="select"
                             defaultValue={Country[0]}
@@ -596,6 +603,7 @@ const ModalContactDetails = () => {
                             State / Province{" "}
                           </label>
                           <CommonSelect
+                          name=""
                             options={State}
                             className="select"
                             defaultValue={State[0]}
@@ -606,6 +614,7 @@ const ModalContactDetails = () => {
                         <div className="mb-3 mb-md-0">
                           <label className="form-label">City </label>
                           <CommonSelect
+                          name=""
                             options={City}
                             className="select"
                             defaultValue={City[0]}
@@ -821,6 +830,7 @@ const ModalContactDetails = () => {
                     </label>
                   </div>
                   <CommonSelect
+                  name=""
                     options={Pipeine}
                     className="select"
                     defaultValue={Pipeine[0]}
@@ -833,6 +843,7 @@ const ModalContactDetails = () => {
                     Status <span className="text-danger">*</span>
                   </label>
                   <CommonSelect
+                  name=""
                     options={Status_Open}
                     className="select"
                     defaultValue={Status_Open[0]}
@@ -853,6 +864,7 @@ const ModalContactDetails = () => {
                     Currency <span className="text-danger">*</span>
                   </label>
                   <CommonSelect
+                  name=""
                     options={Currency}
                     className="select"
                     defaultValue={Currency[0]}
@@ -865,6 +877,7 @@ const ModalContactDetails = () => {
                     Period <span className="text-danger">*</span>
                   </label>
                   <CommonSelect
+                  name=""
                     options={Period}
                     className="select"
                     defaultValue={Period[0]}
@@ -953,6 +966,7 @@ const ModalContactDetails = () => {
                     Source <span className="text-danger">*</span>
                   </label>
                    <CommonSelect
+                   name=""
                             options={Source}
                             className="select"
                             defaultValue={Source[0]}
@@ -977,6 +991,7 @@ const ModalContactDetails = () => {
                     Priority <span className="text-danger">*</span>
                   </label>
                   <CommonSelect
+                  name=""
                             options={Priority}
                             className="select"
                             defaultValue={Priority[0]}
@@ -1128,6 +1143,7 @@ const ModalContactDetails = () => {
                             <span className="text-danger ms-1">*</span>
                           </label>
                            <CommonSelect
+                           name=""
                             options={Company_Name}
                             className="select"
                             defaultValue={Company_Name[1]}
@@ -1202,6 +1218,7 @@ const ModalContactDetails = () => {
                             </Link>
                           </div>
                           <CommonSelect
+                          name=""
                             options={Deals}
                             className="select"
                             defaultValue={Deals[1]}
@@ -1235,6 +1252,7 @@ const ModalContactDetails = () => {
                         <div className="mb-3">
                           <label className="form-label">Owner</label>
                           <CommonSelect
+                          name=""
                             options={Owner}
                             className="select"
                             defaultValue={Owner[1]}
@@ -1260,6 +1278,7 @@ const ModalContactDetails = () => {
                             Source <span className="text-danger">*</span>
                           </label>
                           <CommonSelect
+                          name=""
   options={Source}
   className="select"
   defaultValue={Source[1]}
@@ -1273,6 +1292,7 @@ const ModalContactDetails = () => {
                             Industry <span className="text-danger">*</span>
                           </label>
                           <CommonSelect
+                          name=""
   options={Industry}
   className="select"
   defaultValue={Industry[1]}
@@ -1285,6 +1305,7 @@ const ModalContactDetails = () => {
                             Currency <span className="text-danger">*</span>
                           </label>
                            <CommonSelect
+                           name=""
   options={Currency}
   className="select"
   defaultValue={Currency[1]}
@@ -1297,6 +1318,7 @@ const ModalContactDetails = () => {
                             Language <span className="text-danger">*</span>
                           </label>
                           <CommonSelect
+                          name=""
   options={Language}
   className="select"
   defaultValue={Language[1]}
@@ -1354,6 +1376,7 @@ const ModalContactDetails = () => {
                         <div className="mb-3">
                           <label className="form-label">Country</label>
                           <CommonSelect
+                          name=""
   options={Country}
   className="select"
   defaultValue={Country[1]}
@@ -1366,6 +1389,7 @@ const ModalContactDetails = () => {
                             State / Province{" "}
                           </label>
                           <CommonSelect
+                          name=""
   options={State}
   className="select"
   defaultValue={State[1]}
@@ -1376,6 +1400,7 @@ const ModalContactDetails = () => {
                         <div className="mb-3 mb-md-0">
                           <label className="form-label">City </label>
                            <CommonSelect
+                           name=""
   options={City}
   className="select"
   defaultValue={City[1]}
@@ -1972,6 +1997,7 @@ const ModalContactDetails = () => {
                         Status <span className="text-danger"> *</span>
                       </label>
                       <CommonSelect
+                      name=""
   options={Status_Busy}
   className="select"
   defaultValue={Status_Busy[1]}
@@ -2049,6 +2075,7 @@ const ModalContactDetails = () => {
                         Status <span className="text-danger"> *</span>
                       </label>
                       <CommonSelect
+                      name=""
   options={Status_Busy}
   className="select"
   defaultValue={Status_Busy[1]}
@@ -2125,6 +2152,7 @@ const ModalContactDetails = () => {
                   Account type <span className="text-danger"> *</span>
                 </label>
                  <CommonSelect
+                 name=""
   options={AccountType}
   className="select"
   defaultValue={AccountType[1]}
@@ -2248,6 +2276,7 @@ const ModalContactDetails = () => {
                               Deal <span className="text-danger">*</span>
                             </label>
                             <CommonSelect
+                            name=""
   options={Deals}
   className="select"
   defaultValue={Deals[1]}
@@ -2261,6 +2290,7 @@ const ModalContactDetails = () => {
                               <span className="text-danger">*</span>
                             </label>
                              <CommonSelect
+                             name=""
   options={DocumentType}
   className="select"
   defaultValue={DocumentType[1]}
@@ -2273,6 +2303,7 @@ const ModalContactDetails = () => {
                               Owner <span className="text-danger">*</span>
                             </label>
                             <CommonSelect
+                            name=""
   options={Owner}
   className="select"
   defaultValue={Owner[1]}

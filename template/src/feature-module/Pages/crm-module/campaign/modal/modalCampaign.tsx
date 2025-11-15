@@ -45,6 +45,7 @@ const ModalCampaign = () => {
                   Campaign Type <span className="text-danger">*</span>
                 </label>
                  <CommonSelect
+                 name=""
                             options={Campaign_Type}
                             className="select"
                             defaultValue={Campaign_Type[0]}
@@ -65,6 +66,7 @@ const ModalCampaign = () => {
                   Currency <span className="text-danger">*</span>
                 </label>
                 <CommonSelect
+                          name=""
                             options={Currency}
                             className="select"
                             defaultValue={Currency[0]}
@@ -77,6 +79,7 @@ const ModalCampaign = () => {
                   Period <span className="text-danger">*</span>
                 </label>
                   <CommonSelect
+                  name=""
                             options={Period}
                             className="select"
                             defaultValue={Period[0]}
@@ -239,6 +242,7 @@ const ModalCampaign = () => {
                   Campaign Type <span className="text-danger">*</span>
                 </label>
                 <CommonSelect
+                name=""
                             options={Campaign_Type}
                             className="select"
                             defaultValue={Campaign_Type[1]}
@@ -263,6 +267,7 @@ const ModalCampaign = () => {
                   Currency <span className="text-danger">*</span>
                 </label>
                <CommonSelect
+                      name=""
                             options={Currency}
                             className="select"
                             defaultValue={Currency[1]}
@@ -275,6 +280,7 @@ const ModalCampaign = () => {
                   Period <span className="text-danger">*</span>
                 </label>
                 <CommonSelect
+                          name=""
                             options={Period}
                             className="select"
                             defaultValue={Period[1]}

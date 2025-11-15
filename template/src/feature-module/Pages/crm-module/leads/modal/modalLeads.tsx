@@ -620,6 +620,7 @@ const handleDelete = async () => {
   return (
     <>
       {/* Add lead*/}
+      
       <div
         className="offcanvas offcanvas-end offcanvas-large"
         tabIndex={-1}
@@ -637,7 +638,7 @@ const handleDelete = async () => {
         <form onSubmit={handleSubmit} >
         <div className="offcanvas-body">
             <div className="row">
-              <div className="col-md-12">
+              <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">
                     Lead Name<span className="text-danger">*</span>
@@ -645,6 +646,7 @@ const handleDelete = async () => {
                  <input name="name" value={formData.name} onChange={handleInputChange} className="form-control" required/>
                 </div>
               </div>
+              
               
               {/* <div className="col-md-12">
                 <div className="mb-3">
@@ -795,14 +797,7 @@ const handleDelete = async () => {
                   />
                 </div>
               </div>
-               <div className="col-md-6">
-                <div className="mb-3">
-                  <label className="form-label">
-                    Location<span className="text-danger">*</span>
-                  </label>
-                <input type="text" name="location" placeholder="location" value={formData.location} onChange={handleInputChange} className="form-control" required/>
-                </div>
-              </div>
+              
               
                <div className="col-md-6">
                 <div className="mb-3">
@@ -858,6 +853,14 @@ const handleDelete = async () => {
                     className="select"
                     defaultValue={Leadstatus[0]}
                   />
+                </div>
+              </div>
+               <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Location<span className="text-danger">*</span>
+                  </label>
+                <input type="text" name="location" placeholder="location" value={formData.location} onChange={handleInputChange} className="form-control" required/>
                 </div>
               </div>
               <div className="col-md-6">
@@ -1163,7 +1166,7 @@ const handleDelete = async () => {
          {lead && (
             <form onSubmit={handleSave}>
             <div className="row">
-              <div className="col-md-12">
+              <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">
                     Lead Name<span className="text-danger">*</span>
@@ -1271,15 +1274,7 @@ const handleDelete = async () => {
                   />
                 </div>
               </div>
-               <div className="col-md-6">
-                <div className="mb-3">
-                  <label className="form-label">
-                    Location<span className="text-danger">*</span>
-                  </label>
-                <input type="text" name="location" value={lead.location || ""}
-                onChange={handlechange} className="form-control" required/>
-                </div>
-              </div>
+              
               <div className="col-md-6">
                 <div className="mb-3">
                     <label className="form-label">
@@ -1293,6 +1288,15 @@ const handleDelete = async () => {
                     className="select"
                     
                   />
+                </div>
+              </div>
+               <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Location<span className="text-danger">*</span>
+                  </label>
+                <input type="text" name="location" value={lead.location || ""}
+                onChange={handlechange} className="form-control" required/>
                 </div>
               </div>
                   <div className="col-md-6">

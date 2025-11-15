@@ -306,7 +306,7 @@ const BankAccounts = () => {
                   <label className="form-label">
                     Bank Name<span className="text-danger">*</span>
                   </label>
-                   <CommonSelect
+                   <CommonSelect name=" "
                             options={Bank_Name}
                             className="select"
                             defaultValue={Bank_Name[0]}
@@ -377,7 +377,7 @@ const BankAccounts = () => {
                   <label className="form-label">
                     Bank Name<span className="text-danger">*</span>
                   </label>
-                 <CommonSelect
+                 <CommonSelect name=" "
                             options={Bank_Name}
                             className="select"
                             defaultValue={Bank_Name[0]}

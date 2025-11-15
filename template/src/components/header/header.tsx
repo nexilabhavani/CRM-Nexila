@@ -6,7 +6,7 @@ import { setMobileSidebar } from "../../core/redux/sidebarSlice";
 import { useEffect, useState } from "react";
 import { updateTheme } from "../../core/redux/themeSlice";
 import { all_routes } from "../../routes/all_routes";
-
+import Config from "../../api/authenticationjwt";
 
 const Header = () => {
 
@@ -24,6 +24,15 @@ const Header = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
 };
+
+const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
 
   const [isFullscreen, setIsFullscreen] = useState(false);
   const toggleFullscreen = () => {
@@ -514,19 +523,19 @@ const Header = () => {
                 </span>
               </Link>
               <div className="dropdown-menu dropdown-menu-end dropdown-menu-md p-2">
-                {/* <div className="d-flex align-items-center bg-light rounded-3 p-2 mb-2">
-                  <ImageWithBasePath
+                <div className="d-flex align-items-center bg-light rounded-3 p-2 mb-2">
+                  {/* <ImageWithBasePath
                     src="assets/img/users/user-40.jpg"
                     className="rounded-circle"
                     width={42}
                     height={42}
                     alt=""
-                  />
+                  /> */}
                   <div className="ms-2">
-                    <p className="fw-medium text-dark mb-0">Katherine Brooks</p>
-                    <span className="d-block fs-13">Installer</span>
+                    <p className="fw-medium text-dark mb-0"> {user?.name }</p>
+                    {/* <span className="d-block fs-13">Installer</span> */}
                   </div>
-                </div> */}
+                </div>
                 {/* Item*/}
                 {/* <Link to={route.profile} className="dropdown-item">
                   <i className="ti ti-user-circle me-1 align-middle" />

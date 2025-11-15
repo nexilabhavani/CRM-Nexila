@@ -254,6 +254,7 @@ const ModalActivities=() => {
                 <div className="mb-3 w-100">
                   <label className="form-label">&nbsp;</label>
                   <CommonSelect
+                    name=""
                     options={BeforeDue}
                     className="select"
                     defaultValue={BeforeDue[0]}
@@ -271,6 +272,7 @@ const ModalActivities=() => {
                   Owner <span className="text-danger">*</span>
                 </label>
                 <CommonSelect
+                  name=""
                     options={Owner}
                     className="select"
                     defaultValue={Owner[0]}
@@ -311,6 +313,7 @@ const ModalActivities=() => {
                   </Link>
                 </div>
                 <CommonSelect
+                  name=""
                     options={Deals}
                     className="select"
                     defaultValue={Deals[0]}
@@ -330,6 +333,7 @@ const ModalActivities=() => {
                   </Link>
                 </div>
                 <CommonSelect
+                  name=""
                     options={Owner}
                     className="select"
                     defaultValue={Owner[0]}
@@ -349,6 +353,7 @@ const ModalActivities=() => {
                   </Link>
                 </div>
                 <CommonSelect
+                name=""
                     options={Company_Name}
                     className="select"
                     defaultValue={Company_Name[0]}
@@ -540,6 +545,7 @@ const ModalActivities=() => {
                     <div className="mb-3 w-100">
                       <label className="form-label">&nbsp;</label>
                       <CommonSelect
+                      name=""
                         options={BeforeDue}
                         className="select"
                         defaultValue={BeforeDue[0]}
@@ -557,6 +563,7 @@ const ModalActivities=() => {
                       Owner <span className="text-danger">*</span>
                     </label>
                     <CommonSelect
+                    name=""
                         options={Owner}
                         className="select"
                         defaultValue={Owner[0]}
@@ -611,6 +618,7 @@ const ModalActivities=() => {
                       </Link>
                     </div>
                     <CommonSelect
+                    name=""
                         options={Deals}
                         className="select"
                         defaultValue={Deals[0]}
@@ -630,6 +638,7 @@ const ModalActivities=() => {
                       </Link>
                     </div>
                     <CommonSelect
+                    name=""
                         options={Owner}
                         className="select"
                         defaultValue={Owner[0]}
@@ -649,6 +658,7 @@ const ModalActivities=() => {
                       </Link>
                     </div>
                     <CommonSelect
+                    name=""
                         options={Company_Name}
                         className="select"
                         defaultValue={Company_Name[0]}

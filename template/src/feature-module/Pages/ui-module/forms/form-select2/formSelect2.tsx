@@ -187,7 +187,7 @@ const FormSelect2 = () => {
                             Set <code>data-choices</code> attribute to set a
                             default single select.
                           </p>
-                          <CommonSelect
+                          <CommonSelect name=" "
                             options={defaultSingle}
                             className="select"
                             defaultValue={defaultSingle[0]}

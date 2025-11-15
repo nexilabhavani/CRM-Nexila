@@ -49,6 +49,7 @@ const Modal = () => {
                         Event Category <span className="text-danger">*</span>
                       </label>
                       <CommonSelect
+                         name=""
                         options={Event_Category}
                         className="select"
                         defaultValue={Event_Category[0]}
@@ -105,6 +106,7 @@ const Modal = () => {
                         Category Color <span className="text-danger">*</span>
                       </label>
                       <CommonSelect
+                      name=""
                         options={Category_Color}
                         className="select"
                         defaultValue={Category_Color[0]}

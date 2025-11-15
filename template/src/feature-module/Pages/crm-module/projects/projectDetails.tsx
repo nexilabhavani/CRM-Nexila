@@ -520,7 +520,7 @@ const ProjectDetails = () => {
                                           Reminder{" "}
                                           <span className="text-danger">*</span>
                                         </label>
-                                        <CommonSelect
+                                        <CommonSelect name=""
                                           options={Reminder}
                                           className="select"
                                           defaultValue={Reminder[0]}
@@ -533,7 +533,7 @@ const ProjectDetails = () => {
                                           Task Priority{" "}
                                           <span className="text-danger">*</span>
                                         </label>
-                                        <CommonSelect
+                                        <CommonSelect name=""
                                           options={Task_Priority}
                                           className="select"
                                           defaultValue={Task_Priority[0]}
@@ -546,7 +546,7 @@ const ProjectDetails = () => {
                                           Assigned To{" "}
                                           <span className="text-danger">*</span>
                                         </label>
-                                        <CommonSelect
+                                        <CommonSelect name=""
                                           options={Assigned_To}
                                           className="select"
                                           defaultValue={Assigned_To[0]}

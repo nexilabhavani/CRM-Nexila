@@ -300,7 +300,7 @@ const CompanySettings = () => {
                         <div className="col-md-6">
                           <div className="mb-3">
                             <label className="form-label">Country</label>
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={Country}
                               className="select"
                               defaultValue={Country[0]}
@@ -312,7 +312,7 @@ const CompanySettings = () => {
                             <label className="form-label">
                               State / Province
                             </label>
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={State}
                               className="select"
                               defaultValue={State[0]}
@@ -322,7 +322,7 @@ const CompanySettings = () => {
                         <div className="col-lg-6 col-md-6">
                           <div className="mb-3">
                             <label className="form-label">City</label>
-                            <CommonSelect
+                            <CommonSelect name=" "
                               options={City}
                               className="select"
                               defaultValue={City[0]}

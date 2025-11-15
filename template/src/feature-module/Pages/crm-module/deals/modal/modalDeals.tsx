@@ -311,6 +311,7 @@ const options2 = [
                 </Link>
               </div>
               <CommonSelect
+              name=""
                             options={Pipeine}
                             className="select"
                             defaultValue={Pipeine[0]}
@@ -323,6 +324,7 @@ const options2 = [
                 Status <span className="text-danger">*</span>
               </label>
               <CommonSelect
+              name=""
                             options={Status_Open}
                             className="select"
                             defaultValue={Status_Open[0]}
@@ -343,6 +345,7 @@ const options2 = [
                 Currency <span className="text-danger">*</span>
               </label>
                <CommonSelect
+               name=""
                             options={Currency}
                             className="select"
                             defaultValue={Currency[0]}
@@ -355,6 +358,7 @@ const options2 = [
                 Period <span className="text-danger">*</span>
               </label>
               <CommonSelect
+              name=""
                             options={Period}
                             className="select"
                             defaultValue={Period[0]}
@@ -441,6 +445,7 @@ const options2 = [
                 Source <span className="text-danger">*</span>
               </label>
               <CommonSelect
+              name=""
                             options={Source}
                             className="select"
                             defaultValue={Source[0]}
@@ -464,6 +469,7 @@ const options2 = [
                 Priority <span className="text-danger">*</span>
               </label>
               <CommonSelect
+              name=""
                             options={Priority}
                             className="select"
                             defaultValue={Priority[0]}
@@ -549,6 +555,7 @@ const options2 = [
                 </Link>
               </div>
               <CommonSelect
+              name=""
                             options={Pipeine}
                             className="select"
                             defaultValue={Pipeine[1]}
@@ -561,6 +568,7 @@ const options2 = [
                 Status <span className="text-danger">*</span>
               </label>
              <CommonSelect
+             name=""
                             options={Status_Open}
                             className="select"
                             defaultValue={Status_Open[1]}
@@ -585,6 +593,7 @@ const options2 = [
                 Currency <span className="text-danger">*</span>
               </label>
                 <CommonSelect
+                name=""
                             options={Currency}
                             className="select"
                             defaultValue={Currency[1]}
@@ -597,6 +606,7 @@ const options2 = [
                 Period <span className="text-danger">*</span>
               </label>
                 <CommonSelect
+                name=""
                             options={Period}
                             className="select"
                             defaultValue={Period[1]}
@@ -689,6 +699,7 @@ const options2 = [
                 Source <span className="text-danger">*</span>
               </label>
               <CommonSelect
+              name=""
                             options={Source}
                             className="select"
                             defaultValue={Source[1]}
@@ -712,6 +723,7 @@ const options2 = [
                 Priority <span className="text-danger">*</span>
               </label>
               <CommonSelect
+              name=""
                             options={Priority}
                             className="select"
                             defaultValue={Priority[1]}

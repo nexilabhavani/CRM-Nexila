@@ -53,6 +53,7 @@ const ModalEstimation = () => {
                       </Link>
                     </div>
                     <CommonSelect
+                    name=""
                       options={Client}
                       className="select"
                       defaultValue={Client[0]}
@@ -91,7 +92,7 @@ const ModalEstimation = () => {
                         Add New
                       </Link>
                     </div>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Proposal_Project}
                       className="select"
                       defaultValue={Proposal_Project[0]}
@@ -103,7 +104,7 @@ const ModalEstimation = () => {
                     <label className="form-label">
                       Estimate By <span className="text-danger">*</span>
                     </label>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Estimate_By}
                       className="select"
                       defaultValue={Estimate_By[0]}
@@ -123,7 +124,7 @@ const ModalEstimation = () => {
                     <label className="form-label">
                       Currency <span className="text-danger">*</span>
                     </label>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Currency}
                       className="select"
                       defaultValue={Currency[0]}
@@ -155,7 +156,7 @@ const ModalEstimation = () => {
                     <label className="form-label">
                       Status <span className="text-danger">*</span>
                     </label>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Status_Sent}
                       className="select"
                       defaultValue={Status_Sent[0]}
@@ -258,7 +259,7 @@ const ModalEstimation = () => {
                         Add New
                       </Link>
                     </div>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Client}
                       className="select"
                       defaultValue={Client[1]}
@@ -297,7 +298,7 @@ const ModalEstimation = () => {
                         Add New
                       </Link>
                     </div>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Proposal_Project}
                       className="select"
                       defaultValue={Proposal_Project[1]}
@@ -309,7 +310,7 @@ const ModalEstimation = () => {
                     <label className="form-label">
                       Estimate By <span className="text-danger">*</span>
                     </label>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Estimate_By}
                       className="select"
                       defaultValue={Estimate_By[1]}
@@ -329,7 +330,7 @@ const ModalEstimation = () => {
                     <label className="form-label">
                       Currency <span className="text-danger">*</span>
                     </label>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Currency}
                       className="select"
                       defaultValue={Currency[1]}
@@ -361,7 +362,7 @@ const ModalEstimation = () => {
                     <label className="form-label">
                       Status <span className="text-danger">*</span>
                     </label>
-                    <CommonSelect
+                    <CommonSelect name=""
                       options={Status_Sent}
                       className="select"
                       defaultValue={Status_Sent[1]}

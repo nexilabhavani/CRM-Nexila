@@ -23,75 +23,75 @@ export const SidebarData = [
       //     { label: "Project Dashboard", link: route.projectDashboard },
       //   ],
       // },
-      // {
-      //   label: "Applications",
-      //   link:route.chat,
-      //   submenu: true,
-      //   showSubRoute: false,
-      //   icon: "brand-airtable",
-      //   base: "Applications",
-      //   materialicons: "start",
-      //   dot: true,
-      //   submenuItems: [
-      //     { label: "Chat", link: route.chat },
-      //    {
-      //       label: "Calls",
-      //       customSubmenuTwo: true,
-      //       submenu: true,
-      //       showSubRoute: false,
-      //       link: route.calls,
-      //       page1: "video-call",
-      //       page2: "audio-call",
-      //       page3: "call-history",
-      //       base: "calls",
-      //       submenuItems: [
-      //         {
-      //           label: "Video Call",
-      //           link: route.videoCall,
-      //           submenu: false,
-      //           showSubRoute: false,
-      //           base: "video-call",
-      //         },
-      //         {
-      //           label: "Audio Call",
-      //           link: route.audioCall,
-      //           submenu: false,
-      //           showSubRoute: false,
-      //           base: "audio-call",
-      //         },
-      //         {
-      //           label: "Call History",
-      //           link: route.callHistory,
-      //           submenu: false,
-      //           showSubRoute: false,
-      //           base: "call-history",
-      //         },
-      //       ],
-      //     },
-      //     { label: "Calendar", link: route.calendar },
-      //     { label: "Email", link: route.email,
-      //       relatedRoutes: [
-      //         route.emailReply
-      //       ]
-      //      },
-      //     { label: "To Do", link: route.todo,
-      //       relatedRoutes: [
-      //         route.todoList
-      //       ]
-      //      },
-      //     { label: "Notes", link: route.notes },
-      //     { label: "File Manager", link: route.fileManager },
-      //     { label: "Social Feed", link: route.socialfeed },
-      //     { label: "Kanban", link: route.kanbanview },
-      //     {
-      //       label: "Invoices",
-      //       link: route.invoice,
-      //       relatedRoutes: [
-      //         route.invoice_details
-      //       ]
-      //     },
-      //   ],
-      // },
+      {
+        label: "Applications",
+        link:route.chat,
+        submenu: true,
+        showSubRoute: false,
+        icon: "brand-airtable",
+        base: "Applications",
+        materialicons: "start",
+        dot: true,
+        submenuItems: [
+        //   { label: "Chat", link: route.chat },
+        //  {
+        //     label: "Calls",
+        //     customSubmenuTwo: true,
+        //     submenu: true,
+        //     showSubRoute: false,
+        //     link: route.calls,
+        //     page1: "video-call",
+        //     page2: "audio-call",
+        //     page3: "call-history",
+        //     base: "calls",
+        //     submenuItems: [
+        //       {
+        //         label: "Video Call",
+        //         link: route.videoCall,
+        //         submenu: false,
+        //         showSubRoute: false,
+        //         base: "video-call",
+        //       },
+        //       {
+        //         label: "Audio Call",
+        //         link: route.audioCall,
+        //         submenu: false,
+        //         showSubRoute: false,
+        //         base: "audio-call",
+        //       },
+        //       {
+        //         label: "Call History",
+        //         link: route.callHistory,
+        //         submenu: false,
+        //         showSubRoute: false,
+        //         base: "call-history",
+        //       },
+        //     ],
+        //   },
+          // { label: "Calendar", link: route.calendar },
+          // { label: "Email", link: route.email,
+          //   relatedRoutes: [
+          //     route.emailReply
+          //   ]
+          //  },
+          // { label: "To Do", link: route.todo,
+          //   relatedRoutes: [
+          //     route.todoList
+          //   ]
+          //  },
+          // { label: "Notes", link: route.notes },
+          // { label: "File Manager", link: route.fileManager },
+          // { label: "Social Feed", link: route.socialfeed },
+          { label: "Enquire Form", link: route.kanbanview },
+          // {
+          //   label: "Invoices",
+          //   link: route.invoice,
+          //   relatedRoutes: [
+          //     route.invoice_details
+          //   ]
+          // },
+        ],
+      },
       // {
       //   label: "Super Admin",
       //   link:route.superadminDashboard,

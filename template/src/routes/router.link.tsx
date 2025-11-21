@@ -764,7 +764,7 @@ export const publicRoutes = [
     path: route.kanbanview,
     element: <KanbanView />,
     route: Route,
-    meta_title: "Kanban View",
+    meta_title: "Enquiry Form",
   },
   {
     id: "79",
@@ -855,7 +855,7 @@ export const publicRoutes = [
     path: route.dealsList,
     element: <DealsList />,
     route: Route,
-    meta_title: "Deals",
+    meta_title: "Demos",
   },
   {
     id: "91",
@@ -925,7 +925,7 @@ export const publicRoutes = [
     path: route.projectsList,
     element: <ProjectsList />,
     route: Route,
-    meta_title: "Projects",
+    meta_title: "Students",
   },
   {
     id: "101",

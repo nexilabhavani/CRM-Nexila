@@ -26,6 +26,8 @@ demodate: {
       type: Date,
       default: null,
     },
+    joinstatus:{type:String},
+    lookingfor:{type:String},
 
 
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

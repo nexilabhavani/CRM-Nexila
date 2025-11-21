@@ -169,6 +169,18 @@ export const Source = [
   { value: 'BASc', label: 'BASc' },
   { value: 'M.Com', label: 'M.Com' },
 ];
+ export const Joinstatus = [
+    { value: 'Choose', label: 'Choose' },
+    { value: 'Immediately', label: 'Immediately' },
+    { value: 'With in Week', label: 'with in Week' },
+    { value: 'with in Month', label: 'With in Month' },
+    
+  ];
+   export const Lookingfor = [
+    { value: 'Choose', label: 'Choose' },
+    { value: 'Course', label: 'Course' },
+    { value: 'Internship', label: 'Internship' },
+  ];
 
  export const Category = [
     { value: 'Choose', label: 'Choose' },

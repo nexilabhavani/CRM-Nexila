@@ -2,7 +2,8 @@
 const Lead = require("../models/Lead");
 const Deal = require("../models/Deal");
 const Student = require("../models/Student");
-const User = require("../models/User"); 
+const User = require("../models/User");
+const axios = require("axios"); 
 
 // ✅ Create Lead
 exports.createLead = async (req, res) => {
@@ -17,14 +18,84 @@ exports.createLead = async (req, res) => {
 
     await newLead.save();
 
+  //  2️⃣ Prepare WhatsApp Number
+    let phone = newLead.phone; // 🔴 make sure this field exists
+    if (!phone) {
+      return res.status(201).json({
+        success: true,
+        message: "Lead created (No phone to send WhatsApp)",
+        data: newLead,
+      });
+    }
+
+    // Convert to international format
+    const whatsappId = phone.startsWith("91") ? phone : `91${phone}`;
+
+    // 3️⃣ AUTO TRIGGER WhatsApp Message
+    await axios.post(
+      `${process.env.WATI_BASE_URL}/sendTemplateMessage`+
+  `?whatsappNumber=${whatsappId}`,
+      {
+      
+        template_name: "ds_dec13_link",
+        broadcast_name: "auto_lead",
+        parameters: [
+          {
+            name: "name",
+            value: newLead.name,
+          },
+        ],
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.WATI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    .then(res => {
+        console.log("✅ WATI OK", res.data);
+      })
+      .catch(err => {
+        console.log("❌ STATUS:", err.response?.status);
+        console.log("❌ DATA:", err.response?.data);
+      });
+//     axios.post( "https://live-server-1020387.wati.io/api/v2/sendTemplateMessage" +
+//   "?whatsappNumber=919360228893",
+//   {
+   
+//     template_name: "aiml_intern",
+//     broadcast_name: "lead_auto_msg",
+   
+//   },
+//   {
+//     headers: {
+//       Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImluZm9AbmV4aWxhdGVjaG5vbG9naWVzLmNvbSIsIm5hbWVpZCI6ImluZm9AbmV4aWxhdGVjaG5vbG9naWVzLmNvbSIsImVtYWlsIjoiaW5mb0BuZXhpbGF0ZWNobm9sb2dpZXMuY29tIiwiYXV0aF90aW1lIjoiMTIvMTcvMjAyNSAwNTo0NToxMCIsInRlbmFudF9pZCI6IjEwMjAzODciLCJkYl9uYW1lIjoibXQtcHJvZC1UZW5hbnRzIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQURNSU5JU1RSQVRPUiIsImV4cCI6MjUzNDAyMzAwODAwLCJpc3MiOiJDbGFyZV9BSSIsImF1ZCI6IkNsYXJlX0FJIn0.tPp4U8eGCwLz6QG9GuckxeLmEBUHej6mQkoULcUIYs8`,
+//       "Content-Type": "application/json"
+//     }
+//   }
+// )
+// .then(res => {
+//   console.log("✅ WATI OK", res.data);
+// })
+// .catch(err => {
+//   console.log("❌ STATUS:", err.response?.status);
+//   console.log("❌ DATA:", err.response?.data);
+// });
+
+    // 4️⃣ Final Response
     res.status(201).json({
       success: true,
-      message: "Lead created successfully",
+      message: "Lead created & WhatsApp sent automatically",
       data: newLead,
     });
+
   } catch (err) {
-    console.error("❌ Error creating lead:", err.message);
-    res.status(500).json({ success: false, message: err.message });
+    console.error("❌ Error creating lead:", err.response?.data || err.message);
+    res.status(500).json({
+      success: false,
+      message: "Lead created but WhatsApp failed",
+    });
   }
 };
 
@@ -200,7 +271,48 @@ exports.updateLead = async (req, res) => {
 
       console.log("🎓 New Student created");
     }
+     //  2️⃣ Prepare WhatsApp Number
+    let phone = updatedLead.phone; // 🔴 make sure this field exists
+    if (!phone) {
+      return res.status(201).json({
+        success: true,
+        message: "Lead created (No phone to send WhatsApp)",
+        data: updatedLead,
+      });
+    }
 
+    // Convert to international format
+    const whatsappId = phone.startsWith("91") ? phone : `91${phone}`;
+
+    // 3️⃣ AUTO TRIGGER WhatsApp Message
+    await axios.post(
+      `${process.env.WATI_BASE_URL}/sendTemplateMessage`+
+  `?whatsappNumber=${whatsappId}`,
+      {
+      
+        template_name: "ds_dec13_link",
+        broadcast_name: "auto_lead",
+        parameters: [
+          {
+            name: "name",
+            value: updatedLead.name,
+          },
+        ],
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.WATI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    .then(res => {
+        console.log("✅ WATI OK", res.data);
+      })
+      .catch(err => {
+        console.log("❌ STATUS:", err.response?.status);
+        console.log("❌ DATA:", err.response?.data);
+      });
     // ------------------------------------------------------------------
     // 7️⃣ Send Response
     // ------------------------------------------------------------------
@@ -209,6 +321,7 @@ exports.updateLead = async (req, res) => {
       message: "Lead updated and synced successfully",
       lead: updatedLead,
     });
+    
   } catch (err) {
     console.error("❌ Error updating lead:", err);
     return res.status(500).json({

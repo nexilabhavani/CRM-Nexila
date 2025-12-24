@@ -4,18 +4,11 @@ import {
   Assign_From,
   Assign_To,
   Categorys,
-  City,
-  Company_Name,
-  Country,
   Currency,
-  Deals,
   Industry,
-  Language,
   Leadstatus,
-  Owner,
-  Phone,
   Source,
-  State,
+  Lookingfor,
 } from "../../../../../core/json/selectOption";
 import CommonSelect from "../../../../../components/common-select/commonSelect";
 import CommonDatePicker from "../../../../../components/common-datePicker/commonDatePicker";
@@ -42,6 +35,7 @@ interface Lead {
   graduate?: string;
   followdate?:string;
   demodate?:string;
+  lookingfor?:string;
 }
 
 interface ModalLeadsProps {
@@ -51,7 +45,7 @@ interface ModalLeadsProps {
 }
 const ModalLeads: React.FC<ModalLeadsProps> = ({
   selectedLead,
-  actionType,
+  actionType: _actionType = "",
   onUpdate,
 }) => {
 
@@ -123,11 +117,12 @@ const ModalLeads: React.FC<ModalLeadsProps> = ({
     graduate: "",
     followdate: "",
     demodate: "",
+    lookingfor:"",
   });
   const [userList, setUserList] = useState<any[]>([]); 
 
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
 const [formData, setFormData] = useState<Lead>({
     name: "",
     phone: "",
@@ -142,7 +137,8 @@ const [formData, setFormData] = useState<Lead>({
     assignto: "",
     graduate: "",
     followdate: "",
-    demodate: ""
+    demodate: "",
+    lookingfor:""
   });
   //Leadstaus option getting
 useEffect(() => {
@@ -264,6 +260,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         graduate: "",
         followdate:"",
         demodate:"",
+        lookingfor:"",
       
         
       });
@@ -557,8 +554,48 @@ const handleDelete = async () => {
                   />
                 </div>
               </div>
-              
-              
+              <div className="col-md-6">
+                <div className="mb-3">
+                   <div className="d-flex align-items-center justify-content-between">
+            <label className="form-label">
+              Lead Status <span className="text-danger">*</span>
+            </label>
+                  <Link
+              to="#"
+              className="label-add link-primary"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvas_pipeline"
+            >
+              <i className="ti ti-plus me-1" />
+              Add New
+            </Link>
+            </div>
+                  <CommonSelect
+                  name="leadstatus"
+                   value={formData.leadstatus}
+                    onChange={handleSelectChange}
+                     options={leadStatusOptions} 
+                    className="select"
+                    defaultValue={Leadstatus[0]}
+                  />
+                </div>
+              </div>
+               <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Program Looking For <span className="text-danger">*</span>
+                  </label>
+                  <CommonSelect
+                  name="lookingfor"
+                   value={formData.lookingfor}
+                    onChange={handleSelectChange}
+                    options={Lookingfor}
+                    className="select"
+                    defaultValue={Lookingfor[0]}
+                  />
+                </div>
+              </div>
+  
                <div className="col-md-6">
                 <div className="mb-3">
                     <label className="form-label">
@@ -586,32 +623,6 @@ const handleDelete = async () => {
                     options={userList}
                     className="select"
                     defaultValue={Assign_To[0]}
-                  />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="mb-3">
-                   <div className="d-flex align-items-center justify-content-between">
-            <label className="form-label">
-              Lead Status <span className="text-danger">*</span>
-            </label>
-                  <Link
-              to="#"
-              className="label-add link-primary"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvas_pipeline"
-            >
-              <i className="ti ti-plus me-1" />
-              Add New
-            </Link>
-            </div>
-                  <CommonSelect
-                  name="leadstatus"
-                   value={formData.leadstatus}
-                    onChange={handleSelectChange}
-                     options={leadStatusOptions} 
-                    className="select"
-                    defaultValue={Leadstatus[0]}
                   />
                 </div>
               </div>
@@ -644,7 +655,7 @@ const handleDelete = async () => {
               </div>
             </div>
           </div>
-          <div className="col-md-6">
+          {/* <div className="col-md-6">
             <div className="mb-3">
               <label className="form-label">
                 Demo Date <span className="text-danger">*</span>
@@ -664,7 +675,7 @@ const handleDelete = async () => {
 
               </div>
             </div>
-          </div>
+          </div> */}
               
              <div className="col-md-6">
         {/* <div className="mb-3">
@@ -1019,6 +1030,48 @@ const handleDelete = async () => {
                   />
                 </div>
               </div>
+              
+              <div className="col-md-6">
+                <div className="mb-3">
+                    <label className="form-label">
+                  Program Looking For <span className="text-danger">*</span> 
+                  </label>
+                  <CommonSelect
+                  name="category"
+                    value={lead.lookingfor || ""}
+                    onChange={handleselectchange}
+                    options={Lookingfor}
+                    className="select"
+                    
+                  />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="mb-3">
+                   <div className="d-flex align-items-center justify-content-between">
+            <label className="form-label">
+              Lead Status <span className="text-danger">*</span>
+            </label>
+                  <Link
+              to="#"
+              className="label-add link-primary"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvas_pipeline"
+            >
+              <i className="ti ti-plus me-1" />
+              Add New
+            </Link>
+            </div>
+                  <CommonSelect
+                  name="leadstatus"
+                   value={formData.leadstatus}
+                    onChange={handleSelectChange}
+                     options={leadStatusOptions} 
+                    className="select"
+                    defaultValue={Leadstatus[0]}
+                  />
+                </div>
+              </div>
               <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">
@@ -1050,15 +1103,7 @@ const handleDelete = async () => {
                   />
                 </div>
               </div>
-               <div className="col-md-6">
-                <div className="mb-3">
-                  <label className="form-label">
-                    Location<span className="text-danger">*</span>
-                  </label>
-                <input type="text" name="location" value={lead.location || ""}
-                onChange={handlechange} className="form-control" required/>
-                </div>
-              </div>
+              
                   <div className="col-md-6">
             <div className="mb-3">
               <label className="form-label">
@@ -1131,6 +1176,7 @@ const handleDelete = async () => {
                   />
                 </div>
               </div> 
+              
             </div>
             <div className="d-flex align-items-center justify-content-end">
               <button

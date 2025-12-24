@@ -180,6 +180,17 @@ export const Source = [
     { value: 'Choose', label: 'Choose' },
     { value: 'Course', label: 'Course' },
     { value: 'Internship', label: 'Internship' },
+    { value: 'Project Guidance', label: 'Project Guidance' },
+    { value: 'Project with Internship', label: 'Project with Internship' },
+  ];
+     export const Internshipduration = [
+    { value: 'Choose', label: 'Choose' },
+    { value: '15 Days', label: '15 Days' },
+    { value: '21 Days', label: '21 Days' },
+    { value: '30 Days', label: '30 Days' },
+    { value: '60 Days', label: '60 Days' },
+    { value: '90 Days', label: '90 Days' },
+    { value: 'Others', label: 'Others' },
   ];
 
  export const Category = [
@@ -198,6 +209,7 @@ export const Source = [
     { value: 'Hindi', label: 'Hindi' },
 ];
  export const Leadstatus = [
+    { value: 'Choose', label: 'Choose' },
     { value: 'NewLead', label: 'NewLead' },
     { value: 'Follow-Up 1', label: 'Follow-Up 1' },
     { value: 'Follow-Up 2', label: 'Follow-Up 2' },

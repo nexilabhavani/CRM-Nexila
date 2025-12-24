@@ -5,13 +5,14 @@ import {
   Industry,
   Lookingfor,
   Source,
+  Internshipduration,
 } from "../../../../core/json/selectOption";
 import CommonSelect from "../../../../components/common-select/commonSelect";
 
 import { useState,useEffect} from "react";
 import { createLead } from "../../../../api/leadApi";
-import axios from "axios";
-import API_URL from "../../../../api/apiconfig";
+// import axios from "axios";
+// import API_URL from "../../../../api/apiconfig";
 import PageHeader from "../../../../components/page-header/pageHeader";
 
 
@@ -29,7 +30,7 @@ interface Lead {
   graduate?: string;
   joinstatus?:string;
   lookingfor?:string;
-
+  internshipduration?:string;
 
 }
 
@@ -45,7 +46,7 @@ const KanbanView : React.FC<ModalLeadsProps> = ({
    onUpdate = async () => {},
 }) => {
 
-  const [leadStatusOptions, setLeadStatusOptions] = useState([]);
+  // const [leadStatusOptions, setLeadStatusOptions] = useState([]);
  
 
 
@@ -63,41 +64,42 @@ const [formData, setFormData] = useState<Lead>({
     domain: "",
     graduate: "",
     joinstatus:"",
-    lookingfor:""
+    lookingfor:"",
+    internshipduration:"",
   
   });
   //Leadstaus option getting
-useEffect(() => {
-  const fetchLeadStatuses = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`${API_URL}/leadstatus`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+// useEffect(() => {
+//   const fetchLeadStatuses = async () => {
+//     try {
+//       const token = localStorage.getItem("token");
+//       const res = await axios.get(`${API_URL}/leadstatus`, {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
 
-      // Convert backend data to dropdown-friendly format
-      const formatted = res.data.map((item:any) => ({
-        value: item.name,
-        label: item.name,
-      }));
+//       // Convert backend data to dropdown-friendly format
+//       const formatted = res.data.map((item:any) => ({
+//         value: item.name,
+//         label: item.name,
+//       }));
 
-      setLeadStatusOptions(formatted);
-       // 👉 Auto assign first leadstatus as default
-    if (formatted.length > 0) {
-      setFormData((prev) => ({
-        ...prev,
-        leadstatus: formatted[0].value,
-      }));
-    }
-    } catch (err) {
-      console.error("Error fetching lead statuses", err);
-    }
-  };
+//       setLeadStatusOptions(formatted);
+//        // 👉 Auto assign first leadstatus as default
+//     if (formatted.length > 0) {
+//       setFormData((prev) => ({
+//         ...prev,
+//         leadstatus: formatted[0].value,
+//       }));
+//     }
+//     } catch (err) {
+//       console.error("Error fetching lead statuses", err);
+//     }
+//   };
 
-  fetchLeadStatuses();
-}, []);
+//   fetchLeadStatuses();
+// }, []);
 
 
   // ✅ Validate fields
@@ -164,7 +166,8 @@ const handleSubmit = async (e: React.FormEvent) => {
         domain: "",
         graduate: "",
         joinstatus:"",
-        lookingfor:""
+        lookingfor:"",
+        internshipduration:""
       
       
         
@@ -287,6 +290,23 @@ useEffect(() => {
               <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">
+                Looking for <span className="text-danger">*</span>
+                  </label>
+                  <CommonSelect
+                    name="lookingfor"
+                    value={formData.lookingfor}
+                    onChange={handleSelectChange}
+                    options={Lookingfor}
+                    className="select"
+                   
+                  />
+
+                </div>
+              </div>
+              
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
                     Domain <span className="text-danger">*</span>
                   </label>
                   <CommonSelect
@@ -299,8 +319,26 @@ useEffect(() => {
                   />
                 </div>
               </div>
+              {(formData.lookingfor === "Project with Internship" ||
+  formData.lookingfor === "Internship") && (
+  <div className="col-md-6">
+    <div className="mb-3">
+      <label className="form-label">
+        Internship Duration <span className="text-danger">*</span>
+      </label>
+
+      <CommonSelect
+        name="internshipduration"
+        value={formData.internshipduration}
+        onChange={handleSelectChange}
+        options={Internshipduration}
+        className="select"
+      />
+    </div>
+  </div>
+)}
              
-              <div className="col-md-6">
+              {/* <div className="col-md-6">
                 <div className="mb-3">
                    <div className="d-flex align-items-center justify-content-between">
             <label className="form-label">
@@ -317,7 +355,7 @@ useEffect(() => {
                     
                   />
                 </div>
-              </div>
+              </div> */}
               
                <div className="col-md-6">
                 <div className="mb-3">
@@ -342,22 +380,7 @@ useEffect(() => {
 
                 </div>
               </div>
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label className="form-label">
-                Looking for <span className="text-danger">*</span>
-                  </label>
-                  <CommonSelect
-                    name="lookingfor"
-                    value={formData.lookingfor}
-                    onChange={handleSelectChange}
-                    options={Lookingfor}
-                    className="select"
-                   
-                  />
-
-                </div>
-              </div>
+              
             <div className="d-flex align-items-center justify-content-center">
               {/* <button
                 type="button"

@@ -28,6 +28,7 @@ demodate: {
     },
     joinstatus:{type:String},
     lookingfor:{type:String},
+    internshipduration:{type:String},
 
 
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

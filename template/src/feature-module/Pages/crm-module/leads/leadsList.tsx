@@ -6,13 +6,14 @@ import { Link } from "react-router";
 import Datatable from "../../../../components/dataTable";
 // import { LeadsListData } from "../../../../core/json/leadsListData";
 import { all_routes } from "../../../../routes/all_routes";
-import ImageWithBasePath from "../../../../components/imageWithBasePath";
+
 import ModalLeads from "./modal/modalLeads";
-import CommonDatePicker from "../../../../components/common-datePicker/commonDatePicker";
+// import CommonDatePicker from "../../../../components/common-datePicker/commonDatePicker";
 import axios from "axios";
 // 🔹 Define the type for each lead
 import API_URL from "../../../../api/apiconfig";
 import dayjs from "dayjs";
+// import { Lookingfor } from "../../../../core/json/selectOption";
 
 interface Lead {
   _id: string;
@@ -31,12 +32,13 @@ interface Lead {
   createdAt?:string;
   followdate?:string;
   demodate?:string;
+  lookingfor?:string;
 }
 
 const LeadsList = () => {
    const [data, setData] = useState<Lead[]>([]);
   const [searchText, setSearchText] = useState<string>("");
-  const [filledStars, setFilledStars] = useState<Record<string, boolean>>({});
+  // const [filledStars, setFilledStars] = useState<Record<string, boolean>>({});
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [actionType, setActionType] = useState<"edit" | "delete" | null>(null);
 
@@ -47,12 +49,12 @@ const LeadsList = () => {
   //   {}
   // );
 
-  const handleClick = (key: string) => {
-    setFilledStars((prev) => ({
-      ...prev,
-      [key]: !prev[key], // toggle on/off
-    }));
-  };
+  // const handleClick = (key: string) => {
+  //   setFilledStars((prev) => ({
+  //     ...prev,
+  //     [key]: !prev[key], // toggle on/off
+  //   }));
+  // };
   // const data = LeadsListData;
 
   // const parseLeadsResponse = (resData: any): RawLead[] => {
@@ -147,6 +149,7 @@ const LeadsList = () => {
         graduate: lead.graduate || "N/A",
         followdate:lead.followdate,
         demodate:lead.demodate,
+        lookingfor:lead.lookingfor || 'N/A',
         createdAt:lead.createdAt,
         
       }));
@@ -196,7 +199,7 @@ const LeadsList = () => {
     {
       title: "Lead Name",
       dataIndex: "name",
-      render: (text: string, record: Lead) => (
+      render: (text: string) => (
         <h6 className="d-flex align-items-center fs-14 fw-medium mb-0">
           {/* <Link to={all_routes.leadsDetails} className="avatar me-2">
             <ImageWithBasePath
@@ -242,16 +245,22 @@ const LeadsList = () => {
       dataIndex: "phone",
       sorter: (a: Lead, b: Lead) => a.phone.localeCompare(b.phone),
     },
-    {
-      title: "Email",
-      dataIndex: "email",
-      sorter: (a: Lead, b: Lead) => (a.email || "").localeCompare(b.email || ""),
-    },
-    {
-      title: "Category",
-      dataIndex: "category",
+    // {
+    //   title: "Email",
+    //   dataIndex: "email",
+    //   sorter: (a: Lead, b: Lead) => (a.email || "").localeCompare(b.email || ""),
+    // },
+    // {
+    //   title: "Category",
+    //   dataIndex: "category",
+    //   sorter: (a: Lead, b: Lead) =>
+    //     (a.category || "").localeCompare(b.category || ""),
+    // },
+     {
+      title: "Program Looking For",
+      dataIndex: "lookingfor",
       sorter: (a: Lead, b: Lead) =>
-        (a.category || "").localeCompare(b.category || ""),
+        (a.lookingfor || "").localeCompare(b.lookingfor || ""),
     },
     {
       title: "Lead Source",
@@ -259,12 +268,12 @@ const LeadsList = () => {
       sorter: (a: Lead, b: Lead) =>
         (a.leadsource || "").localeCompare(b.leadsource || ""),
     },
-    {
-      title: "College Name",
-      dataIndex: "collegename",
-      sorter: (a: Lead, b: Lead) =>
-        (a.collegename || "").localeCompare(b.collegename || ""),
-    },
+    // {
+    //   title: "College Name",
+    //   dataIndex: "collegename",
+    //   sorter: (a: Lead, b: Lead) =>
+    //     (a.collegename || "").localeCompare(b.collegename || ""),
+    // },
     {
       title: "Graduate",
       dataIndex: "graduate",
@@ -325,13 +334,21 @@ const LeadsList = () => {
     (a.followdate || "").localeCompare(b.followdate || "")
 },
 {
-  title: "Demo Date",
-  dataIndex: "demodate",
+  title: "Created On",
+  dataIndex: "createdAt",
   render: (date: string) =>
     date ? dayjs(date).format("DD-MM-YYYY") : "-",
   sorter: (a: Lead, b: Lead) =>
-    (a.demodate || "").localeCompare(b.demodate || "")
+    (a.createdAt || "").localeCompare(b.createdAt || "")
 },
+// {
+//   title: "Demo Date",
+//   dataIndex: "demodate",
+//   render: (date: string) =>
+//     date ? dayjs(date).format("DD-MM-YYYY") : "-",
+//   sorter: (a: Lead, b: Lead) =>
+//     (a.demodate || "").localeCompare(b.demodate || "")
+// },
     //  {
     //   title: "AssignFrom",
     //   dataIndex: "assignfrom",

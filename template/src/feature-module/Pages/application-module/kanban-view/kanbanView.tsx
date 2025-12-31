@@ -104,7 +104,7 @@ const [formData, setFormData] = useState<Lead>({
 
   // ✅ Validate fields
  const validateForm = () => {
-  const fieldsToIgnore = ["leadstatus"];
+  const fieldsToIgnore = ["leadstatus","internshipduration"];
 
   const missingFields: string[] = [];
 

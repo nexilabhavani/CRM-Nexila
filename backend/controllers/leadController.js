@@ -9,9 +9,14 @@ const axios = require("axios");
 exports.createLead = async (req, res) => {
   try {
     console.log("📥 Creating Lead:", req.body);
+     //  FIX: define data FIRST
+    const data = { ...req.body };
 
+    //  Convert empty strings to null (ObjectId safety)
+    if (!data.assignfrom || data.assignfrom === "") data.assignfrom = null;
+    if (!data.assignto || data.assignto === "") data.assignto = null;
     const newLead = new Lead({
-      ...req.body,
+      ...data,
       createdBy: req.user ? req.user._id : null, 
       // store creator if authenticated
     });

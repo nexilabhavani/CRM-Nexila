@@ -9,6 +9,7 @@ import {
   Leadstatus,
   Source,
   Lookingfor,
+  Internshipduration,
 } from "../../../../../core/json/selectOption";
 import CommonSelect from "../../../../../components/common-select/commonSelect";
 import CommonDatePicker from "../../../../../components/common-datePicker/commonDatePicker";
@@ -36,6 +37,7 @@ interface Lead {
   followdate?:string;
   demodate?:string;
   lookingfor?:string;
+  internshipduration?:string;
 }
 
 interface ModalLeadsProps {
@@ -118,6 +120,7 @@ const ModalLeads: React.FC<ModalLeadsProps> = ({
     followdate: "",
     demodate: "",
     lookingfor:"",
+    internshipduration:"",
   });
   const [userList, setUserList] = useState<any[]>([]); 
 
@@ -138,7 +141,8 @@ const [formData, setFormData] = useState<Lead>({
     graduate: "",
     followdate: "",
     demodate: "",
-    lookingfor:""
+    lookingfor:"",
+    internshipduration:"",
   });
   //Leadstaus option getting
 useEffect(() => {
@@ -194,8 +198,21 @@ useEffect(() => {
 
 
   // ✅ Validate fields
-  const validateForm = () => {
-  const fieldsToIgnore = ["demodate", "followdate"];
+ const validateForm = () => {
+  // Always optional fields
+  const alwaysIgnore = ["demodate", "followdate", "internshipduration"];
+
+  // Conditional logic
+  const isAssignmentRequired =
+    formData.leadstatus === "Demo Scheduled" ||
+    formData.leadstatus === "Student";
+
+  // Conditionally ignore assign fields
+  const conditionalIgnore = isAssignmentRequired
+    ? [] // BOTH required
+    : ["assignto", "assignfrom"]; // BOTH optional
+
+  const fieldsToIgnore = [...alwaysIgnore, ...conditionalIgnore];
 
   const emptyFields = Object.entries(formData).filter(
     ([key, value]) =>
@@ -210,6 +227,7 @@ useEffect(() => {
 
   return true;
 };
+
   // ✅ Handle text inputs
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -261,6 +279,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         followdate:"",
         demodate:"",
         lookingfor:"",
+        internshipduration:"",
       
         
       });
@@ -595,37 +614,6 @@ const handleDelete = async () => {
                   />
                 </div>
               </div>
-  
-               <div className="col-md-6">
-                <div className="mb-3">
-                    <label className="form-label">
-                  Assign From <span className="text-danger">*</span> 
-                  </label>
-                  <CommonSelect
-                  name="assignfrom"
-                   value={formData.assignfrom}
-                    onChange={handleSelectChange}
-                    options={userList}
-                    className="select"
-                    defaultValue={Assign_From[0]}
-                  />
-                </div>
-              </div>
-               <div className="col-md-6">
-                <div className="mb-3">
-                    <label className="form-label">
-                  Assign To<span className="text-danger">*</span> 
-                  </label>
-                  <CommonSelect
-                  name="assignto"
-                   value={formData.assignto}
-                    onChange={handleSelectChange}
-                    options={userList}
-                    className="select"
-                    defaultValue={Assign_To[0]}
-                  />
-                </div>
-              </div>
                <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">
@@ -634,7 +622,27 @@ const handleDelete = async () => {
                 <input type="text" name="location" placeholder="location" value={formData.location} onChange={handleInputChange} className="form-control" required/>
                 </div>
               </div>
-              <div className="col-md-6">
+                 {(formData.lookingfor === "Project with Internship" ||
+                formData.lookingfor === "Internship") && (
+                <div className="col-md-6">
+                  <div className="mb-3">
+                    <label className="form-label">
+                      Internship Duration <span className="text-danger">*</span>
+                    </label>
+              
+                    <CommonSelect
+                      name="internshipduration"
+                      value={formData.internshipduration}
+                      onChange={handleSelectChange}
+                      options={Internshipduration}
+                      className="select"
+                    />
+                  </div>
+                </div>
+              )}
+                {(formData.leadstatus === "Demo Scheduled" ||
+                formData.leadstatus === "Student") && (
+                   <div className="col-md-6">
             <div className="mb-3">
               <label className="form-label">
                 Follow-UP Date <span className="text-danger">*</span>
@@ -655,6 +663,48 @@ const handleDelete = async () => {
               </div>
             </div>
           </div>
+              )}
+                {(formData.leadstatus === "Demo Scheduled" ||
+                formData.leadstatus === "Student") && (
+                   <div className="col-md-6">
+                <div className="mb-3">
+                    <label className="form-label">
+                  Assign From <span className="text-danger">*</span> 
+                  </label>
+                  <CommonSelect
+                  name="assignfrom"
+                   value={formData.assignfrom}
+                    onChange={handleSelectChange}
+                    options={userList}
+                    className="select"
+                    defaultValue={Assign_From[0]}
+                  />
+                </div>
+              </div>
+               
+              )}
+               {(formData.leadstatus === "Demo Scheduled" ||
+                formData.leadstatus === "Student") && (
+                 <div className="col-md-6">
+                <div className="mb-3">
+                    <label className="form-label">
+                  Assign To<span className="text-danger">*</span> 
+                  </label>
+                  <CommonSelect
+                  name="assignto"
+                   value={formData.assignto}
+                    onChange={handleSelectChange}
+                    options={userList}
+                    className="select"
+                    defaultValue={Assign_To[0]}
+                  />
+                </div>
+              </div>
+              )}
+             
+               
+                 
+              
           {/* <div className="col-md-6">
             <div className="mb-3">
               <label className="form-label">
@@ -1052,7 +1102,7 @@ const handleDelete = async () => {
             <label className="form-label">
               Lead Status <span className="text-danger">*</span>
             </label>
-                  <Link
+                  {/* <Link
               to="#"
               className="label-add link-primary"
               data-bs-toggle="offcanvas"
@@ -1060,7 +1110,7 @@ const handleDelete = async () => {
             >
               <i className="ti ti-plus me-1" />
               Add New
-            </Link>
+            </Link> */}
             </div>
                   <CommonSelect
                   name="leadstatus"

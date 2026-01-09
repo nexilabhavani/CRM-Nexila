@@ -18,6 +18,12 @@ const LeadSchema = new mongoose.Schema({
 assignfrom:  { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 assignto:  { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 notes: { type: String },
+ joinstatus:{type:String},
+ lookingfor:{type:String},
+ internshipduration:{type:String},
+  remark:{type:String},
+  domainreason:{type:String},
+  dropreason:{type:String},
 followdate: {
       type: Date,
       default: null,
@@ -26,10 +32,7 @@ demodate: {
       type: Date,
       default: null,
     },
-    joinstatus:{type:String},
-    lookingfor:{type:String},
-    internshipduration:{type:String},
-
+   
 
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   createdAt: { type: Date, default: Date.now },

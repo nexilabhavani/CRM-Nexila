@@ -1,3 +1,4 @@
+
 // controllers/leadController.js
 const Lead = require("../models/Lead");
 const Deal = require("../models/Deal");
@@ -157,186 +158,117 @@ exports.getLead = async (req, res) => {
   }
 };
 
-// ✅ Update Lead
 exports.updateLead = async (req, res) => {
   try {
     const { id } = req.params;
 
-    console.log("✏️ Updating lead with ID:", id);
-    console.log("📦 Incoming data:", req.body);
+    console.log("✏️ Updating lead:", id);
+    console.log("📦 Incoming:", req.body);
 
-    // 1️⃣ Convert names → ObjectId
-    if (req.body.assignfrom && typeof req.body.assignfrom === "string") {
-      const fromUser = await User.findOne({ name: req.body.assignfrom });
-      if (fromUser) req.body.assignfrom = fromUser._id;
+    const payload = { ...req.body };
+
+    // --------------------------------------------------
+    // 1️⃣ CLEAN assignfrom / assignto
+    // --------------------------------------------------
+    const needsAssign =
+      payload.leadstatus === "Demo Scheduled" ||
+      payload.leadstatus === "Student";
+
+    if (!needsAssign) {
+      delete payload.assignfrom;
+      delete payload.assignto;
+    } else {
+      // remove invalid values
+      if (!payload.assignfrom || payload.assignfrom === "N/A") {
+        delete payload.assignfrom;
+      }
+      if (!payload.assignto || payload.assignto === "N/A") {
+        delete payload.assignto;
+      }
+
+      // convert name → ObjectId
+      if (payload.assignfrom && typeof payload.assignfrom === "string") {
+        const fromUser = await User.findOne({ name: payload.assignfrom });
+        if (fromUser) payload.assignfrom = fromUser._id;
+      }
+
+      if (payload.assignto && typeof payload.assignto === "string") {
+        const toUser = await User.findOne({ name: payload.assignto });
+        if (toUser) payload.assignto = toUser._id;
+      }
     }
 
-    if (req.body.assignto && typeof req.body.assignto === "string") {
-      const toUser = await User.findOne({ name: req.body.assignto });
-      if (toUser) req.body.assignto = toUser._id;
-    }
+    // --------------------------------------------------
+    // 2️⃣ DATE NORMALIZATION
+    // --------------------------------------------------
+    payload.followdate = payload.followdate || null;
+    payload.demodate = payload.demodate || null;
 
-    // 2️⃣ Update Lead
-    const updatedLead = await Lead.findByIdAndUpdate(id,  {
-    ...req.body,  // this includes followdate & demodate
-    followdate: req.body.followdate || null,
-    demodate: req.body.demodate || null,
-  }, {
-      new: true,
-      runValidators: true,
-    }).lean();
+    // --------------------------------------------------
+    // 3️⃣ UPDATE LEAD (NOW SAFE)
+    // --------------------------------------------------
+    const updatedLead = await Lead.findByIdAndUpdate(
+      id,
+      payload,
+      { new: true, runValidators: true }
+    ).lean();
 
     if (!updatedLead) {
       return res.status(404).json({ success: false, message: "Lead not found" });
     }
 
-    console.log("✅ Lead updated:", updatedLead);
+    console.log("✅ Lead updated");
 
-    // ------------------------------------------------------------------
-    // 3️⃣ SYNC changes to Deal (if exists)
-    // ------------------------------------------------------------------
+    // --------------------------------------------------
+    // 4️⃣ SYNC DEAL
+    // --------------------------------------------------
     const existingDeal = await Deal.findOne({ leadId: updatedLead._id });
-
     if (existingDeal) {
       await Deal.findOneAndUpdate(
         { leadId: updatedLead._id },
-        {
-          name: updatedLead.name,
-          phone: updatedLead.phone,
-          email: updatedLead.email,
-          domain: updatedLead.domain,
-          category: updatedLead.category,
-          leadsource: updatedLead.leadsource,
-          leadstatus: updatedLead.leadstatus,
-          location: updatedLead.location,
-          assignfrom: updatedLead.assignfrom,
-          assignto: updatedLead.assignto,
-          followdate: updatedLead.followdate,   // ADD THIS
-          demodate: updatedLead.demodate,  
-         
-        },
+        updatedLead,
         { new: true }
       );
-
-      console.log("🔄 Deal synced with updated lead");
     }
 
-    // ------------------------------------------------------------------
-    // 4️⃣ SYNC changes to Student (if exists)
-    // ------------------------------------------------------------------
+    // --------------------------------------------------
+    // 5️⃣ SYNC STUDENT
+    // --------------------------------------------------
     const existingStudent = await Student.findOne({ leadId: updatedLead._id });
-
     if (existingStudent) {
       await Student.findOneAndUpdate(
         { leadId: updatedLead._id },
-        {
-          name: updatedLead.name,
-          phone: updatedLead.phone,
-          email: updatedLead.email,
-          domain: updatedLead.domain,
-          category: updatedLead.category,
-          leadsource: updatedLead.leadsource,
-          leadstatus: updatedLead.leadstatus,
-          location: updatedLead.location,
-          assignfrom: updatedLead.assignfrom,
-          assignto: updatedLead.assignto,
-          followdate: updatedLead.followdate,   // ADD THIS
-          demodate: updatedLead.demodate,  
-        },
+        updatedLead,
         { new: true }
       );
-
-      console.log("🔄 Student synced with updated lead");
     }
 
-    // ------------------------------------------------------------------
-    // 5️⃣ Move to Deal if needed
-    // ------------------------------------------------------------------
+    // --------------------------------------------------
+    // 6️⃣ CREATE DEAL / STUDENT IF NEEDED
+    // --------------------------------------------------
     if (updatedLead.leadstatus === "Demo Scheduled" && !existingDeal) {
-      await Deal.create({
-        ...updatedLead,
-        leadId: updatedLead._id,
-        followdate: updatedLead.followdate,
-        demodate: updatedLead.demodate,
-      });
-
-      console.log("📦 New Deal created");
+      await Deal.create({ ...updatedLead, leadId: updatedLead._id });
     }
 
-    // ------------------------------------------------------------------
-    // 6️⃣ Move to Student if needed
-    // ------------------------------------------------------------------
     if (updatedLead.leadstatus === "Student" && !existingStudent) {
-      await Student.create({
-        ...updatedLead,
-        leadId: updatedLead._id,
-        followdate: updatedLead.followdate,
-        demodate: updatedLead.demodate,
-      });
-
-      console.log("🎓 New Student created");
-    }
-     //  2️⃣ Prepare WhatsApp Number
-    let phone = updatedLead.phone; // 🔴 make sure this field exists
-    if (!phone) {
-      return res.status(201).json({
-        success: true,
-        message: "Lead created (No phone to send WhatsApp)",
-        data: updatedLead,
-      });
+      await Student.create({ ...updatedLead, leadId: updatedLead._id });
     }
 
-    // Convert to international format
-    const whatsappId = phone.startsWith("91") ? phone : `91${phone}`;
-
-    // 3️⃣ AUTO TRIGGER WhatsApp Message
-    await axios.post(
-      `${process.env.WATI_BASE_URL}/sendTemplateMessage`+
-  `?whatsappNumber=${whatsappId}`,
-      {
-      
-        template_name: "ds_dec13_link",
-        broadcast_name: "auto_lead",
-        parameters: [
-          {
-            name: "name",
-            value: updatedLead.name,
-          },
-        ],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.WATI_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-      }
-    )
-    .then(res => {
-        console.log("✅ WATI OK", res.data);
-      })
-      .catch(err => {
-        console.log("❌ STATUS:", err.response?.status);
-        console.log("❌ DATA:", err.response?.data);
-      });
-    // ------------------------------------------------------------------
-    // 7️⃣ Send Response
-    // ------------------------------------------------------------------
     return res.json({
       success: true,
-      message: "Lead updated and synced successfully",
+      message: "Lead updated successfully",
       lead: updatedLead,
     });
-    
+
   } catch (err) {
     console.error("❌ Error updating lead:", err);
     return res.status(500).json({
       success: false,
-      message: "Server error",
-      error: err.message,
+      message: err.message,
     });
   }
 };
-
+                  
 // ✅ Delete Lead
 exports.deleteLead = async (req, res) => {
   try {

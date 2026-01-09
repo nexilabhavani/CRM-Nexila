@@ -64,7 +64,7 @@ const LeadsDetails = () => {
                         <i className="ti ti-lock me-1" />
                         Private
                       </span>
-                      <div className="dropdown">
+                      {/* <div className="dropdown">
                         <Link
                           to="#"
                           className="btn btn-xs btn-success fs-12 py-1 px-2 fw-medium d-inline-flex align-items-center"
@@ -84,7 +84,7 @@ const LeadsDetails = () => {
                             <span>Lost</span>
                           </Link>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>

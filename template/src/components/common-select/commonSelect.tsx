@@ -107,14 +107,16 @@ const CommonSelect: React.FC<SelectProps> = ({
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
   // Sync internal state with parent value
-  useEffect(() => {
+ useEffect(() => {
+  if (options.length > 0) {
     if (value) {
       const match = options.find((opt) => opt.value === value);
       setSelectedOption(match || null);
     } else if (defaultValue) {
       setSelectedOption(defaultValue);
     }
-  }, [value, defaultValue, options]);
+  }
+}, [value, defaultValue, options]);
 
   // Handle selection change
   const handleChange = (option: Option | null) => {

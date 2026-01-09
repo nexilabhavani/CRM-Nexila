@@ -33,6 +33,10 @@ interface Lead {
   followdate?:string;
   demodate?:string;
   lookingfor?:string;
+  domainreason?:string;
+  remark?:string;
+  dropreason?:string;
+  internshipduration?:string;
 }
 
 const LeadsList = () => {
@@ -150,6 +154,10 @@ const LeadsList = () => {
         followdate:lead.followdate,
         demodate:lead.demodate,
         lookingfor:lead.lookingfor || 'N/A',
+        remark:lead.remark || 'New Lead Added',
+        domainreason:lead.domainreason || "N/A",
+        dropreason:lead.dropreason || "N/A",
+        internshipduration:lead.internshipduration || "N/A",
         createdAt:lead.createdAt,
         
       }));

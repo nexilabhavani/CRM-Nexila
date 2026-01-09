@@ -167,7 +167,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         graduate: "",
         joinstatus:"",
         lookingfor:"",
-        internshipduration:""
+        internshipduration:"",
       
       
         

@@ -38,6 +38,9 @@ interface Lead {
   demodate?:string;
   lookingfor?:string;
   internshipduration?:string;
+  dropreason?:string;
+  remark?:string;
+  domainreason?:string;
 }
 
 interface ModalLeadsProps {
@@ -101,7 +104,17 @@ const ModalLeads: React.FC<ModalLeadsProps> = ({
 
   
 
-   
+
+
+const disableFutureAndOldDates = (current: dayjs.Dayjs) => {
+  const today = dayjs().endOf("day");
+  const thirtyDaysAgo = dayjs().subtract(30, "day").startOf("day");
+
+  return (
+    current.isAfter(today) || current.isBefore(thirtyDaysAgo)
+  );
+};
+
 
   const [leadStatusOptions, setLeadStatusOptions] = useState([]);
  const [lead, setLead] = useState<Lead>({
@@ -121,6 +134,9 @@ const ModalLeads: React.FC<ModalLeadsProps> = ({
     demodate: "",
     lookingfor:"",
     internshipduration:"",
+    dropreason:"",
+    domainreason:"",
+    remark:"",
   });
   const [userList, setUserList] = useState<any[]>([]); 
 
@@ -143,6 +159,9 @@ const [formData, setFormData] = useState<Lead>({
     demodate: "",
     lookingfor:"",
     internshipduration:"",
+    dropreason:"",
+    remark:"",
+    domainreason:"",
   });
   //Leadstaus option getting
 useEffect(() => {
@@ -183,8 +202,8 @@ useEffect(() => {
 
       console.log("Fetched users:", res.data);
       const formatted = res.data.map((u: any) => ({
-        label: `${u.name} `,
-        value: u._id,
+       label: u.name,
+       value: u.name,
       }));
       setUserList(formatted);
     } catch (err: any) {
@@ -197,36 +216,78 @@ useEffect(() => {
 
 
 
-  // ✅ Validate fields
- const validateForm = () => {
-  // Always optional fields
-  const alwaysIgnore = ["demodate", "followdate", "internshipduration"];
+//   
+const validateForm = () => {
+  // Always optional fields (base)
+  const alwaysIgnore = [
+    "email",
+    "collegename","remark"
+  ];
 
-  // Conditional logic
+  // Conditions
   const isAssignmentRequired =
     formData.leadstatus === "Demo Scheduled" ||
     formData.leadstatus === "Student";
 
-  // Conditionally ignore assign fields
-  const conditionalIgnore = isAssignmentRequired
-    ? [] // BOTH required
-    : ["assignto", "assignfrom"]; // BOTH optional
+  const isInternship =
+    formData.lookingfor === "Internship";
+
+  const isDemoScheduled =
+    formData.leadstatus === "Demo Scheduled";
+  const isDomainReason= formData.domain ==="Others";
+  const isDropReason=formData.leadstatus === "Drop Out";
+
+  const isFollowUp =
+    (formData.leadstatus === "Follow-Up 1"||formData.leadstatus === "Follow-Up 2" || formData.leadstatus === "Follow-Up 3");
+
+  // Conditionally ignored fields
+  const conditionalIgnore = [
+    ...(isAssignmentRequired ? [] : ["assignto", "assignfrom"]),
+    ...(isInternship ? [] : ["internshipduration"]),
+    ...(isDemoScheduled ? [] : ["demodate"]),
+    ...(isFollowUp ? [] : ["followdate"]),
+    ...(isDropReason?[]:["dropreason"]),
+    ...(isDomainReason?[]:["domainreason"])
+  ];
 
   const fieldsToIgnore = [...alwaysIgnore, ...conditionalIgnore];
 
+  // ❌ EMPTY FIELD VALIDATION
   const emptyFields = Object.entries(formData).filter(
     ([key, value]) =>
       !fieldsToIgnore.includes(key) &&
-      (!value || value.trim?.() === "")
+      (!value || value.toString().trim() === "")
   );
 
   if (emptyFields.length > 0) {
-    console.warn("Missing fields:", emptyFields.map(([key]) => key));
+    alert(`Please fill required fields: ${emptyFields.map(([k]) => k).join(", ")}`);
+    return false;
+  }
+
+  // ❌ MOBILE VALIDATION (10 digits only)
+  if ( formData.phone && !/^[0-9]{10}$/.test(formData.phone)) {
+    alert("Mobile number must be exactly 10 digits");
+    return false;
+  }
+
+  // ❌ NAME VALIDATION (letters only)
+  if (formData.name && !/^[A-Za-z ]+$/.test(formData.name)) {
+    alert("Name should not contain numbers or special characters");
+    return false;
+  }
+
+  // ❌ COLLEGE NAME VALIDATION (only if filled)
+  if (
+    formData.collegename &&
+    !/^[A-Za-z ]+$/.test(formData.collegename)
+  ) {
+    alert("College name should not contain numbers or special characters");
     return false;
   }
 
   return true;
 };
+
 
   // ✅ Handle text inputs
   const handleInputChange = (
@@ -280,8 +341,9 @@ const handleSubmit = async (e: React.FormEvent) => {
         demodate:"",
         lookingfor:"",
         internshipduration:"",
-      
-        
+        dropreason:"",
+        remark:"",
+        domainreason:"",
       });
     } else {
       alert("❌ Failed to store lead: " + (res.message || "Unknown error"));
@@ -298,11 +360,72 @@ useEffect(() => {
 }, [formData]);
 
 
+const editvalidateform = () => {
+  const alwaysIgnore = ["email", "collegename"];
+
+  const isAssignmentRequired =
+    lead.leadstatus === "Demo Scheduled" || lead.leadstatus === "Student";
+
+  const isInternship = lead.lookingfor === "Internship";
+  const isDemoScheduled = lead.leadstatus === "Demo Scheduled";
+  const isDomainReason = lead.domain === "Others";
+  const isDropReason = lead.leadstatus === "Drop Out";
+
+  const isFollowUp =
+   (formData.leadstatus === "Follow-Up 1"||formData.leadstatus === "Follow-Up 2" || formData.leadstatus === "Follow-Up 3");
+
+  const conditionalIgnore = [
+    ...(isAssignmentRequired ? [] : ["assignto", "assignfrom"]),
+    ...(isInternship ? [] : ["internshipduration"]),
+    ...(isDemoScheduled ? [] : ["demodate"]),
+    ...(isFollowUp ? [] : ["followdate"]),
+    ...(isDropReason ? [] : ["dropreason"]),
+    ...(isDomainReason ? [] : ["domainreason"]),
+  ];
+
+  const fieldsToIgnore = [...alwaysIgnore, ...conditionalIgnore];
+
+  // 🔴 REQUIRED FIELD CHECK
+  const emptyFields = Object.entries(lead).filter(
+    ([key, value]) =>
+      !fieldsToIgnore.includes(key) &&
+      (value === null ||
+        value === undefined ||
+        value.toString().trim() === "")
+  );
+
+  if (emptyFields.length > 0) {
+    alert(
+      `Please fill required fields: ${emptyFields
+        .map(([k]) => k)
+        .join(", ")}`
+    );
+    return false;
+  }
+
+  // 🔴 PHONE
+  if (lead.phone && !/^[0-9]{10}$/.test(lead.phone)) {
+    alert("Mobile number must be exactly 10 digits");
+    return false;
+  }
+
+  // 🔴 NAME
+  if (lead.name && !/^[A-Za-z ]+$/.test(lead.name)) {
+    alert("Name should not contain numbers or special characters");
+    return false;
+  }
+
+  
+  return true;
+};
+
+
 // 🟢 Load selectedLead into form
 useEffect(() => {
     if (selectedLead) {
       setLead({
       ...selectedLead,
+      remark: selectedLead.remark || "",
       demodate: selectedLead.demodate
         ? selectedLead.demodate.split("T")[0]
         : "",
@@ -319,6 +442,7 @@ useEffect(() => {
     setLead((prev) => ({ ...prev, [name]: value }));
   };
 
+
   const handleselectchange = (name: string, value: string) => {
   setLead((prev) => ({
     ...prev!,
@@ -326,30 +450,62 @@ useEffect(() => {
   }));
 };
 
-  // ✅ Update handler
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!lead || !lead._id) return;
+ const handleSave = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    try {
-      const token = localStorage.getItem("token");
-      await axios.put(`${API_URL}/leads/${lead._id}`,{
-    ...lead,
-    demodate: lead.demodate || null,
-    followdate: lead.followdate || null,
-  },
-        {
+  // 1️⃣ VALIDATION
+  if (!editvalidateform()) return;
+  if (!lead || !lead._id) return;
+
+  try {
+    const token = localStorage.getItem("token");
+
+    // 2️⃣ CLONE PAYLOAD
+    const payload: any = {
+      ...lead,
+      remark:lead.remark || "New Lead Added",
+      demodate: lead.demodate || null,
+      followdate: lead.followdate || null,
+    };
+
+    // 3️⃣ CLEAN assign fields based on status
+    const needsAssign =
+      payload.leadstatus === "Demo Scheduled" ||
+      payload.leadstatus === "Student";
+
+    if (!needsAssign) {
+      delete payload.assignfrom;
+      delete payload.assignto;
+    } else {
+      // remove invalid values
+      if (!payload.assignfrom || payload.assignfrom === "N/A") {
+        delete payload.assignfrom;
+      }
+      if (!payload.assignto || payload.assignto === "N/A") {
+        delete payload.assignto;
+      }
+    }
+
+    // 4️⃣ API CALL
+    await axios.put(
+      `${API_URL}/leads/${lead._id}`,
+      payload,
+      {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      alert("✅ Lead updated successfully");
-      onUpdate();
-    } catch (err) {
-      alert("❌ Failed to update lead");
-       console.error("❌ Update failed:", err);
-    }
-  };
+      }
+    );
+
+    alert("✅ Lead updated successfully");
+    onUpdate();
+
+  } catch (err) {
+    alert("❌ Failed to update lead");
+    console.error("❌ Update failed:", err);
+  }
+};
+
 
   // ✅ Delete handler
 const handleDelete = async () => {
@@ -485,7 +641,7 @@ const handleDelete = async () => {
                   <label className="form-label">
                     Phone<span className="text-danger">*</span>
                   </label>
-                 <input name="phone" placeholder="Phone" value={formData.phone} onChange={handleInputChange} className="form-control" required/>
+                 <input name="phone" type="tel" placeholder="Phone"  value={formData.phone} onChange={handleInputChange} className="form-control" required/>
               
                 </div>
               </div>
@@ -500,7 +656,7 @@ const handleDelete = async () => {
               value={formData.email}
               onChange={handleInputChange}
               className="form-control"
-              required
+             
             />
                 </div>
               </div>
@@ -525,7 +681,7 @@ const handleDelete = async () => {
                   <label className="form-label">
                     College Name
                   </label>
-                 <input type="text" name="collegename" placeholder="college Name" value={formData.collegename} onChange={handleInputChange} className="form-control" required/>
+                 <input type="text" name="collegename" placeholder="college Name" value={formData.collegename} onChange={handleInputChange} className="form-control" />
                 </div>
               </div>
               <div className="col-md-6">
@@ -599,6 +755,51 @@ const handleDelete = async () => {
                   />
                 </div>
               </div>
+
+              {(formData.leadstatus === "Follow-Up 1" || formData.leadstatus === "Follow-Up 2" || formData.leadstatus === "Follow-Up 3") && (
+                   <div className="col-md-6">
+            <div className="mb-3">
+              <label className="form-label">
+                Follow-UP Date <span className="text-danger">*</span>
+              </label>
+              <div className="input-group w-auto input-group-flat">
+                <CommonDatePicker
+        placeholder="dd/mm/yyyy"
+        format="DD/MM/YYYY"
+        value={formData.followdate ? dayjs(formData.followdate) : null}
+        disabledDate={disableFutureAndOldDates}
+        onChange={(date) =>
+          setFormData((prev) => ({
+            ...prev,
+            followdate: date ? date.format("YYYY-MM-DD") : "",
+          }))
+        }
+      />
+
+              </div>
+            </div>
+          </div>
+              )}
+              {(formData.domain === "Others") &&(
+               <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Enter Domain Name<span className="text-danger">*</span>
+                  </label>
+                 <input name="domainreason" type="text" placeholder="Domain"  value={formData.domainreason} onChange={handleInputChange} className="form-control" required/>
+              
+                </div>
+              </div>)}{(formData.leadstatus==="Drop Out")&&(
+                 <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Enter Drop Reason<span className="text-danger">*</span>
+                  </label>
+                 <input name="dropreason" type="text" placeholder="Drop Reason"  value={formData.dropreason} onChange={handleInputChange} className="form-control" required/>
+              
+                </div>
+              </div>
+              )}
                <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">
@@ -622,6 +823,14 @@ const handleDelete = async () => {
                 <input type="text" name="location" placeholder="location" value={formData.location} onChange={handleInputChange} className="form-control" required/>
                 </div>
               </div>
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Remarks
+                  </label>
+                <input type="text" name="remark" placeholder="Remarks" value={formData.remark} onChange={handleInputChange} className="form-control" />
+                </div>
+              </div>
                  {(formData.lookingfor === "Project with Internship" ||
                 formData.lookingfor === "Internship") && (
                 <div className="col-md-6">
@@ -640,30 +849,8 @@ const handleDelete = async () => {
                   </div>
                 </div>
               )}
-                {(formData.leadstatus === "Demo Scheduled" ||
-                formData.leadstatus === "Student") && (
-                   <div className="col-md-6">
-            <div className="mb-3">
-              <label className="form-label">
-                Follow-UP Date <span className="text-danger">*</span>
-              </label>
-              <div className="input-group w-auto input-group-flat">
-                <CommonDatePicker
-        placeholder="dd/mm/yyyy"
-        format="DD/MM/YYYY"
-        value={formData.followdate ? dayjs(formData.followdate) : null}
-        onChange={(date) =>
-          setFormData((prev) => ({
-            ...prev,
-            followdate: date ? date.format("YYYY-MM-DD") : "",
-          }))
-        }
-      />
-
-              </div>
-            </div>
-          </div>
-              )}
+              
+                
                 {(formData.leadstatus === "Demo Scheduled" ||
                 formData.leadstatus === "Student") && (
                    <div className="col-md-6">
@@ -704,8 +891,9 @@ const handleDelete = async () => {
              
                
                  
-              
-          {/* <div className="col-md-6">
+            {(formData.leadstatus === "Demo Scheduled" ||
+                formData.leadstatus === "Student") && (   
+          <div className="col-md-6">
             <div className="mb-3">
               <label className="form-label">
                 Demo Date <span className="text-danger">*</span>
@@ -715,6 +903,7 @@ const handleDelete = async () => {
         placeholder="dd/mm/yyyy"
         format="DD/MM/YYYY"
         value={formData.demodate ? dayjs(formData.demodate) : null}
+        disabledDate={disableFutureAndOldDates}
         onChange={(date) =>
           setFormData((prev) => ({
             ...prev,
@@ -725,7 +914,8 @@ const handleDelete = async () => {
 
               </div>
             </div>
-          </div> */}
+          </div>
+              )}
               
              <div className="col-md-6">
         {/* <div className="mb-3">
@@ -1065,6 +1255,41 @@ const handleDelete = async () => {
                   />
                 </div>
               </div>
+                <div className="col-md-6">
+                <div className="mb-3">
+                    <label className="form-label">
+                Lead Status<span className="text-danger">*</span> 
+                  </label>
+                  <CommonSelect
+                  name="leadstatus"
+                    value={lead.leadstatus || ""}
+                    onChange={handleselectchange}
+                     options={leadStatusOptions} 
+                    className="select"
+                    
+                  />
+                </div>
+              </div> 
+              {(lead.domain === "Others") &&(
+               <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Enter Domain Name<span className="text-danger">*</span>
+                  </label>
+                 <input name="domainreason" type="text" placeholder="Domain"  value={lead.domainreason} onChange={handlechange} className="form-control" required/>
+              
+                </div>
+              </div>)}{(lead.leadstatus==="Drop Out")&&(
+                 <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Enter Drop Reason<span className="text-danger">*</span>
+                  </label>
+                 <input name="dropreason" type="text" placeholder="Drop Reason"  value={lead.dropreason} onChange={handlechange} className="form-control" required/>
+              
+                </div>
+              </div>
+              )}
               <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">
@@ -1087,7 +1312,7 @@ const handleDelete = async () => {
                   Program Looking For <span className="text-danger">*</span> 
                   </label>
                   <CommonSelect
-                  name="category"
+                  name="lookingfor"
                     value={lead.lookingfor || ""}
                     onChange={handleselectchange}
                     options={Lookingfor}
@@ -1096,106 +1321,45 @@ const handleDelete = async () => {
                   />
                 </div>
               </div>
+               {(lead.lookingfor === "Project with Internship" ||
+                lead.lookingfor === "Internship") && (
+                <div className="col-md-6">
+                  <div className="mb-3">
+                    <label className="form-label">
+                      Internship Duration <span className="text-danger">*</span>
+                    </label>
+                    <CommonSelect
+                      name="internshipduration"
+                      value={lead.internshipduration}
+                      onChange={handleselectchange}
+                      options={Internshipduration}
+                      className="select"
+                    />
+                  </div>
+                </div>
+              )}
+          
               <div className="col-md-6">
                 <div className="mb-3">
-                   <div className="d-flex align-items-center justify-content-between">
-            <label className="form-label">
-              Lead Status <span className="text-danger">*</span>
-            </label>
-                  {/* <Link
-              to="#"
-              className="label-add link-primary"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvas_pipeline"
-            >
-              <i className="ti ti-plus me-1" />
-              Add New
-            </Link> */}
-            </div>
-                  <CommonSelect
-                  name="leadstatus"
-                   value={formData.leadstatus}
-                    onChange={handleSelectChange}
-                     options={leadStatusOptions} 
-                    className="select"
-                    defaultValue={Leadstatus[0]}
-                  />
+                  <label className="form-label">
+                    Location
+                  </label>
+                 <input type="text" name="location"  value={lead.location || ""}
+                onChange={handlechange} className="form-control" required/>
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">
-                    Domain <span className="text-danger">*</span>
+                   Remarks
                   </label>
-                  <CommonSelect
-                  name="domain"
-                    value={lead.domain || ""}
-                    onChange={handleselectchange}
-                    options={Industry}
-                    className="select"
-                    
-                  />
+                 <input type="text" name="remark"  value={lead.remark}
+                onChange={handlechange} className="form-control"/>
                 </div>
               </div>
-              
-              <div className="col-md-6">
-                <div className="mb-3">
-                    <label className="form-label">
-                Lead Status<span className="text-danger">*</span> 
-                  </label>
-                  <CommonSelect
-                  name="leadstatus"
-                    value={lead.leadstatus || ""}
-                    onChange={handleselectchange}
-                     options={leadStatusOptions} 
-                    className="select"
-                    
-                  />
-                </div>
-              </div>
-              
-                  <div className="col-md-6">
-            <div className="mb-3">
-              <label className="form-label">
-                Follow-UP Date <span className="text-danger">*</span>
-              </label>
-              <div className="input-group w-auto input-group-flat">
-                <CommonDatePicker
-        placeholder="dd/mm/yyyy"
-        format="DD/MM/YYYY"
-        value={lead.followdate ? dayjs(lead.followdate) : null}
-        onChange={(date) =>
-          setLead((prev) => ({
-            ...prev,
-            followdate: date ? date.format("YYYY-MM-DD") : "",
-          }))
-        }
-      />
-
-              </div>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <div className="mb-3">
-              <label className="form-label">
-                Demo Date <span className="text-danger">*</span>
-              </label>
-              <div className="input-group w-auto input-group-flat">
-                <CommonDatePicker
-        placeholder="dd/mm/yyyy"
-        format="DD/MM/YYYY"
-        value={lead.demodate ? dayjs(lead.demodate) :  null}
-        onChange={(date) =>
-          setLead((prev) => ({
-            ...prev,
-            demodate: date ? date.format("YYYY-MM-DD") : "",
-          }))
-        }
-      />
-
-              </div>
-            </div>
-          </div>
+            {(lead.leadstatus === "Demo Scheduled" ||
+                lead.leadstatus === "Student") && (
+                  <>
                <div className="col-md-6">
                 <div className="mb-3">
                     <label className="form-label">
@@ -1204,8 +1368,9 @@ const handleDelete = async () => {
                   <CommonSelect
                   name="assignfrom"
                    value={lead.assignfrom || ""}
-                    onChange={handleselectchange}
                     options={userList}
+                    onChange={handleselectchange}
+                  
                     className="select"
                     
                   />
@@ -1225,7 +1390,56 @@ const handleDelete = async () => {
                     
                   />
                 </div>
-              </div> 
+              </div>
+              </>
+                )}
+                {(lead.leadstatus === "Follow-Up 1" || lead.leadstatus === "Follow-Up 2" || lead.leadstatus === "Follow-Up 3") && (
+                  <div className="col-md-6">
+            <div className="mb-3">
+              <label className="form-label">
+                Follow-UP Date <span className="text-danger">*</span>
+              </label>
+              <div className="input-group w-auto input-group-flat">
+                <CommonDatePicker
+        placeholder="dd/mm/yyyy"
+        format="DD/MM/YYYY"
+        value={lead.followdate ? dayjs(lead.followdate) : null}
+        disabledDate={disableFutureAndOldDates}
+        onChange={(date) =>
+          setLead((prev) => ({
+            ...prev,
+            followdate: date ? date.format("YYYY-MM-DD") : "",
+          }))
+        }
+      />
+
+              </div>
+            </div>
+          </div>)}
+          {(lead.leadstatus === "Demo Scheduled")&&(
+            <div className="col-md-6">
+            <div className="mb-3">
+              <label className="form-label">
+                Demo Date <span className="text-danger">*</span>
+              </label>
+              <div className="input-group w-auto input-group-flat">
+                <CommonDatePicker
+        placeholder="dd/mm/yyyy"
+        format="DD/MM/YYYY"
+        value={lead.demodate ? dayjs(lead.demodate) :  null}
+         disabledDate={disableFutureAndOldDates}
+        onChange={(date) =>
+          setLead((prev) => ({
+            ...prev,
+            demodate: date ? date.format("YYYY-MM-DD") : "",
+          }))
+        }
+      />
+
+              </div>
+            </div>
+          </div>
+          )}
               
             </div>
             <div className="d-flex align-items-center justify-content-end">

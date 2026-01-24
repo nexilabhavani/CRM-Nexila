@@ -86,7 +86,7 @@ export interface SelectProps {
   options: Option[];
   defaultValue?: Option;
   className?: string;
-  name: string;
+  name?: string;
   value?: string;
   onChange?: (name: string, value: string) => void;
 }
@@ -120,11 +120,13 @@ const CommonSelect: React.FC<SelectProps> = ({
 
   // Handle selection change
   const handleChange = (option: Option | null) => {
-    setSelectedOption(option);
-    if (onChange && option) {
-      onChange(name, option.value);
-    }
-  };
+  setSelectedOption(option);
+
+  if (onChange && option && name !== undefined) {
+    onChange(name, option.value);
+  }
+};
+
 
   return (
     <Select

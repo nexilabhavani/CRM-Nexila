@@ -32,8 +32,12 @@ demodate: {
       type: Date,
       default: null,
     },
-   
-
+  dateofjoin:{type:Date,default:null},
+  fees:{type:String},
+  feetype:{type:String}, 
+  feepaid:{type:String},
+  pendingfee:{type:String},  
+  noofday:{type:String,default:"0"},
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date }

@@ -1,28 +1,139 @@
 
 // controllers/leadController.js
+const mongoose = require("mongoose");
 const Lead = require("../models/Lead");
 const Deal = require("../models/Deal");
 const Student = require("../models/Student");
 const User = require("../models/User");
 const axios = require("axios"); 
-
+const Studentlog=require("../models/Studentlog");
+const detectChanges = require("../utils/detectChanges");
 // ✅ Create Lead
 exports.createLead = async (req, res) => {
   try {
-    console.log("📥 Creating Lead:", req.body);
-     //  FIX: define data FIRST
+  
+
     const data = { ...req.body };
 
-    //  Convert empty strings to null (ObjectId safety)
-    if (!data.assignfrom || data.assignfrom === "") data.assignfrom = null;
-    if (!data.assignto || data.assignto === "") data.assignto = null;
-    const newLead = new Lead({
-      ...data,
-      createdBy: req.user ? req.user._id : null, 
-      // store creator if authenticated
-    });
+    // ---------------- assignfrom ----------------
+    if (data.assignfrom) {
+      if (mongoose.Types.ObjectId.isValid(data.assignfrom)) {
+        // already ObjectId → keep
+        data.assignfrom = data.assignfrom;
+      } else {
+        // name → convert
+        const user = await User.findOne({ name: data.assignfrom });
+        data.assignfrom = user ? user._id : null;
+      }
+    } else {
+      data.assignfrom = null;
+    }
 
-    await newLead.save();
+    // ---------------- assignto ----------------
+    if (data.assignto) {
+      if (mongoose.Types.ObjectId.isValid(data.assignto)) {
+        data.assignto = data.assignto;
+      } else {
+        const user = await User.findOne({ name: data.assignto });
+        data.assignto = user ? user._id : null;
+      }
+    } else {
+      data.assignto = null;
+    }
+
+    console.log("✅ FINAL DATA:", data);
+  // // 2️⃣ Convert EMPTY / N/A → null (ObjectId safety)
+
+  // if (!data.assignfrom || data.assignfrom === "" || data.assignfrom === "N/A") {
+  //   data.assignfrom = null;
+  // }
+
+  // if (!data.assignto || data.assignto === "" || data.assignto === "N/A") {
+  //   data.assignto = null;
+  // }
+
+
+  // // --------------------------------------------------
+  // // 3️⃣ Convert NAME → ObjectId (User lookup)
+  // // --------------------------------------------------
+  // if (data.assignfrom && typeof data.assignfrom === "string") {
+  //   const fromUser = await User.findOne({ name: data.assignfrom });
+  //   data.assignfrom = fromUser ? fromUser._id : null;
+  // }
+
+  // if (data.assignto && typeof data.assignto === "string") {
+  //   const toUser = await User.findOne({ name: data.assignto });
+  //   data.assignto = toUser ? toUser._id : null;
+  // }
+
+
+  const newLead = new Lead({
+    ...data,
+    createdBy: req.user ? req.user._id : null,
+  });
+
+  await newLead.save();
+  console.log("✅ Lead created:", newLead._id);
+
+  // --------------------------------------------------
+  // 5️⃣ SYNC DEAL ON CREATE
+  // --------------------------------------------------
+  if (newLead.leadstatus === "Demo Scheduled") {
+    await Deal.findOneAndUpdate(
+      { leadId: newLead._id },
+      { ...newLead.toObject(), leadId: newLead._id },
+      { upsert: true, new: true }
+    );
+    console.log("📦 Deal created from Lead");
+  }
+
+  // --------------------------------------------------
+  // 6️⃣ SYNC STUDENT ON CREATE
+  // --------------------------------------------------
+ if (newLead.leadstatus === "Student") {
+  let student = await Student.findOne({ leadid: newLead._id });
+
+  if (!student) {
+    student = await Student.create({
+      name: newLead.name,
+      phone: newLead.phone,
+      email: newLead.email,
+      collegename:newLead.collegename,
+      location: newLead.location,
+      category: newLead.category,
+      leadsource: newLead.leadsource,
+      domain: newLead.domain,
+      graduate: newLead.graduate,
+      leadstatus: newLead.leadstatus,
+      dateofjoin:newLead.dateofjoin,
+      feetype:newLead.feetype,
+      leadid: newLead._id,
+      fees: Number(newLead.fees) || 0,
+      feepaid: Number(newLead.feepaid) || 0,
+      pendingfee:
+      (Number(newLead.fees) || 0) -
+      (Number(newLead.feepaid) || 0),
+      assignto:newLead.assignto,
+      lookingfor:newLead.lookingfor,
+      internshipduration:newLead.internshipduration
+
+    });
+     
+    console.log("student data:",student);
+    // ✅ log creation
+    await Studentlog.create({
+      studentid: student._id,
+      action: "create",
+     
+      source: "lead_create",
+      updatedby: req.user?._id
+    });
+    
+    console.log("Student and student log created");
+  }
+}
+
+
 
   //  2️⃣ Prepare WhatsApp Number
     let phone = newLead.phone; // 🔴 make sure this field exists
@@ -88,6 +199,8 @@ exports.createLead = async (req, res) => {
 //   console.log("❌ STATUS:", err.response?.status);
 //   console.log("❌ DATA:", err.response?.data);
 // });
+
+console.log(data);
 
     // 4️⃣ Final Response
     res.status(201).json({
@@ -170,32 +283,39 @@ exports.updateLead = async (req, res) => {
     // --------------------------------------------------
     // 1️⃣ CLEAN assignfrom / assignto
     // --------------------------------------------------
-    const needsAssign =
-      payload.leadstatus === "Demo Scheduled" ||
-      payload.leadstatus === "Student";
+    // const needsAssign =
+    //   payload.leadstatus === "Demo Scheduled" ||
+    //   payload.leadstatus === "Student";
 
-    if (!needsAssign) {
-      delete payload.assignfrom;
-      delete payload.assignto;
-    } else {
-      // remove invalid values
-      if (!payload.assignfrom || payload.assignfrom === "N/A") {
-        delete payload.assignfrom;
-      }
-      if (!payload.assignto || payload.assignto === "N/A") {
-        delete payload.assignto;
-      }
+    // if (!needsAssign) {
+    //   delete payload.assignfrom;
+    //   delete payload.assignto;
+    // } else {
+    //   // remove invalid values
+    //   if (!payload.assignfrom || payload.assignfrom === "N/A") {
+    //     delete payload.assignfrom;
+    //   }
+    //   if (!payload.assignto || payload.assignto === "N/A") {
+    //     delete payload.assignto;
+    //   }
 
-      // convert name → ObjectId
-      if (payload.assignfrom && typeof payload.assignfrom === "string") {
-        const fromUser = await User.findOne({ name: payload.assignfrom });
-        if (fromUser) payload.assignfrom = fromUser._id;
-      }
+    //   // convert name → ObjectId
+    //   if (payload.assignfrom && typeof payload.assignfrom === "string") {
+    //     const fromUser = await User.findOne({ name: payload.assignfrom });
+    //     if (fromUser) payload.assignfrom = fromUser._id;
+    //   }
 
-      if (payload.assignto && typeof payload.assignto === "string") {
-        const toUser = await User.findOne({ name: payload.assignto });
-        if (toUser) payload.assignto = toUser._id;
-      }
+    //   if (payload.assignto && typeof payload.assignto === "string") {
+    //     const toUser = await User.findOne({ name: payload.assignto });
+    //     if (toUser) payload.assignto = toUser._id;
+    //   }
+    // }
+    if (!payload.assignfrom || !mongoose.Types.ObjectId.isValid(payload.assignfrom)) {
+      payload.assignfrom = null;
+    }
+
+    if (!payload.assignto || !mongoose.Types.ObjectId.isValid(payload.assignto)) {
+      payload.assignto = null;
     }
 
     // --------------------------------------------------
@@ -209,9 +329,13 @@ exports.updateLead = async (req, res) => {
     // --------------------------------------------------
     const updatedLead = await Lead.findByIdAndUpdate(
       id,
-      payload,
+       { $set: payload },
       { new: true, runValidators: true }
-    ).lean();
+    )
+      .populate("assignfrom", "name email role")
+      .populate("assignto", "name email role")
+      .lean();
+
 
     if (!updatedLead) {
       return res.status(404).json({ success: false, message: "Lead not found" });
@@ -234,14 +358,125 @@ exports.updateLead = async (req, res) => {
     // --------------------------------------------------
     // 5️⃣ SYNC STUDENT
     // --------------------------------------------------
-    const existingStudent = await Student.findOne({ leadId: updatedLead._id });
-    if (existingStudent) {
-      await Student.findOneAndUpdate(
-        { leadId: updatedLead._id },
-        updatedLead,
-        { new: true }
-      );
-    }
+    // const existingStudent = await Student.findOne({ leadId: updatedLead._id });
+    // if (existingStudent) {
+    //   await Student.findOneAndUpdate(
+    //     { leadId: updatedLead._id },
+    //     updatedLead,
+    //     { new: true }
+    //   );
+    // }
+
+const existingStudent = await Student.findOne({
+  leadid: updatedLead._id
+});
+
+
+
+// CASE 1: leadstatus → Student (CREATE)
+if (updatedLead.leadstatus === "Student" && !existingStudent) {
+
+  const studentData = {
+    name: updatedLead.name,
+    phone: updatedLead.phone,
+    email: updatedLead.email,
+    collegename: updatedLead.collegename,
+    location: updatedLead.location,
+    category: updatedLead.category,
+    leadsource: updatedLead.leadsource,
+    domain: updatedLead.domain,
+    graduate: updatedLead.graduate,
+    leadstatus: updatedLead.leadstatus,
+
+    lookingfor: updatedLead.lookingfor,
+    internshipduration: updatedLead.internshipduration,
+    noofday: updatedLead.noofday,
+    dateofjoin: updatedLead.dateofjoin,
+    assignto:updatedLead.assignto,
+    feetype: updatedLead.feetype,
+    fees: Number(updatedLead.fees) || 0,
+    feepaid: Number(updatedLead.feepaid),
+    pendingfee:
+      (Number(updatedLead.fees) || 0) -
+      (Number(updatedLead.feepaid) || 0),
+
+    leadid: updatedLead._id
+  };
+
+  const student = await Student.create(studentData);
+  console.log("student data upadte:",student);
+
+  // ✅ CREATE log (oldvalue = null)
+  const changes = Object.keys(studentData).map(key => ({
+    field: key,
+    oldvalue: null,
+    newvalue: studentData[key]
+  }));
+
+  await Studentlog.create({
+    studentid: student._id,
+    action: "create",
+    changes,
+    source: "lead_update",
+    updatedby: req.user?._id
+  });
+}
+
+
+// CASE 2: student already exists (UPDATE)
+
+// if (existingStudent) {
+
+//   const updateData = {
+//     name: updatedLead.name,
+//     phone: updatedLead.phone,
+//     email: updatedLead.email,
+//     collegename: updatedLead.collegename,
+//     location: updatedLead.location,
+//     category: updatedLead.category,
+//     leadsource: updatedLead.leadsource,
+//     domain: updatedLead.domain,
+//     graduate: updatedLead.graduate,
+
+//     lookingfor: updatedLead.lookingfor,
+//     internshipduration: updatedLead.internshipduration,
+//     noofday: updatedLead.noofday,
+//     dateofjoin: updatedLead.dateofjoin,
+
+//     feetype: updatedLead.feetype,
+//     fees: Number(updatedLead.fees) || existingStudent.fees,
+//     feepaid: Number(updatedLead.feepaid) || existingStudent.feepaid
+//   };
+
+//   // 🔹 recalc pending fee in backend
+//   updateData.pendingfee = updateData.fees - updateData.feepaid;
+
+//   // 🔹 detect changes BEFORE update
+//   const changes = detectChanges(existingStudent.toObject(), updateData);
+
+//   const updatedStudent = await Student.findByIdAndUpdate(
+//     existingStudent._id,
+//     updateData,
+//     { new: true }
+//   );
+
+//   // 🔹 log only if changed
+//   if (changes.length > 0) {
+
+//     const feeFields = ["fees", "feepaid", "pendingfee"];
+//     const isPayment =
+//       changes.every(c => feeFields.includes(c.field));
+
+//     await Studentlog.create({
+//       studentid: updatedStudent._id,
+//       action: isPayment ? "payment" : "update",
+//       changes,
+//       source: "lead_update",
+//       updatedby: req.user?._id
+//     });
+//   }
+// }
+
 
     // --------------------------------------------------
     // 6️⃣ CREATE DEAL / STUDENT IF NEEDED
@@ -250,9 +485,9 @@ exports.updateLead = async (req, res) => {
       await Deal.create({ ...updatedLead, leadId: updatedLead._id });
     }
 
-    if (updatedLead.leadstatus === "Student" && !existingStudent) {
-      await Student.create({ ...updatedLead, leadId: updatedLead._id });
-    }
+    // if (updatedLead.leadstatus === "Student" && !existingStudent) {
+    //   await Student.create({ ...updatedLead, leadId: updatedLead._id });
+    // }
 
     return res.json({
       success: true,

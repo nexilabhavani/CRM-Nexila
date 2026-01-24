@@ -3,16 +3,17 @@ import Footer from "../../../../components/footer/footer";
 import PageHeader from "../../../../components/page-header/pageHeader";
 import SearchInput from "../../../../components/dataTable/dataTableSearch";
 import { useState,useEffect } from "react";
-import PredefinedDatePicker from "../../../../components/common-dateRangePicker/PredefinedDatePicker";
-import { ProjectListData } from "../../../../core/json/projectsListData";
-import { all_routes } from "../../../../routes/all_routes";
-import ImageWithBasePath from "../../../../components/imageWithBasePath";
+// import PredefinedDatePicker from "../../../../components/common-dateRangePicker/PredefinedDatePicker";
+// import { ProjectListData } from "../../../../core/json/projectsListData";
+// import { all_routes } from "../../../../routes/all_routes";
+// import ImageWithBasePath from "../../../../components/imageWithBasePath";
 import Datatable from "../../../../components/dataTable";
 import ModalProject from "./modal/modalProject";
-import CommonDatePicker from "../../../../components/common-datePicker/commonDatePicker";
+// import CommonDatePicker from "../../../../components/common-datePicker/commonDatePicker";
 import axios from "axios";
 import API_URL from "../../../../api/apiconfig";
 import dayjs from "dayjs";
+// import { Internshipduration, Lookingfor } from "../../../../core/json/selectOption";
 interface Student {
   _id: string;
   name: string;
@@ -28,12 +29,21 @@ interface Student {
   time?: string;
   followdate?:string;
   demodate?:string;
+  lookingfor?:string;
+  internshipduration?:string,
+  dateofjoin?:string;
+  fees?:string;
+  feetype?:string;
+  feepaid?:string;
+  pendingfee?:string;
+  noofday:string;
   createdAt?: string;
 }
 
 const ProjectsList = () => {
   const [searchText, setSearchText] = useState<string>("");
-
+ const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [actionType, setActionType] = useState<"edit" | null>(null);
   const [data, setData] = useState<Student[]>([]);
 
 const fetchLeads = async () => {
@@ -61,15 +71,24 @@ const fetchLeads = async () => {
       _id: student._id,
       name: student.name || "N/A",
       phone: student.phone || "N/A",
-      leadstatus: student.leadstatus || "Pending",
-      leadsource: student.leadSource || student.leadsource || "N/A",
-      category: student.category || "N/A",
-      location: student.location || "N/A",
+      // leadstatus: student.leadstatus || "Pending",
+      // leadsource: student.leadSource || student.leadsource || "N/A",
+      // category: student.category || "N/A",
+      // location: student.location || "N/A",
       domain: student.domain || "N/A",
       assignfrom: student.assignfrom?.name || "N/A",
       assignto: student.assignto?.name || "N/A",
       followdate:student.followdate,
-      demodate:student.demodate,
+      internshipduration:student.intershipduration || "0",
+      lookingfor:student.lookingfor,
+      noofday:student.noofday || "0",
+      // demodate:student.demodate,
+      dateofjoin:student.dateofjoin,
+      fees:student.fees,
+      feepaid:student.feepaid,
+      pendingfee:student.pendingfee,
+      feetype:student.feetype,
+
       createdAt: student.createdAt,
     }));
 
@@ -84,21 +103,27 @@ useEffect(() => {
   fetchLeads();
 }, []);
 
+// ✅ Edit lead handler
+  const handleEditClick = (student: Student) => {
+    setSelectedStudent(student);
+    setActionType("edit");
+  };
+
 const totalStudents = data.length;
 
   const handleSearch = (value: string) => {
     setSearchText(value);
   };
-  const [filledStars, setFilledStars] = useState<{ [key: string]: boolean }>(
-    {}
-  );
+  // const [filledStars, setFilledStars] = useState<{ [key: string]: boolean }>(
+  //   {}
+  // );
 
-  const handleClick = (key: string) => {
-    setFilledStars((prev) => ({
-      ...prev,
-      [key]: !prev[key], // toggle on/off
-    }));
-  };
+  // const handleClick = (key: string) => {
+  //   setFilledStars((prev) => ({
+  //     ...prev,
+  //     [key]: !prev[key], // toggle on/off
+  //   }));
+  // };
   // const data = ProjectListData;
   const columns = [
     // {
@@ -116,16 +141,16 @@ const totalStudents = data.length;
     //   ),
     //   sorter: (a: any, b: any) => a.Name.length - b.Name.length,
     // },
-    {
-      title: "Students Name",
-            dataIndex: "name",
-            render: (text: string, record: Student) => (
-              <Link to={all_routes.dealsDetails} className="title-name">
-                {text}
-              </Link>
-            ),
-            sorter: (a: Student, b: Student) => a.name.localeCompare(b.name),
-    },
+    // {
+    //   title: "Students Name",
+    //         dataIndex: "name",
+    //         render: (text: string, record: Student) => (
+    //           <Link to={all_routes.dealsDetails} className="title-name">
+    //             {text}
+    //           </Link>
+    //         ),
+    //         sorter: (a: Student, b: Student) => a.name.localeCompare(b.name),
+    // },
     // {
     //   title: "Client",
     //   dataIndex: "Client",
@@ -215,106 +240,85 @@ const totalStudents = data.length;
     //   sorter: (a: any, b: any) => a.Status.length - b.Status.length,
     // },
 
-    // {
-    //   title: "Action",
-    //   dataIndex: "Action",
-    //   render: () => (
-    //     <div className="dropdown table-action">
-    //       <Link
-    //         to="#"
-    //         className="action-icon btn btn-xs shadow btn-icon btn-outline-light"
-    //         data-bs-toggle="dropdown"
-    //         aria-expanded="false"
-    //       >
-    //         <i className="ti ti-dots-vertical" />
-    //       </Link>
-    //       <div className="dropdown-menu dropdown-menu-right">
-    //         <Link
-    //           className="dropdown-item "
-    //           data-bs-toggle="offcanvas"
-    //           data-bs-target="#offcanvas_edit"
-    //           to="#"
-    //         >
-    //           <i className="ti ti-edit text-blue" /> Edit
-    //         </Link>
-    //         <Link
-    //           className="dropdown-item"
-    //           to="#"
-    //           data-bs-toggle="modal"
-    //           data-bs-target="#delete_project"
-    //         >
-    //           <i className="ti ti-trash" /> Delete
-    //         </Link>
-    //         <Link className="dropdown-item" to="#">
-    //           <i className="ti ti-clipboard-copy text-green" /> Clone this
-    //           Project
-    //         </Link>
-    //         <Link className="dropdown-item" to="#">
-    //           <i className="ti ti-printer" /> Print
-    //         </Link>
-    //         <Link className="dropdown-item" to="#">
-    //           <i className="ti ti-subtask" /> Add New Task
-    //         </Link>
-    //       </div>
-    //     </div>
-    //   ),
-    //   sorter: (a: any, b: any) => a.Action.length - b.Action.length,
-    // },
+   {
+      title: "Student Name",
+      dataIndex: "name",
+      sorter: (a: Student, b: Student) => a.name.localeCompare(b.name),
+    },
     {
       title: "Phone",
       dataIndex: "phone",
       sorter: (a: Student, b: Student) => a.phone.localeCompare(b.phone),
     },
-   
-    {
-      title: "Category",
-      dataIndex: "category",
-      sorter: (a: Student, b: Student) =>
-        (a.category || "").localeCompare(b.category || ""),
-    },
-    {
-      title: "Lead Source",
-      dataIndex: "leadsource",
-      sorter: (a: Student, b: Student) =>
-        (a.leadsource || "").localeCompare(b.leadsource || ""),
-    },
-    {
+     {
       title: "Domain",
       dataIndex: "domain",
       sorter: (a: Student, b: Student) =>
         (a.domain || "").localeCompare(b.domain || ""),
     },
-    {
-      title: "Location",
-      dataIndex: "location",
+     {
+      title: "No of Days",
+      dataIndex: "noofday",
+      sorter: (a: Student, b: Student) => a.noofday.localeCompare(b.noofday),
+    },
+      {
+      title: "Date of Joining",
+      dataIndex: "dateofjoin",
+      render: (date: string) =>
+        date ? dayjs(date).format("DD-MM-YYYY") : "-",
       sorter: (a: Student, b: Student) =>
-        (a.location || "").localeCompare(b.location || ""),
+        (a.dateofjoin || "").localeCompare(b.dateofjoin || "")
     },
     {
-      title: "Assigned From",
-      dataIndex: "assignfrom",
+      title: "Fees",
+      dataIndex: "fees",
       sorter: (a: Student, b: Student) =>
-        (a.assignfrom || "").localeCompare(b.assignfrom || ""),
+        (a.fees || "").localeCompare(b.fees || ""),
     },
+ {
+      title: "Pending Fees",
+      dataIndex: "pendingfee",
+      sorter: (a: Student, b: Student) =>
+        (a.pendingfee || "").localeCompare(b.pendingfee || ""),
+    },
+   
+    // {
+    //   title: "Category",
+    //   dataIndex: "category",
+    //   sorter: (a: Student, b: Student) =>
+    //     (a.category || "").localeCompare(b.category || ""),
+    // },
+    // {
+    //   title: "Lead Source",
+    //   dataIndex: "leadsource",
+    //   sorter: (a: Student, b: Student) =>
+    //     (a.leadsource || "").localeCompare(b.leadsource || ""),
+    // },
+   
+    // {
+    //   title: "Location",
+    //   dataIndex: "location",
+    //   sorter: (a: Student, b: Student) =>
+    //     (a.location || "").localeCompare(b.location || ""),
+    // },
+    // {
+    //   title: "Assign From",
+    //   dataIndex: "assignfrom",
+    //   sorter: (a: Student, b: Student) =>
+    //     (a.assignfrom || "").localeCompare(b.assignfrom || ""),
+    // },
     {
-      title: "Assigned To",
+      title: "Trainer",
       dataIndex: "assignto",
       sorter: (a: Student, b: Student) =>
         (a.assignto || "").localeCompare(b.assignto || ""),
     },
-     {
-      title: "Follow-UP Date",
-      dataIndex: "followdate",
-      render: (date: string) =>
-        date ? dayjs(date).format("DD-MM-YYYY") : "-",
-      sorter: (a: Student, b: Student) =>
-        (a.followdate || "").localeCompare(b.followdate || "")
-    },
-    {
-      title: "Lead Status",
-      dataIndex: "leadstatus",
-      render: (text: string) => (
-        <span
+   
+    // {
+    //   title: "Lead Status",
+    //   dataIndex: "leadstatus",
+    //   render: (text: string) => (
+    //     <span
           // className={`badge badge-pill badge-status ${
           //   text === "Demo Sheduled"
           //     ? "bg-success"
@@ -324,21 +328,67 @@ const totalStudents = data.length;
           //     ? "bg-info"
           //     : "bg-danger"
           // }`}
-        >
-          {text}
-        </span>
+    //     >
+    //       {text}
+    //     </span>
+    //   ),
+    //   sorter: (a: Student, b: Student) =>
+    //     (a.leadstatus || "").localeCompare(b.leadstatus || ""),
+    // },
+      // {
+      //     title: "Demo Date",
+      //     dataIndex: "demodate",
+      //     render: (date: string) =>
+      //       date ? dayjs(date).format("DD-MM-YYYY") : "-",
+      //     sorter: (a: Student, b: Student) =>
+      //       (a.demodate || "").localeCompare(b.demodate || "")
+      //   },
+          {
+      title: "Action",
+      dataIndex: "Action",
+      render: (_: any, record: Student) => (
+        <div className="dropdown table-action">
+          <Link
+            to="#"
+            className="action-icon btn btn-xs shadow btn-icon btn-outline-light"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i className="ti ti-dots-vertical" />
+          </Link>
+          <div className="dropdown-menu dropdown-menu-right">
+            <Link
+              className="dropdown-item "
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvas_edit"
+              to="#"
+              onClick={() => handleEditClick(record)}
+            >
+              <i className="ti ti-edit text-blue" /> Edit
+            </Link>
+            <Link
+              className="dropdown-item"
+              to="#"
+              data-bs-toggle="modal"
+              data-bs-target="#delete_project"
+            >
+              <i className="ti ti-trash" /> Update Fee
+            </Link>
+            {/* <Link className="dropdown-item" to="#">
+              <i className="ti ti-clipboard-copy text-green" /> Clone this
+              Project
+            </Link>
+            <Link className="dropdown-item" to="#">
+              <i className="ti ti-printer" /> Print
+            </Link>
+            <Link className="dropdown-item" to="#">
+              <i className="ti ti-subtask" /> Add New Task
+            </Link> */}
+          </div>
+        </div>
       ),
-      sorter: (a: Student, b: Student) =>
-        (a.leadstatus || "").localeCompare(b.leadstatus || ""),
+      sorter: (a: any, b: any) => a.Action.length - b.Action.length,
     },
-      {
-          title: "Demo Date",
-          dataIndex: "demodate",
-          render: (date: string) =>
-            date ? dayjs(date).format("DD-MM-YYYY") : "-",
-          sorter: (a: Student, b: Student) =>
-            (a.demodate || "").localeCompare(b.demodate || "")
-        },
   ];
   return (
     <>
@@ -1214,7 +1264,11 @@ const totalStudents = data.length;
       {/* ========================
 			End Page Content
 		========================= */}
-        <ModalProject/>
+        <ModalProject
+         selectedStudent={selectedStudent}
+        actionType={actionType}
+        onUpdate={fetchLeads}
+        />
     </>
   );
 };

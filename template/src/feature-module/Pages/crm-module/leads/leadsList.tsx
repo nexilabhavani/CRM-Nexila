@@ -148,8 +148,8 @@ const LeadsList = () => {
         category: lead.category || "N/A",
         location: lead.location || "N/A",
         domain: lead.domain || "N/A",
-        assignfrom: lead.assignFrom ||  lead.assignfrom?.name || "N/A",
-        assignto: lead.assignTo ||    lead.assignto?.name || "N/A",
+        assignfrom: lead.assignfrom?.name ,
+        assignto: lead.assignto?.name ,
         graduate: lead.graduate || "N/A",
         followdate:lead.followdate,
         demodate:lead.demodate,
@@ -182,10 +182,10 @@ const LeadsList = () => {
     setActionType("edit");
   };
 
-  const handleDeleteClick = (lead: Lead) => {
-    setSelectedLead(lead);
-    setActionType("delete");
-  };
+  // const handleDeleteClick = (lead: Lead) => {
+  //   setSelectedLead(lead);
+  //   setActionType("delete");
+  // };
 
 
   const columns = [
@@ -398,7 +398,7 @@ const LeadsList = () => {
             >
               <i className="ti ti-edit text-blue" /> Edit
             </Link>
-            <Link
+           {/* <Link
               className="dropdown-item"
               to="#"
               data-bs-toggle="modal"
@@ -406,7 +406,7 @@ const LeadsList = () => {
               onClick={() => handleDeleteClick(record)}
             >
               <i className="ti ti-trash" /> Delete
-            </Link>
+            </Link>*/}
             {/* <Link className="dropdown-item" to="#">
               <i className="ti ti-clipboard-copy text-blue-light" /> Clone
             </Link> */}

@@ -226,6 +226,12 @@ export const Source = [
     { value: 'Manju sri', label: 'Manju sri' },
    
 ];
+ export const Feetype = [
+  { value: 'Choose', label: 'Choose' },
+    { value: 'Full Fees', label: 'Full Fees' },
+    { value: 'EMI Option', label: 'EMI Option' },
+   
+];
  export const Assign_To = [
   { value: 'Choose', label: 'Choose' },
     { value: 'Bhavani', label: 'Bhavani' },

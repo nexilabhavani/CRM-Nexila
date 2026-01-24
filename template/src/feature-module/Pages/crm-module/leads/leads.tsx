@@ -1,12 +1,12 @@
-import { Link } from "react-router"
-import Footer from "../../../../components/footer/footer"
-import PageHeader from "../../../../components/page-header/pageHeader"
-import { all_routes } from "../../../../routes/all_routes"
-import { useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+// import { Link } from "react-router"
+// import Footer from "../../../../components/footer/footer"
+// import PageHeader from "../../../../components/page-header/pageHeader"
+// import { all_routes } from "../../../../routes/all_routes"
+// import { useState } from "react";
+// import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import ModalLeads from "./modal/modalLeads";
-import ImageWithBasePath from "../../../../components/imageWithBasePath";
-import CommonDatePicker from "../../../../components/common-datePicker/commonDatePicker";
+// import ImageWithBasePath from "../../../../components/imageWithBasePath";
+// import CommonDatePicker from "../../../../components/common-datePicker/commonDatePicker";
 import LeadsList from "./leadsList";
 
 
@@ -1044,7 +1044,11 @@ const Leads = () => {
   {/* ========================
 			End Page Content
 		========================= */}
-    <ModalLeads/>
+  <ModalLeads
+  selectedLead={null}
+  actionType={null}
+  onUpdate={() => {}}
+/>
 </>
 
   )

@@ -1,8 +1,8 @@
 import { Link } from "react-router";
 import { all_routes } from "../../../../../routes/all_routes";
 import {
-  Assign_From,
-  Assign_To,
+  // Assign_From,
+  // Assign_To,
   Categorys,
   Currency,
   Industry,
@@ -10,6 +10,7 @@ import {
   Source,
   Lookingfor,
   Internshipduration,
+  Feetype,
 } from "../../../../../core/json/selectOption";
 import CommonSelect from "../../../../../components/common-select/commonSelect";
 import CommonDatePicker from "../../../../../components/common-datePicker/commonDatePicker";
@@ -41,6 +42,11 @@ interface Lead {
   dropreason?:string;
   remark?:string;
   domainreason?:string;
+  dateofjoin?:string;
+  fees?:string;
+  feetype?:string;
+  feepaid?:string;
+  pendingfee?:string;
 }
 
 interface ModalLeadsProps {
@@ -51,7 +57,7 @@ interface ModalLeadsProps {
 const ModalLeads: React.FC<ModalLeadsProps> = ({
   selectedLead,
   actionType: _actionType = "",
-  onUpdate,
+  onUpdate, 
 }) => {
 
   // const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -107,12 +113,8 @@ const ModalLeads: React.FC<ModalLeadsProps> = ({
 
 
 const disableFutureAndOldDates = (current: dayjs.Dayjs) => {
-  const today = dayjs().endOf("day");
-  const thirtyDaysAgo = dayjs().subtract(30, "day").startOf("day");
-
-  return (
-    current.isAfter(today) || current.isBefore(thirtyDaysAgo)
-  );
+  const today = dayjs().startOf("day");
+  return current.isBefore(today);
 };
 
 
@@ -137,6 +139,12 @@ const disableFutureAndOldDates = (current: dayjs.Dayjs) => {
     dropreason:"",
     domainreason:"",
     remark:"",
+    dateofjoin:"",
+    fees:"",
+    feepaid:"",
+    feetype:"",
+    pendingfee:"",
+
   });
   const [userList, setUserList] = useState<any[]>([]); 
 
@@ -162,6 +170,11 @@ const [formData, setFormData] = useState<Lead>({
     dropreason:"",
     remark:"",
     domainreason:"",
+    dateofjoin:"",
+    fees:"",
+    feepaid:"",
+    feetype:"",
+    pendingfee:"",
   });
   //Leadstaus option getting
 useEffect(() => {
@@ -203,7 +216,7 @@ useEffect(() => {
       console.log("Fetched users:", res.data);
       const formatted = res.data.map((u: any) => ({
        label: u.name,
-       value: u.name,
+       value: u._id,
       }));
       setUserList(formatted);
     } catch (err: any) {
@@ -221,14 +234,14 @@ const validateForm = () => {
   // Always optional fields (base)
   const alwaysIgnore = [
     "email",
-    "collegename","remark"
+    "collegename","remark","pendingfee"
   ];
 
   // Conditions
   const isAssignmentRequired =
-    formData.leadstatus === "Demo Scheduled" ||
-    formData.leadstatus === "Student";
-
+    formData.leadstatus === "Demo Scheduled" ;
+ 
+  const isAssignmentstudent= formData.leadstatus === "Student";
   const isInternship =
     formData.lookingfor === "Internship";
 
@@ -243,6 +256,7 @@ const validateForm = () => {
   // Conditionally ignored fields
   const conditionalIgnore = [
     ...(isAssignmentRequired ? [] : ["assignto", "assignfrom"]),
+    ...(isAssignmentstudent ?[] :["assignto","fees","feepaid","feetype","dateofjoin"]),
     ...(isInternship ? [] : ["internshipduration"]),
     ...(isDemoScheduled ? [] : ["demodate"]),
     ...(isFollowUp ? [] : ["followdate"]),
@@ -264,27 +278,6 @@ const validateForm = () => {
     return false;
   }
 
-  // ❌ MOBILE VALIDATION (10 digits only)
-  if ( formData.phone && !/^[0-9]{10}$/.test(formData.phone)) {
-    alert("Mobile number must be exactly 10 digits");
-    return false;
-  }
-
-  // ❌ NAME VALIDATION (letters only)
-  if (formData.name && !/^[A-Za-z ]+$/.test(formData.name)) {
-    alert("Name should not contain numbers or special characters");
-    return false;
-  }
-
-  // ❌ COLLEGE NAME VALIDATION (only if filled)
-  if (
-    formData.collegename &&
-    !/^[A-Za-z ]+$/.test(formData.collegename)
-  ) {
-    alert("College name should not contain numbers or special characters");
-    return false;
-  }
-
   return true;
 };
 
@@ -294,6 +287,27 @@ const validateForm = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
     const { name, value } = e.target;
+     if (name === "phone") {
+    if (!/^\d*$/.test(value)) return; // ❌ block letters/symbols
+    if (value.length > 10) return;    // ❌ block >10 digits
+  }
+
+     if (name === "fees" || name==="feepaid" || name==="pendingfee") {
+    if (!/^\d*$/.test(value)) return; // ❌ block letters/symbols
+  }
+  if (name === "feepaid") {
+    const paid = Number(value);
+    const fees = Number(formData.fees) || 0;
+
+    if (paid > fees) {
+      return; // ❌ block input
+    }
+  }
+
+  // 👤 NAME – allow only letters & spaces
+  if (name === "name" || name === "collegename") {
+    if (!/^[A-Za-z ]*$/.test(value)) return; // ❌ block numbers/symbols
+  }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -303,16 +317,38 @@ const validateForm = () => {
 const handleSelectChange = (name: string, value: string) => {
   setFormData((prev) => ({
     ...prev,
-    [name]: value,
+    [name]: value, // ✅ only ObjectId string
   }));
 };
+useEffect(() => {
+  const fees = Number(formData.fees) || 0;
+  const feepaid = Number(formData.feepaid) || 0;
+
+  // ❌ If fee paid is greater than fees, reset feepaid
+  if (feepaid > fees) {
+    setFormData((prev) => ({
+      ...prev,
+      feepaid: fees.toString(),   // clamp to max fees
+      pendingfee: "0",
+    }));
+    return;
+  }
+
+  const pending = fees - feepaid;
+
+  setFormData((prev) => ({
+    ...prev,
+    pendingfee: pending.toString(),
+  }));
+}, [formData.fees, formData.feepaid]);
+
+
 
   // ✅ Submit form
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
   if (!validateForm()) {
-    alert("⚠️ Please fill all required fields.");
     return;
   }
 
@@ -322,6 +358,8 @@ const handleSubmit = async (e: React.FormEvent) => {
     if (res.success) {
       alert("✅ Lead stored successfully!");
       console.log("Created lead:", res);
+      
+
       // 🔹 Immediately refresh the list without page reload
       onUpdate();
       setFormData({
@@ -364,23 +402,25 @@ const editvalidateform = () => {
   const alwaysIgnore = ["email", "collegename"];
 
   const isAssignmentRequired =
-    lead.leadstatus === "Demo Scheduled" || lead.leadstatus === "Student";
-
+    lead.leadstatus === "Demo Scheduled"  ;
+  const isAssignmentstudent= lead.leadstatus === "Student";
   const isInternship = lead.lookingfor === "Internship";
   const isDemoScheduled = lead.leadstatus === "Demo Scheduled";
   const isDomainReason = lead.domain === "Others";
   const isDropReason = lead.leadstatus === "Drop Out";
 
   const isFollowUp =
-   (formData.leadstatus === "Follow-Up 1"||formData.leadstatus === "Follow-Up 2" || formData.leadstatus === "Follow-Up 3");
+   (lead.leadstatus === "Follow-Up 1"||lead.leadstatus === "Follow-Up 2" || lead.leadstatus === "Follow-Up 3");
 
   const conditionalIgnore = [
     ...(isAssignmentRequired ? [] : ["assignto", "assignfrom"]),
+     ...(isAssignmentstudent ?[] :["assignto","fees","feepaid","feetype","dateofjoin"]),
     ...(isInternship ? [] : ["internshipduration"]),
     ...(isDemoScheduled ? [] : ["demodate"]),
     ...(isFollowUp ? [] : ["followdate"]),
     ...(isDropReason ? [] : ["dropreason"]),
     ...(isDomainReason ? [] : ["domainreason"]),
+    
   ];
 
   const fieldsToIgnore = [...alwaysIgnore, ...conditionalIgnore];
@@ -403,23 +443,30 @@ const editvalidateform = () => {
     return false;
   }
 
-  // 🔴 PHONE
-  if (lead.phone && !/^[0-9]{10}$/.test(lead.phone)) {
-    alert("Mobile number must be exactly 10 digits");
-    return false;
-  }
-
-  // 🔴 NAME
-  if (lead.name && !/^[A-Za-z ]+$/.test(lead.name)) {
-    alert("Name should not contain numbers or special characters");
-    return false;
-  }
-
-  
   return true;
 };
 
+useEffect(() => {
+  const fees = Number(lead.fees) || 0;
+  const feepaid = Number(lead.feepaid) || 0;
 
+  // ❌ If fee paid is greater than fees, reset feepaid
+  if (feepaid > fees) {
+    setLead((prev) => ({
+      ...prev,
+      feepaid: fees.toString(),   // clamp to max fees
+      pendingfee: "0",
+    }));
+    return;
+  }
+
+  const pending = fees - feepaid;
+
+  setLead((prev) => ({
+    ...prev,
+    pendingfee: pending.toString(),
+  }));
+}, [lead.fees, lead.feepaid]);
 // 🟢 Load selectedLead into form
 useEffect(() => {
     if (selectedLead) {
@@ -439,6 +486,26 @@ useEffect(() => {
   // ✅ Handle change
   const handlechange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+     if (name === "phone") {
+    if (!/^\d*$/.test(value)) return; // ❌ block letters/symbols
+    if (value.length > 10) return;    // ❌ block >10 digits
+  }
+  if (name === "fees" || name==="feepaid" || name==="pendingfee") {
+    if (!/^\d*$/.test(value)) return; // ❌ block letters/symbols
+  }
+
+  if (name === "feepaid") {
+    const paid = Number(value);
+    const fees = Number(lead.fees) || 0;
+
+    if (paid > fees) {
+      return; // ❌ block input
+    }
+  }
+  // 👤 NAME – allow only letters & spaces
+  if (name === "name" || name === "collegename") {
+    if (!/^[A-Za-z ]*$/.test(value)) return; // ❌ block numbers/symbols
+  }
     setLead((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -449,6 +516,30 @@ useEffect(() => {
     [name]: value,
   }));
 };
+
+useEffect(() => {
+  const fees = Number(lead.fees) || 0;
+  const feepaid = Number(lead.feepaid) || 0;
+
+  // ❌ If fee paid is greater than fees, reset feepaid
+  if (feepaid > fees) {
+    setLead((prev) => ({
+      ...prev,
+      feepaid: fees.toString(),   // clamp to max fees
+      pendingfee: "0",
+    }));
+    return;
+  }
+
+  const pending = fees - feepaid;
+
+  setLead((prev) => ({
+    ...prev,
+    pendingfee: pending.toString(),
+  }));
+}, [lead.fees, lead.feepaid]);
+
+
 
  const handleSave = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -851,8 +942,7 @@ const handleDelete = async () => {
               )}
               
                 
-                {(formData.leadstatus === "Demo Scheduled" ||
-                formData.leadstatus === "Student") && (
+                {(formData.leadstatus === "Demo Scheduled" ) && (
                    <div className="col-md-6">
                 <div className="mb-3">
                     <label className="form-label">
@@ -864,18 +954,17 @@ const handleDelete = async () => {
                     onChange={handleSelectChange}
                     options={userList}
                     className="select"
-                    defaultValue={Assign_From[0]}
+                    // defaultValue={Assign_From[0]}
                   />
                 </div>
               </div>
                
               )}
-               {(formData.leadstatus === "Demo Scheduled" ||
-                formData.leadstatus === "Student") && (
+               {(formData.leadstatus === "Demo Scheduled") && (
                  <div className="col-md-6">
                 <div className="mb-3">
                     <label className="form-label">
-                  Assign To<span className="text-danger">*</span> 
+                 Assign To<span className="text-danger">*</span> 
                   </label>
                   <CommonSelect
                   name="assignto"
@@ -883,7 +972,24 @@ const handleDelete = async () => {
                     onChange={handleSelectChange}
                     options={userList}
                     className="select"
-                    defaultValue={Assign_To[0]}
+                    // defaultValue={Assign_To[0]}
+                  />
+                </div>
+              </div>
+              )}
+               {(formData.leadstatus === "Student") && (
+                 <div className="col-md-6">
+                <div className="mb-3">
+                    <label className="form-label">
+                  Trainer<span className="text-danger">*</span> 
+                  </label>
+                  <CommonSelect
+                  name="assignto"
+                   value={formData.assignto}
+                    onChange={handleSelectChange}
+                    options={userList}
+                    className="select"
+                    // defaultValue={Assign_To[0]}
                   />
                 </div>
               </div>
@@ -891,8 +997,7 @@ const handleDelete = async () => {
              
                
                  
-            {(formData.leadstatus === "Demo Scheduled" ||
-                formData.leadstatus === "Student") && (   
+            {(formData.leadstatus === "Demo Scheduled") && (   
           <div className="col-md-6">
             <div className="mb-3">
               <label className="form-label">
@@ -910,12 +1015,88 @@ const handleDelete = async () => {
             demodate: date ? date.format("YYYY-MM-DD") : "",
           }))
         }
+
+        
       />
 
               </div>
             </div>
           </div>
               )}
+
+               {(formData.leadstatus === "Student") && (   
+
+                <>
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label className="form-label">
+                Date of Joining <span className="text-danger">*</span>
+              </label>
+              <div className="input-group w-auto input-group-flat">
+                <CommonDatePicker
+        placeholder="dd/mm/yyyy"
+        format="DD/MM/YYYY"
+        value={formData.dateofjoin ? dayjs(formData.dateofjoin) : null}
+        disabledDate={disableFutureAndOldDates}
+        onChange={(date) =>
+          setFormData((prev) => ({
+            ...prev,
+            dateofjoin: date ? date.format("YYYY-MM-DD") : "",
+          }))
+        }
+
+        
+      />
+
+              </div>
+            </div>
+          </div>
+             
+
+       <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Fees<span className="text-danger">*</span>
+                  </label>
+                 <input name="fees" type="text" placeholder="Fees"  value={formData.fees} onChange={handleInputChange} className="form-control" required/>
+              
+                </div>
+              </div>
+ <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Fee Paid<span className="text-danger">*</span>
+                  </label>
+                 <input name="feepaid" type="text" placeholder="Fee Paid"  value={formData.feepaid} onChange={handleInputChange} className="form-control" required/>
+              
+                </div>
+              </div>
+ <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Pending Fees
+                  </label>
+                 <input name="pendingfee" type="text" placeholder="Pending Fees"  value={formData.pendingfee}   disabled className="form-control" />
+              
+                </div>
+              </div>
+    <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Fee Type <span className="text-danger">*</span>
+                  </label>
+                  <CommonSelect
+                  name="feetype"
+                   value={formData.feetype}
+                    onChange={handleSelectChange}
+                    options={Feetype}
+                    className="select"
+                    defaultValue={Feetype[0]}
+                  />
+                </div>
+              </div>
+
+        </>  )}
               
              <div className="col-md-6">
         {/* <div className="mb-3">
@@ -1357,8 +1538,7 @@ const handleDelete = async () => {
                 onChange={handlechange} className="form-control"/>
                 </div>
               </div>
-            {(lead.leadstatus === "Demo Scheduled" ||
-                lead.leadstatus === "Student") && (
+            {(lead.leadstatus === "Demo Scheduled" ) && (
                   <>
                <div className="col-md-6">
                 <div className="mb-3">
@@ -1440,6 +1620,95 @@ const handleDelete = async () => {
             </div>
           </div>
           )}
+
+            {(lead.leadstatus === "Student") && (   
+
+                <>
+                <div className="col-md-6">
+                <div className="mb-3">
+                    <label className="form-label">
+                  Trainer<span className="text-danger">*</span> 
+                  </label>
+                  <CommonSelect
+                  name="assignto"
+                    value={lead.assignto || ""}
+                    onChange={handleselectchange}
+                    options={userList}
+                    className="select"
+                    
+                  />
+                </div>
+              </div>
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label className="form-label">
+                Date of Joining <span className="text-danger">*</span>
+              </label>
+              <div className="input-group w-auto input-group-flat">
+                <CommonDatePicker
+        placeholder="dd/mm/yyyy"
+        format="DD/MM/YYYY"
+        value={lead.dateofjoin ? dayjs(lead.dateofjoin) : null}
+        disabledDate={disableFutureAndOldDates}
+        onChange={(date) =>
+          setLead((prev) => ({
+            ...prev,
+            dateofjoin: date ? date.format("YYYY-MM-DD") : "",
+          }))
+        }
+
+        
+      />
+
+              </div>
+            </div>
+          </div>
+             
+
+       <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Fees<span className="text-danger">*</span>
+                  </label>
+                 <input name="fees" type="text" placeholder="Fees"  value={lead.fees} onChange={handlechange} className="form-control" required/>
+              
+                </div>
+              </div>
+          <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Fee Paid<span className="text-danger">*</span>
+                  </label>
+                 <input name="feepaid" type="text" placeholder="Fee Paid"  value={lead.feepaid} onChange={handlechange} className="form-control" required/>
+              
+                </div>
+              </div>
+            <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Pending Fees
+                  </label>
+                 <input name="pendingfee" type="text" placeholder="Pending Fees"  value={lead.pendingfee} onChange={handlechange} disabled className="form-control" />
+              
+                </div>
+              </div>
+    <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Fee Type <span className="text-danger">*</span>
+                  </label>
+                  <CommonSelect
+                  name="feetype"
+                   value={lead.feetype}
+                    onChange={handleselectchange}
+                    options={Feetype}
+                    className="select"
+                    defaultValue={Feetype[0]}
+                  />
+                </div>
+              </div>
+
+        </>  )}
               
             </div>
             <div className="d-flex align-items-center justify-content-end">

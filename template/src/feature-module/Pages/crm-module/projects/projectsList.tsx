@@ -32,10 +32,10 @@ interface Student {
   lookingfor?:string;
   internshipduration?:string,
   dateofjoin?:string;
-  fees?:string;
-  feetype?:string;
-  feepaid?:string;
-  pendingfee?:string;
+  fees:number;
+  feetype:string;
+  feepaid:number;
+  pendingfee:number;
   noofday:string;
   createdAt?: string;
 }
@@ -43,7 +43,7 @@ interface Student {
 const ProjectsList = () => {
   const [searchText, setSearchText] = useState<string>("");
  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [actionType, setActionType] = useState<"edit" | null>(null);
+  const [actionType, setActionType] = useState<"edit" | "payment" | null>(null);
   const [data, setData] = useState<Student[]>([]);
 
 const fetchLeads = async () => {
@@ -79,9 +79,9 @@ const fetchLeads = async () => {
       assignfrom: student.assignfrom?.name || "N/A",
       assignto: student.assignto?.name || "N/A",
       followdate:student.followdate,
-      internshipduration:student.intershipduration || "0",
+      internshipduration:student.internshipduration,
       lookingfor:student.lookingfor,
-      noofday:student.noofday || "0",
+      noofday:student.noofday || "120",
       // demodate:student.demodate,
       dateofjoin:student.dateofjoin,
       fees:student.fees,
@@ -108,6 +108,11 @@ useEffect(() => {
     setSelectedStudent(student);
     setActionType("edit");
   };
+
+  const handleUpdateFeeClick = (student: Student) => {
+  setSelectedStudent(student);
+  setActionType("payment"); // 🔥 IMPORTANT
+};
 
 const totalStudents = data.length;
 
@@ -273,13 +278,13 @@ const totalStudents = data.length;
       title: "Fees",
       dataIndex: "fees",
       sorter: (a: Student, b: Student) =>
-        (a.fees || "").localeCompare(b.fees || ""),
+    (a.fees ?? 0) - (b.fees ?? 0),
     },
  {
       title: "Pending Fees",
       dataIndex: "pendingfee",
       sorter: (a: Student, b: Student) =>
-        (a.pendingfee || "").localeCompare(b.pendingfee || ""),
+           (a.pendingfee ?? 0) - (b.pendingfee ?? 0),
     },
    
     // {
@@ -371,6 +376,7 @@ const totalStudents = data.length;
               to="#"
               data-bs-toggle="modal"
               data-bs-target="#delete_project"
+              onClick={() => handleUpdateFeeClick(record)}
             >
               <i className="ti ti-trash" /> Update Fee
             </Link>

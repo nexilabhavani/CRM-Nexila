@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+// import { Link } from "react-router";
 // import ImageWithBasePath from "../../../../../components/imageWithBasePath";
 import { useState,useEffect} from "react";
 import {
@@ -24,22 +24,20 @@ interface Student {
   category?: string;
   location?: string;
   domain?: string;
-  assignfrom?: string;
-  assignto?: string;
+   assignto?: string | { _id: string; name: string };
   graduate?: string;
   lookingfor?:string;
   internshipduration?:string;
   noofday?:string;
   dateofjoin?:string;
-  fees?:string;
-  feetype?:string;
-  feepaid?:string;
-  pendingfee?:string;
-  payamount?:string;
+  fees:number;
+  feetype:string;
+  feepaid:number;
+  pendingfee:number;
 }
 interface ModalStudentsProps {
   selectedStudent: Student | null;
-  actionType: "edit" | null;
+   actionType: "edit" | "payment" | null;
   onUpdate: () => void;
 }
 
@@ -55,7 +53,7 @@ const ModalProject: React.FC<ModalStudentsProps> = ({
   };
 
    const [userList, setUserList] = useState<any[]>([]); 
-    // const [message, setMessage] = useState("");
+   const [payamount, setPayAmount] = useState<number>(0);
   const [formData, setFormData] = useState<Student>({
       name: "",
       phone: "",
@@ -64,19 +62,23 @@ const ModalProject: React.FC<ModalStudentsProps> = ({
       // location: "",
       // category: "",
       domain: "",
-      assignfrom: "",
       assignto: "",
       // graduate: "",
       lookingfor:"",
       internshipduration:"",
       noofday:"",
       dateofjoin:"",
-      fees:"",
-      feepaid:"",
+      fees:0,
+      feepaid:0,
       feetype:"",
-      pendingfee:"",
-      payamount:"",
+      pendingfee:0,
     });
+    const [payments, setPayments] = useState<any[]>([]);
+   const [loadingPayments, setLoadingPayments] = useState(false);
+
+
+
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -102,52 +104,110 @@ const ModalProject: React.FC<ModalStudentsProps> = ({
   
     fetchUsers();
   }, []);
+  useEffect(() => {
+  if (userList.length && formData.assignto) {
+    const user = userList.find(u => u.label === formData.assignto);
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        assignto: user.value,
+      }));
+    }
+  }
+}, [userList, formData.assignto]);
+
+
+  useEffect(() => {
+  const pending = Number(formData.fees) - Number(formData.feepaid);
+
+  setFormData(prev => ({
+    ...prev,
+    pendingfee: pending >= 0 ? pending : 0,
+  }));
+}, [formData.fees, formData.feepaid]);
+
+  useEffect(() => {
+  if (!selectedStudent || !selectedStudent._id) return;
+
+  if (actionType === "payment") {
+    console.log("selectedStudent:", selectedStudent);
+    fetchPayments(selectedStudent._id);
+    fetchStudent(selectedStudent._id);
+   
   
-  
-// useEffect(() => {
-//   if (selectedStudent && actionType === "edit") {
-//     setFormData({
-//       _id: selectedStudent._id,
 
-//       name: selectedStudent.name ?? "",
-//       phone: selectedStudent.phone ?? "",
-//       // email: selectedStudent.email ?? "",
-//       // collegename: selectedStudent.collegename ?? "",
-//       // location: selectedStudent.location ?? "",
-//       // category: selectedStudent.category ?? "",
-//       domain: selectedStudent.domain ?? "",
-//       assignto:selectedStudent.assignto ?? "",
+  }
 
-//       // graduate: selectedStudent.graduate ?? "",
-//       lookingfor: selectedStudent.lookingfor ?? "",
-//       internshipduration: selectedStudent.internshipduration ?? "",
-//       noofday: selectedStudent.noofday ?? "",
-//       dateofjoin: selectedStudent.dateofjoin ?? "",
-
-//       fees: selectedStudent.fees != null ? String(selectedStudent.fees) : "",
-//       feepaid: selectedStudent.feepaid != null ? String(selectedStudent.feepaid) : "",
-//       pendingfee:
-//         selectedStudent.pendingfee != null
-//           ? String(selectedStudent.pendingfee)
-//           : "",
-
-//       feetype: selectedStudent.feetype ?? "",
-//     });
-//   }
-// }, [selectedStudent, actionType]);
-useEffect(() => {
-  if (selectedStudent) {
+  if (actionType === "edit") {
     setFormData({
       ...selectedStudent,
       assignto:
         typeof selectedStudent.assignto === "object"
           ? selectedStudent.assignto._id
-          : selectedStudent.assignto,
+          : selectedStudent.assignto ?? "",
     });
   }
-}, [selectedStudent]);
+}, [selectedStudent, actionType]);
 
-  //   
+ if (!selectedStudent) {
+  return null; // ✅ SAFE now
+}
+
+
+  const fetchPayments = async (studentId: string) => {
+  try {
+    setLoadingPayments(true);
+
+    const token = localStorage.getItem("token");
+    
+    const res = await axios.get(
+      `${API_URL}/students/${studentId}/payments`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+   
+
+    setPayments(res.data.payments);
+    
+  } catch (err) {
+    console.error("❌ Failed to load payments", err);
+  } finally {
+    setLoadingPayments(false);
+  }
+};
+ const fetchStudent = async (id: string) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.get(`${API_URL}/students/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const s = res.data.student;
+
+    setFormData({
+      _id: s._id,
+      name: s.name ?? "",
+      phone: s.phone ?? "",
+      fees: selectedStudent.fees ?? 0,
+    feepaid: selectedStudent.feepaid ?? 0,
+    pendingfee: selectedStudent.pendingfee ?? 0,
+    feetype: selectedStudent.feetype ?? "",
+ 
+      assignto:
+        typeof s.assignto === "object" ? s.assignto._id : s.assignto ?? "",
+    });
+
+    setPayAmount(0); // 🔥 reset payment input
+  } catch (err) {
+    console.error("❌ Failed to load student", err);
+  }
+};
+
+
   const validateForm = () => {
     // Always optional fields (base)
     const alwaysIgnore = [
@@ -158,7 +218,7 @@ useEffect(() => {
     // Conditions
 
     const isInternship =
-      formData.lookingfor === "Internship";
+     ( formData.lookingfor === "Internship" || formData.lookingfor === "Project with Internship");
 
     // Conditionally ignored fields
     const conditionalIgnore = [
@@ -183,35 +243,36 @@ useEffect(() => {
   };
 
     // ✅ Handle text inputs
-    const handleInputChange = (
-      e: React.ChangeEvent<HTMLInputElement>
-    ): void => {
-      const { name, value } = e.target;
-       if (name === "phone") {
-      if (!/^\d*$/.test(value)) return; // ❌ block letters/symbols
-      if (value.length > 10) return;    // ❌ block >10 digits
-    }
-  
-       if (name === "fees" || name==="feepaid" || name==="pendingfee" || name==="noofday") {
-      if (!/^\d*$/.test(value)) return; // ❌ block letters/symbols
-    }
-  
-    // 👤 NAME – allow only letters & spaces
-    if (name === "name" || name === "collegename") {
-      if (!/^[A-Za-z ]*$/.test(value)) return; // ❌ block numbers/symbols
-    }
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    };
-  
+    // 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { name, value } = e.target;
+
+  const numberFields = ["fees", "feepaid", "pendingfee", "payamount", "noofday"];
+
+  setFormData(prev => ({
+    ...prev,
+    [name]: numberFields.includes(name)
+      ? Number(value || 0)
+      : value
+  }));
+};
+
     // ✅ Handle selects (from CommonSelect)
   
   // For CommonSelect dropdowns:
   const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData(prev => {
+    const updated = { ...prev, [name]: value };
+
+    // ✅ AUTO-FILL noofday when internship duration changes
+    if (name === "internshipduration") {
+      updated.noofday = value; // value already = days
+    }
+
+    return updated;
+  });
   };
+
 
    const handleSave = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -236,7 +297,7 @@ useEffect(() => {
         },
       }
     );
-    
+   
     alert("✅ Student updated successfully");
     onUpdate();
 
@@ -245,7 +306,54 @@ useEffect(() => {
     alert("❌ Failed to update student");
   }
 };
+// useEffect(() => {
+//   if (payamount > formData.pendingfee) {
+//     setFormData(prev => ({
+//       ...prev,
+//       payamount: prev.pendingfee,
+//     }));
+//   }
+// }, [payamount, formData.pendingfee]);
 
+const handlePayment = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!selectedStudent?._id) return;
+
+  if (payamount <= 0) {
+    alert("Enter valid payment amount");
+    return;
+  }
+
+  // if (payamount > formData.pendingfee) {
+  //   alert("Payment exceeds pending fee");
+  //   return;
+  // }
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.put(`${API_URL}/students/pay-fee/${selectedStudent._id}`,
+      { payamount: payamount },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    const updated = res.data.student;
+
+    setFormData(prev => ({
+      ...prev,
+      feepaid: updated.feepaid ?? prev.feepaid,
+      pendingfee: updated.pendingfee ?? prev.pendingfee,
+    }));
+
+    setPayAmount(0);
+    alert("✅ Payment successful");
+    fetchPayments(selectedStudent._id);
+    onUpdate();
+  } catch (err: any) {
+    alert(err.response?.data?.message || "Payment failed");
+  }
+};
 
 // const handlePayment = async (e) => {
 //   e.preventDefault();
@@ -740,7 +848,7 @@ useEffect(() => {
                   <label className="form-label">
                     Name <span className="text-danger">*</span>
                   </label>
-                 <input name="name" type="text" value={formData.name} onChange={handleInputChange} className="form-control" required/>
+                 <input name="name" type="text" value={formData.name ?? ""} onChange={handleInputChange} className="form-control" required/>
                 </div>
               </div>
              <div className="col-md-6">
@@ -795,7 +903,7 @@ useEffect(() => {
                   <label className="form-label">
                     Fees<span className="text-danger">*</span>
                   </label>
-                 <input name="fees" type="text" value={formData.fees ?? ""} onChange={handleInputChange} className="form-control" required/>
+                 <input name="fees" type="text" value={formData.fees ?? 0} onChange={handleInputChange} disabled className="form-control" required/>
                 </div>
               </div>
                <div className="col-md-6">
@@ -803,7 +911,7 @@ useEffect(() => {
                   <label className="form-label">
                     Pending Fees<span className="text-danger"></span>
                   </label>
-                  <input name="pendingfee" type="text" value={formData.pendingfee ?? ""} onChange={handleInputChange} disabled  className="form-control" />
+                  <input name="pendingfee" type="text" value={formData.pendingfee ?? 0} onChange={handleInputChange} disabled  className="form-control" />
                 </div>
               </div>
                <div className="col-md-6">
@@ -811,7 +919,7 @@ useEffect(() => {
                   <label className="form-label">
                     Fees Paid<span className="text-danger">*</span>
                   </label>
-                 <input name="feepaid" type="text" value={formData.feepaid ?? ""} onChange={handleInputChange} className="form-control" required/>
+                 <input name="feepaid" type="text" value={formData.feepaid ?? 0} onChange={handleInputChange} disabled className="form-control" required/>
                 </div>
               </div>
                 <div className="col-md-6">
@@ -836,7 +944,9 @@ useEffect(() => {
                        </label>
                                 <CommonSelect
                                 name="assignto"
-                                  value={formData.assignto ?? ""}
+                                  value={typeof formData.assignto === "object"
+      ? formData.assignto._id
+      : formData.assignto || ""}
                                   onChange={handleSelectChange}
                                   options={userList}
                                   className="select"
@@ -859,10 +969,10 @@ useEffect(() => {
                                 />
                              </div>
                 </div>
-                 {(formData.lookingfor === "Internship") && (
+                 {(formData.lookingfor === "Internship"|| formData.lookingfor==="Project with Internship") && (
                    <div className="col-md-6">
                   <div className="mb-3">
-                        <label className="form-label">
+                        <label className="form-label">Internship Duration in Days
                        <span className="text-danger">*</span> 
                        </label>
                                 <CommonSelect
@@ -876,7 +986,7 @@ useEffect(() => {
                              </div>
                 </div>
                  )}   
-                   {(formData.lookingfor === "Course") && (
+                  
                      <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">
@@ -885,7 +995,7 @@ useEffect(() => {
                  <input name="noofday" type="text" value={formData.noofday ?? ""} onChange={handleInputChange} className="form-control" required/>
                 </div>
               </div>
-                   )}
+                  
 
               {/*  <div className="col-md-6">
                 <div className="mb-3">
@@ -1073,11 +1183,11 @@ useEffect(() => {
       </div> */}
       {/* success modal */}
       {/* delete modal */}
-      {/* used<div className="modal fade" id="delete_project">
+     <div className="modal fade" id="delete_project">
         <div className="modal-dialog modal-dialog-centered modal-sm rounded-0">
            <div className="modal-content rounded-0">
             <div className="modal-body p-4 text-center position-relative">
-               <h5 className="mb-1">Update Fees</h5> */}
+               <h5 className="mb-1">Update Fees</h5> 
                 {/* <i className="ti ti-trash fs-24" />
                <div className="mb-3 position-relative z-1">
                 <span className="avatar avatar-xl badge-soft-danger border-0 text-danger rounded-circle">
@@ -1103,13 +1213,13 @@ useEffect(() => {
                   Yes, Delete
                 </Link>
               </div>*/}
-              {/*used form <form onSubmit={handlePayment}>
+              <form onSubmit={handlePayment}>
               <div className="col-md-12">
                 <div className="mb-3">
                   <label className="form-label">
                     Fees<span className="text-danger">*</span>
                   </label>
-                 <input name="fees" type="text" value={formData.fees ?? ""} onChange={handleInputChange} className="form-control" disabled required/>
+                 <input name="fees" type="text" value={formData.fees } onChange={handleInputChange} className="form-control" disabled required/>
                 </div>
               </div>
                <div className="col-md-12">
@@ -1117,7 +1227,7 @@ useEffect(() => {
                   <label className="form-label">
                     Pending Fees<span className="text-danger"></span>
                   </label>
-                  <input name="pendingfee" type="text" value={formData.pendingfee ?? ""} onChange={handleInputChange} disabled className="form-control" />
+                  <input name="pendingfee" type="text" value={formData.pendingfee } onChange={handleInputChange} disabled className="form-control" />
                 </div>
               </div>
                <div className="col-md-12">
@@ -1125,7 +1235,7 @@ useEffect(() => {
                   <label className="form-label">
                     Fees Paid<span className="text-danger">*</span>
                   </label>
-                 <input name="feepaid" type="text" value={formData.feepaid ?? ""} onChange={handleInputChange} disabled className="form-control" required/>
+                 <input name="feepaid" type="text" value={formData.feepaid } onChange={handleInputChange} disabled className="form-control" required/>
                 </div>
               </div>
               <div className="col-md-12">
@@ -1133,7 +1243,11 @@ useEffect(() => {
                   <label className="form-label">
                     Pay Amount<span className="text-danger">*</span>
                   </label>
-                 <input name="payamount" type="text" placeholder="Enter payment amount" value={formData.payamount ?? ""} onChange={handleInputChange} className="form-control" required/>
+                 <input name="payamount" type="text" placeholder="Enter payment amount" value={payamount } 
+                 onChange={(e) => setPayAmount(Number(e.target.value))} disabled={formData.pendingfee === 0} className="form-control" required/>
+                   {formData.pendingfee === 0 && (
+      <small className="text-success">✅ Fees fully paid</small>
+    )}
                 </div>
               </div>
                 <div className="col-md-12">
@@ -1143,14 +1257,14 @@ useEffect(() => {
                        </label>
                                 <CommonSelect
                                 name="feetype"
-                                  value={formData.feetype ?? ""}
+                                  value={formData.feetype}
                                   onChange={handleSelectChange}
                                   options={Feetype}
                                   className="select"
                                   
                                 />
                              </div>
-                </div> */}
+                </div> 
                  {/* <div className="d-flex justify-content-center">
                 <Link
                   to="#"
@@ -1167,10 +1281,10 @@ useEffect(() => {
                   Update
                 </Link>
               </div> */}
-              {/* used button <div className="d-flex align-items-center justify-content-end">
+              <div className="d-flex align-items-center justify-content-end">
               <button
                 type="button"
-                data-bs-dismiss="offcanvas"
+                data-bs-dismiss="modal"
                 className="btn btn-light me-2"
               >
                 Cancel
@@ -1178,18 +1292,57 @@ useEffect(() => {
               <button
                 type="submit"
                 className="btn btn-primary"
+                disabled={formData.pendingfee === 0}
                 // data-bs-toggle="modal"
                 // data-bs-target="#create_success"
               >
-              Update
+             Pay Now
               </button>
             </div>
             </form>
+              {actionType === "payment" && (
+  <div className="mt-4">
+    <h5>Payment History</h5>
+
+    {loadingPayments ? (
+      <p>Loading payments...</p>
+    ) : payments.length === 0 ? (
+      <p>No payments yet</p>
+    ) : (
+      <table className="table table-sm table-bordered">
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>Amount</th>
+            {/* <th>Mode</th> */}
+            <th>Date</th>
+            <th>Collected By</th>
+          </tr>
+        </thead>
+        
+          {payments.map((p, index) => (
+            <tr key={p._id}>
+              <td>{index + 1}</td>
+              <td>₹{p.payment.amount}</td>
+              {/* <td>{p.payment.paymentMode}</td> */}
+              <td>
+                {new Date(p.payment.paidAt).toLocaleDateString()}
+              </td>
+              <td>{p.updatedby?.name || "System"}</td>
+            </tr>
+          ))}
+       
+      </table>
+    )}
+  </div>
+)}
+
+            
             </div> 
           
           </div>
         </div> 
-      </div>*/} 
+      </div> 
       {/* delete modal */}
     </>
   );

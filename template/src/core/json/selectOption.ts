@@ -185,11 +185,11 @@ export const Source = [
   ];
      export const Internshipduration = [
     { value: 'Choose', label: 'Choose' },
-    { value: '15 Days', label: '15 Days' },
-    { value: '21 Days', label: '21 Days' },
-    { value: '30 Days', label: '30 Days' },
-    { value: '60 Days', label: '60 Days' },
-    { value: '90 Days', label: '90 Days' },
+    { value: '15', label: '15' },
+    { value: '21', label: '21' },
+    { value: '30', label: '30' },
+    { value: '60', label: '60' },
+    { value: '90', label: '90' },
     { value: 'Others', label: 'Others' },
   ];
 

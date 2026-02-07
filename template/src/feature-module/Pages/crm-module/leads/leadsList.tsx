@@ -37,6 +37,12 @@ interface Lead {
   remark?:string;
   dropreason?:string;
   internshipduration?:string;
+  dateofjoin?:string;
+  fees?:string;
+  feetype?:string;
+  feepaid?:string;
+  pendingfee?:string;
+  noofday?:string;
 }
 
 const LeadsList = () => {
@@ -149,7 +155,7 @@ const LeadsList = () => {
         location: lead.location || "N/A",
         domain: lead.domain || "N/A",
         assignfrom: lead.assignfrom?.name ,
-        assignto: lead.assignto?.name ,
+        assignto: lead.assignto?.name,
         graduate: lead.graduate || "N/A",
         followdate:lead.followdate,
         demodate:lead.demodate,
@@ -158,6 +164,12 @@ const LeadsList = () => {
         domainreason:lead.domainreason || "N/A",
         dropreason:lead.dropreason || "N/A",
         internshipduration:lead.internshipduration || "N/A",
+       dateofjoin:lead.dateofjoin,
+        fees:lead.fees,
+        feetype:lead.feetype,
+        feepaid:lead.feepaid,
+        pendingfee:lead.pendingfee,
+        noofday:lead.noofday,
         createdAt:lead.createdAt,
         
       }));
@@ -300,18 +312,18 @@ const LeadsList = () => {
       sorter: (a: Lead, b: Lead) =>
         (a.location || "").localeCompare(b.location || ""),
     },
-    {
-      title: "Assigned From",
-      dataIndex: "assignfrom",
-      sorter: (a: Lead, b: Lead) =>
-        (a.assignfrom || "").localeCompare(b.assignfrom || ""),
-    },
-    {
-      title: "Assigned To",
-      dataIndex: "assignto",
-      sorter: (a: Lead, b: Lead) =>
-        (a.assignto || "").localeCompare(b.assignto || ""),
-    },
+    // {
+    //   title: "Assigned From",
+    //   dataIndex: "assignfrom",
+    //   sorter: (a: Lead, b: Lead) =>
+    //     (a.assignfrom || "").localeCompare(b.assignfrom || ""),
+    // },
+    // {
+    //   title: "Assigned To",
+    //   dataIndex: "assignto",
+    //   sorter: (a: Lead, b: Lead) =>
+    //     (a.assignto || "").localeCompare(b.assignto || ""),
+    // },
     {
       title: "Lead Status",
       dataIndex: "leadstatus",

@@ -2,6 +2,7 @@
 const Student = require("../models/Student");
 const  Studentlog=require("../models/Studentlog");
 const mongoose = require("mongoose");
+const user = require("../models/User");
 exports.getStudents = async (req, res) => {
   try {
     const students = await Student.find()
@@ -25,19 +26,29 @@ exports.getStudents = async (req, res) => {
 exports.getStudent = async (req, res) => {
   try {
     const student = await Student.findById(req.params.id)
-      .populate("assignto", "name email role")
-      .populate("createdBy", "name email role");
+      .populate("assignfrom", "name email role")
+      .populate("assignto", "name email role");
 
     if (!student) {
-      return res.status(404).json({ success: false, message: "student not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
     }
 
-    res.status(200).json({ success: true, student });
+    res.status(200).json({
+      success: true,
+      student,
+    });
   } catch (err) {
     console.error("❌ Error fetching student:", err.message);
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
+
 
 exports.updateStudent = async (req, res) => {
   try {
@@ -102,7 +113,7 @@ exports.updateStudent = async (req, res) => {
         action: actionType,
         changes,
         source: "student_edit",
-        updatedby: req.user?._id
+        updatedby: req.User?._id
       });
     }
 
@@ -120,15 +131,14 @@ exports.updateStudent = async (req, res) => {
 
 exports.payStudentFee = async (req, res) => {
   try {
-    const { payamount } = req.body;
-    const student = await Student.findById(req.params.id);
+    const { payamount, paymentMode } = req.body;
 
+    const student = await Student.findById(req.params.id);
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
 
     const amount = Number(payamount);
-
     if (amount <= 0) {
       return res.status(400).json({ message: "Invalid payment amount" });
     }
@@ -140,39 +150,66 @@ exports.payStudentFee = async (req, res) => {
     const oldFeePaid = student.feepaid;
     const oldPendingFee = student.pendingfee;
 
-    // ✅ Update values
+    // ✅ Update student fees
     student.feepaid += amount;
     student.pendingfee -= amount;
-
     await student.save();
 
-    // ✅ Log changes
+    // ✅ STORE PAYMENT HISTORY
     await Studentlog.create({
       studentid: student._id,
       action: "payment",
+      source: "fee_payment",
+      payment: {
+        amount: amount,
+        paymentMode: paymentMode || "cash",
+        paidAt: new Date(),
+      },
       changes: [
         {
           field: "feepaid",
           oldvalue: oldFeePaid,
-          newvalue: student.feepaid
+          newvalue: student.feepaid,
         },
         {
           field: "pendingfee",
           oldvalue: oldPendingFee,
-          newvalue: student.pendingfee
-        }
+          newvalue: student.pendingfee,
+        },
       ],
-      source: "fee_payment",
-      updatedby: req.user?._id
+      updatedby: req.user?._id,
     });
 
     res.json({
       message: "Payment successful",
-      student
+      student,
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+exports.getStudentPayments = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid student ID" });
+    }
+
+    const logs = await Studentlog.find({
+      studentid: id,
+      action: "payment",
+    })
+      .sort({ createdAt: -1 })
+      .populate("updatedby", "name");
+
+    res.json({ payments: logs });
+  } catch (error) {
+    console.error("🔥 getStudentPayments error:", error);
+    res.status(500).json({ message: error.message });
   }
 };

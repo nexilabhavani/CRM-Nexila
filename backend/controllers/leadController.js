@@ -115,20 +115,34 @@ exports.createLead = async (req, res) => {
       (Number(newLead.feepaid) || 0),
       assignto:newLead.assignto,
       lookingfor:newLead.lookingfor,
+      noofday:newLead.noofday, 
       internshipduration:newLead.internshipduration
 
     });
      
     console.log("student data:",student);
     // ✅ log creation
-    await Studentlog.create({
-      studentid: student._id,
-      action: "create",
+   await Studentlog.create({
+  studentid: student._id,
+  action: "create",
+  source: "lead_create",
+  updatedby: req.user?._id,
+});
+
+// create payment log if fee paid
+if (student.feepaid && Number(student.feepaid) > 0) {
+  await Studentlog.create({
+    studentid: student._id,
+    action: "payment",
+    source: "lead_create",
+    payment: {
+      amount: Number(student.feepaid),
+      paymentMode:  "cash",
      
-      source: "lead_create",
-      updatedby: req.user?._id
-    });
-    
+    },
+    updatedby: req.user?._id,
+  });
+}
     console.log("Student and student log created");
   }
 }
@@ -387,7 +401,7 @@ if (updatedLead.leadstatus === "Student" && !existingStudent) {
     domain: updatedLead.domain,
     graduate: updatedLead.graduate,
     leadstatus: updatedLead.leadstatus,
-
+    noofday:updatedLead.noofday,
     lookingfor: updatedLead.lookingfor,
     internshipduration: updatedLead.internshipduration,
     noofday: updatedLead.noofday,
@@ -413,13 +427,35 @@ if (updatedLead.leadstatus === "Student" && !existingStudent) {
     newvalue: studentData[key]
   }));
 
+  // await Studentlog.create({
+  //   studentid: student._id,
+  //   action: "create",
+  //   changes,
+  //   source: "lead_update",
+  //   updatedby: req.user?._id
+  // });
+ 
+await Studentlog.create({
+  studentid: student._id,
+  action: "create",
+  changes,
+  source: "lead_update",
+  updatedby: req.user?._id,
+});
+paidDiff=student.feepaid;
+// payment log ONLY if payment increased
+if (paidDiff > 0) {
   await Studentlog.create({
     studentid: student._id,
-    action: "create",
-    changes,
+    action: "payment",
     source: "lead_update",
-    updatedby: req.user?._id
+    payment: {
+      amount: paidDiff,      // ✅ only new amount
+      paymentMode: "cash",
+    },
+    updatedby: req.user?._id,
   });
+}
 }
 
 

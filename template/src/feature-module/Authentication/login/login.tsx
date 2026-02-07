@@ -50,7 +50,7 @@ const Login = () => {
               >
                 <div className="text-center mb-4 auth-logo">
                   <ImageWithBasePath
-                    src="assets/img/logo.svg"
+                    src="assets/img/logo1.png"
                     className="img-fluid"
                     alt="Logo"
                   />

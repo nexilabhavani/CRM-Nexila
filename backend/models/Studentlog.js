@@ -8,6 +8,12 @@ const StudentlogSchema = new mongoose.Schema({
     enum: ["create", "update", "payment"],
     required: true
   },
+  payment: {
+      amount: { type: Number },          // paid amount
+      paymentMode: { type: String },      // cash / upi / card (optional)
+      transactionId: { type: String },    // optional
+      paidAt: { type: Date, default: Date.now }
+    },
 
  changes: [
       {
@@ -21,11 +27,11 @@ const StudentlogSchema = new mongoose.Schema({
 
   updatedby: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "user"
+    ref: "User"
   },
   source: {
     type: String,
-    enum: ["lead_create", "lead_update", "student_edit"],
+    enum: ["lead_create", "lead_update", "student_edit","fee_payment"],
     required: true
   },
     createdAt: { type: Date, default: Date.now },

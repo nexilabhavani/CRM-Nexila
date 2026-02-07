@@ -47,6 +47,7 @@ interface Lead {
   feetype?:string;
   feepaid?:string;
   pendingfee?:string;
+  noofday?:string;
 }
 
 interface ModalLeadsProps {
@@ -144,6 +145,7 @@ const disableFutureAndOldDates = (current: dayjs.Dayjs) => {
     feepaid:"",
     feetype:"",
     pendingfee:"",
+    noofday:"",
 
   });
   const [userList, setUserList] = useState<any[]>([]); 
@@ -175,6 +177,7 @@ const [formData, setFormData] = useState<Lead>({
     feepaid:"",
     feetype:"",
     pendingfee:"",
+    noofday:"",
   });
   //Leadstaus option getting
 useEffect(() => {
@@ -234,7 +237,7 @@ const validateForm = () => {
   // Always optional fields (base)
   const alwaysIgnore = [
     "email",
-    "collegename","remark","pendingfee"
+    "collegename","remark","pendingfee","noofday"
   ];
 
   // Conditions
@@ -243,7 +246,7 @@ const validateForm = () => {
  
   const isAssignmentstudent= formData.leadstatus === "Student";
   const isInternship =
-    formData.lookingfor === "Internship";
+    (formData.lookingfor === "Internship"||formData.lookingfor==="Project with Internship");
 
   const isDemoScheduled =
     formData.leadstatus === "Demo Scheduled";
@@ -315,11 +318,18 @@ const validateForm = () => {
 
 // For CommonSelect dropdowns:
 const handleSelectChange = (name: string, value: string) => {
-  setFormData((prev) => ({
-    ...prev,
-    [name]: value, // ✅ only ObjectId string
-  }));
+  setFormData(prev => {
+    const updated = { ...prev, [name]: value };
+
+    // ✅ AUTO-FILL noofday when internship duration changes
+    if (name === "internshipduration") {
+      updated.noofday = value; // value already = days
+    }
+
+    return updated;
+  });
 };
+
 useEffect(() => {
   const fees = Number(formData.fees) || 0;
   const feepaid = Number(formData.feepaid) || 0;
@@ -398,13 +408,43 @@ useEffect(() => {
 }, [formData]);
 
 
+// 
+
+useEffect(() => {
+  if (userList.length && lead.assignto) {
+    const user = userList.find(u => u.label === lead.assignto);
+    if (user) {
+      setLead(prev => ({
+        ...prev,
+        assignto: user.value,
+      }));
+    }
+  }
+}, [userList, lead.assignto]);
+
+useEffect(() => {
+  if (userList.length && lead.assignfrom) {
+    const user = userList.find(u => u.label === lead.assignfrom);
+    if (user) {
+      setLead(prev => ({
+        ...prev,
+        assignfrom: user.value,
+      }));
+    }
+  }
+}, [userList, lead.assignfrom]);
+
+
+
+
+
 const editvalidateform = () => {
-  const alwaysIgnore = ["email", "collegename"];
+  const alwaysIgnore = ["email", "collegename","noofday"];
 
   const isAssignmentRequired =
     lead.leadstatus === "Demo Scheduled"  ;
   const isAssignmentstudent= lead.leadstatus === "Student";
-  const isInternship = lead.lookingfor === "Internship";
+  const isInternship = (lead.lookingfor === "Internship" || lead.lookingfor ==="Project with Internship");
   const isDemoScheduled = lead.leadstatus === "Demo Scheduled";
   const isDomainReason = lead.domain === "Others";
   const isDropReason = lead.leadstatus === "Drop Out";
@@ -447,41 +487,46 @@ const editvalidateform = () => {
 };
 
 useEffect(() => {
+  if (!lead.fees && !lead.feepaid) return;
+
   const fees = Number(lead.fees) || 0;
   const feepaid = Number(lead.feepaid) || 0;
 
-  // ❌ If fee paid is greater than fees, reset feepaid
-  if (feepaid > fees) {
-    setLead((prev) => ({
-      ...prev,
-      feepaid: fees.toString(),   // clamp to max fees
-      pendingfee: "0",
-    }));
-    return;
-  }
+  const pending = Math.max(fees - feepaid, 0);
 
-  const pending = fees - feepaid;
-
-  setLead((prev) => ({
-    ...prev,
-    pendingfee: pending.toString(),
-  }));
+  setLead((prev) =>
+    prev.pendingfee === pending.toString()
+      ? prev
+      : { ...prev, pendingfee: pending.toString() }
+  );
 }, [lead.fees, lead.feepaid]);
 // 🟢 Load selectedLead into form
 useEffect(() => {
-    if (selectedLead) {
-      setLead({
-      ...selectedLead,
-      remark: selectedLead.remark || "",
-      demodate: selectedLead.demodate
-        ? selectedLead.demodate.split("T")[0]
-        : "",
-      followdate: selectedLead.followdate
-        ? selectedLead.followdate.split("T")[0]
-        : "",
-    });
-    }
-  }, [selectedLead])
+  if (!selectedLead) return;
+
+  const fees = Number(selectedLead.fees) || 0;
+  const feepaid = Number(selectedLead.feepaid) || 0;
+
+  setLead((prev) => ({
+    ...prev,
+    ...selectedLead,        // 🔥 leadstatus comes FIRST
+    leadstatus: selectedLead.leadstatus, // 🔥 FORCE Student
+    remark: selectedLead.remark || "",
+    demodate: selectedLead.demodate
+      ? selectedLead.demodate.split("T")[0]
+      : "",
+    followdate: selectedLead.followdate
+      ? selectedLead.followdate.split("T")[0]
+      : "",
+    dateofjoin: selectedLead.dateofjoin
+      ? selectedLead.dateofjoin.split("T")[0]
+      : "",
+    fees: fees.toString(),
+    feepaid: feepaid.toString(),
+    pendingfee: (fees - feepaid).toString(),
+    feetype: selectedLead.feetype || "",
+  }));
+}, [selectedLead]);
 
   // ✅ Handle change
   const handlechange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -490,9 +535,9 @@ useEffect(() => {
     if (!/^\d*$/.test(value)) return; // ❌ block letters/symbols
     if (value.length > 10) return;    // ❌ block >10 digits
   }
-  if (name === "fees" || name==="feepaid" || name==="pendingfee") {
-    if (!/^\d*$/.test(value)) return; // ❌ block letters/symbols
-  }
+ if (name === "fees" || name === "feepaid") {
+  if (!/^\d*$/.test(value)) return;
+}
 
   if (name === "feepaid") {
     const paid = Number(value);
@@ -511,33 +556,19 @@ useEffect(() => {
 
 
   const handleselectchange = (name: string, value: string) => {
-  setLead((prev) => ({
-    ...prev!,
-    [name]: value,
-  }));
+  setLead(prev => {
+    const updated = { ...prev, [name]: value };
+
+    //AUTO-FILL noofday when internship duration changes
+    if (name === "internshipduration") {
+      updated.noofday = value; 
+    }
+
+    return updated;
+  });
 };
 
-useEffect(() => {
-  const fees = Number(lead.fees) || 0;
-  const feepaid = Number(lead.feepaid) || 0;
 
-  // ❌ If fee paid is greater than fees, reset feepaid
-  if (feepaid > fees) {
-    setLead((prev) => ({
-      ...prev,
-      feepaid: fees.toString(),   // clamp to max fees
-      pendingfee: "0",
-    }));
-    return;
-  }
-
-  const pending = fees - feepaid;
-
-  setLead((prev) => ({
-    ...prev,
-    pendingfee: pending.toString(),
-  }));
-}, [lead.fees, lead.feepaid]);
 
 
 
@@ -625,7 +656,8 @@ const handleDelete = async () => {
   }
 };
 
-
+// console.log("Assign From ID:", lead.assignfrom);
+// console.log("Assign To ID:", lead.assignto);
 
 
   // const [tags, setTags] = useState<string[]>(["Collab"]);
@@ -659,7 +691,7 @@ const handleDelete = async () => {
           ></button>
         </div>
         <form onSubmit={handleSubmit} >
-        <div className="offcanvas-body">
+        <div className="offcanvas-body" style={{maxHeight: "650px",overflowY: "auto", }} >
             <div className="row">
               <div className="col-md-6">
                 <div className="mb-3">
@@ -1098,8 +1130,8 @@ const handleDelete = async () => {
 
         </>  )}
               
-             <div className="col-md-6">
-        {/* <div className="mb-3">
+           {/*  <div className="col-md-6">
+         <div className="mb-3">
           <div className="d-flex align-items-center justify-content-between">
             <label className="form-label">
               Lead Status <span className="text-danger">*</span>
@@ -1124,8 +1156,8 @@ const handleDelete = async () => {
             options={leadStatusOptions} 
             className="select"
           />
-        </div> */}
-      </div>   
+        </div>
+      </div>  */}  
 
             </div>
             <div className="d-flex align-items-center justify-content-end">
@@ -1511,7 +1543,7 @@ const handleDelete = async () => {
                     </label>
                     <CommonSelect
                       name="internshipduration"
-                      value={lead.internshipduration}
+                      value={lead.internshipduration || ""}
                       onChange={handleselectchange}
                       options={Internshipduration}
                       className="select"
@@ -1670,7 +1702,7 @@ const handleDelete = async () => {
                   <label className="form-label">
                     Fees<span className="text-danger">*</span>
                   </label>
-                 <input name="fees" type="text" placeholder="Fees"  value={lead.fees} onChange={handlechange} className="form-control" required/>
+                 <input name="fees" type="text"  value={lead.fees} onChange={handlechange} className="form-control" required/>
               
                 </div>
               </div>
@@ -1679,7 +1711,7 @@ const handleDelete = async () => {
                   <label className="form-label">
                     Fee Paid<span className="text-danger">*</span>
                   </label>
-                 <input name="feepaid" type="text" placeholder="Fee Paid"  value={lead.feepaid} onChange={handlechange} className="form-control" required/>
+                 <input name="feepaid" type="text" value={lead.feepaid} onChange={handlechange} className="form-control" required/>
               
                 </div>
               </div>
@@ -1688,7 +1720,7 @@ const handleDelete = async () => {
                   <label className="form-label">
                     Pending Fees
                   </label>
-                 <input name="pendingfee" type="text" placeholder="Pending Fees"  value={lead.pendingfee} onChange={handlechange} disabled className="form-control" />
+                 <input name="pendingfee" type="text"  value={lead.pendingfee} onChange={handlechange} disabled className="form-control" />
               
                 </div>
               </div>
@@ -1703,7 +1735,7 @@ const handleDelete = async () => {
                     onChange={handleselectchange}
                     options={Feetype}
                     className="select"
-                    defaultValue={Feetype[0]}
+                    
                   />
                 </div>
               </div>

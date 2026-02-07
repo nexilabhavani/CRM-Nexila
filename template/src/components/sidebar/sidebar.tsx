@@ -155,15 +155,15 @@ const Sidebar = () => {
           <div>
             {/* Logo Normal */}
             <Link to={route.dealsDashboard} className="logo logo-normal">
-              <ImageWithBasePath src="assets/img/logo.svg" alt="Logo" />
+              <ImageWithBasePath src="assets/img/logo2.png" alt="Logo" />
             </Link>
             {/* Logo Small */}
             <Link to={route.dealsDashboard} className="logo-small">
-              <ImageWithBasePath src="assets/img/logo-small.svg" alt="Logo" />
+              <ImageWithBasePath src="assets/img/logo2.png" alt="Logo" />
             </Link>
             {/* Logo Dark */}
             <Link to={route.dealsDashboard} className="dark-logo">
-              <ImageWithBasePath src="assets/img/logo-white.svg" alt="Logo" />
+              <ImageWithBasePath src="assets/img/logo2.png" alt="Logo" />
             </Link>
           </div>
           <button

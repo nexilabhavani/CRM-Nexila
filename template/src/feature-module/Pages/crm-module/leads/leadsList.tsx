@@ -6,9 +6,7 @@ import { Link } from "react-router";
 import Datatable from "../../../../components/dataTable";
 // import { LeadsListData } from "../../../../core/json/leadsListData";
 import { all_routes } from "../../../../routes/all_routes";
-
 import ModalLeads from "./modal/modalLeads";
-// import CommonDatePicker from "../../../../components/common-datePicker/commonDatePicker";
 import axios from "axios";
 // 🔹 Define the type for each lead
 import API_URL from "../../../../api/apiconfig";
@@ -501,7 +499,7 @@ const LeadsList = () => {
                     </span>
                   </div> */}
                 </div>
-                {/* <div className="d-flex align-items-center gap-2 flex-wrap">
+            <div className="d-flex align-items-center gap-2 flex-wrap">
                   <div className="dropdown">
                     <Link
                       to="#"
@@ -528,7 +526,7 @@ const LeadsList = () => {
                       </div>
                       <div className="filter-set-view p-3">
                         <div className="accordion" id="accordionExample">
-                          <div className="filter-set-content">
+                          {/* <div className="filter-set-content">
                             <div className="filter-set-content-head">
                               <Link
                                 to="#"
@@ -730,8 +728,8 @@ const LeadsList = () => {
                                 </ul>
                               </div>
                             </div>
-                          </div>
-                          <div className="filter-set-content">
+                          </div> */}
+                          {/* <div className="filter-set-content">
                             <div className="filter-set-content-head">
                               <Link
                                 to="#"
@@ -802,7 +800,7 @@ const LeadsList = () => {
                                 </ul>
                               </div>
                             </div>
-                          </div>
+                          </div> */}
                           <div className="filter-set-content">
                             <div className="filter-set-content-head">
                               <Link
@@ -844,38 +842,11 @@ const LeadsList = () => {
                                       Closed
                                     </label>
                                   </li>
-                                  <li>
-                                    <label className="dropdown-item px-2 d-flex align-items-center">
-                                      <input
-                                        className="form-check-input m-0 me-1"
-                                        type="checkbox"
-                                      />
-                                      Not Closed
-                                    </label>
-                                  </li>
-                                  <li>
-                                    <label className="dropdown-item px-2 d-flex align-items-center">
-                                      <input
-                                        className="form-check-input m-0 me-1"
-                                        type="checkbox"
-                                      />
-                                      Contacted
-                                    </label>
-                                  </li>
-                                  <li>
-                                    <label className="dropdown-item px-2 d-flex align-items-center">
-                                      <input
-                                        className="form-check-input m-0 me-1"
-                                        type="checkbox"
-                                      />
-                                      Lost
-                                    </label>
-                                  </li>
                                 </ul>
                               </div>
                             </div>
                           </div>
-                          <div className="filter-set-content">
+                          {/* <div className="filter-set-content">
                             <div className="filter-set-content-head">
                               <Link
                                 to="#"
@@ -901,7 +872,7 @@ const LeadsList = () => {
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </div> */}
                           <div className="filter-set-content">
                             <div className="filter-set-content-head">
                               <Link
@@ -940,158 +911,7 @@ const LeadsList = () => {
                                         className="form-check-input m-0 me-1"
                                         type="checkbox"
                                       />
-                                      <span className="avatar avatar-xs rounded-circle me-2">
-                                        <ImageWithBasePath
-                                          src="assets/img/users/user-17.jpg"
-                                          className="flex-shrink-0 rounded-circle"
-                                          alt="img"
-                                        />
-                                      </span>
-                                      Robert Johnson
-                                    </label>
-                                  </li>
-                                  <li className="mb-1">
-                                    <label className="dropdown-item px-2 d-flex align-items-center">
-                                      <input
-                                        className="form-check-input m-0 me-1"
-                                        type="checkbox"
-                                      />
-                                      <span className="avatar avatar-xs rounded-circle me-2">
-                                        <ImageWithBasePath
-                                          src="assets/img/users/user-16.jpg"
-                                          className="flex-shrink-0 rounded-circle"
-                                          alt="img"
-                                        />
-                                      </span>
                                       Isabella Cooper
-                                    </label>
-                                  </li>
-                                  <li className="mb-1">
-                                    <label className="dropdown-item px-2 d-flex align-items-center">
-                                      <input
-                                        className="form-check-input m-0 me-1"
-                                        type="checkbox"
-                                      />
-                                      <span className="avatar avatar-xs rounded-circle me-2">
-                                        <ImageWithBasePath
-                                          src="assets/img/users/user-14.jpg"
-                                          className="flex-shrink-0 rounded-circle"
-                                          alt="img"
-                                        />
-                                      </span>
-                                      John Smith
-                                    </label>
-                                  </li>
-                                  <li className="mb-1">
-                                    <label className="dropdown-item px-2 d-flex align-items-center">
-                                      <input
-                                        className="form-check-input m-0 me-1"
-                                        type="checkbox"
-                                      />
-                                      <span className="avatar avatar-xs rounded-circle me-2">
-                                        <ImageWithBasePath
-                                          src="assets/img/users/user-22.jpg"
-                                          className="flex-shrink-0 rounded-circle"
-                                          alt="img"
-                                        />
-                                      </span>
-                                      Sophia Parker
-                                    </label>
-                                  </li>
-                                  <li className="mb-1">
-                                    <label className="dropdown-item px-2 d-flex align-items-center">
-                                      <input
-                                        className="form-check-input m-0 me-1"
-                                        type="checkbox"
-                                      />
-                                      <span className="avatar avatar-xs rounded-circle me-2">
-                                        <ImageWithBasePath
-                                          src="assets/img/users/user-25.jpg"
-                                          className="flex-shrink-0 rounded-circle"
-                                          alt="img"
-                                        />
-                                      </span>
-                                      Emma Reynolds
-                                    </label>
-                                  </li>
-                                  <li className="mb-1">
-                                    <label className="dropdown-item px-2 d-flex align-items-center">
-                                      <input
-                                        className="form-check-input m-0 me-1"
-                                        type="checkbox"
-                                      />
-                                      <span className="avatar avatar-xs rounded-circle me-2">
-                                        <ImageWithBasePath
-                                          src="assets/img/users/user-24.jpg"
-                                          className="flex-shrink-0 rounded-circle"
-                                          alt="img"
-                                        />
-                                      </span>
-                                      Liam Carter
-                                    </label>
-                                  </li>
-                                  <li className="mb-1">
-                                    <label className="dropdown-item px-2 d-flex align-items-center">
-                                      <input
-                                        className="form-check-input m-0 me-1"
-                                        type="checkbox"
-                                      />
-                                      <span className="avatar avatar-xs rounded-circle me-2">
-                                        <ImageWithBasePath
-                                          src="assets/img/users/user-39.jpg"
-                                          className="flex-shrink-0 rounded-circle"
-                                          alt="img"
-                                        />
-                                      </span>
-                                      Noah Mitchell
-                                    </label>
-                                  </li>
-                                  <li className="mb-1">
-                                    <label className="dropdown-item px-2 d-flex align-items-center">
-                                      <input
-                                        className="form-check-input m-0 me-1"
-                                        type="checkbox"
-                                      />
-                                      <span className="avatar avatar-xs rounded-circle me-2">
-                                        <ImageWithBasePath
-                                          src="assets/img/users/user-31.jpg"
-                                          className="flex-shrink-0 rounded-circle"
-                                          alt="img"
-                                        />
-                                      </span>
-                                      Mason Hayes
-                                    </label>
-                                  </li>
-                                  <li className="mb-1">
-                                    <label className="dropdown-item px-2 d-flex align-items-center">
-                                      <input
-                                        className="form-check-input m-0 me-1"
-                                        type="checkbox"
-                                      />
-                                      <span className="avatar avatar-xs rounded-circle me-2">
-                                        <ImageWithBasePath
-                                          src="assets/img/users/user-21.jpg"
-                                          className="flex-shrink-0 rounded-circle"
-                                          alt="img"
-                                        />
-                                      </span>
-                                      Ron Thompson
-                                    </label>
-                                  </li>
-                                  <li className="mb-1">
-                                    <label className="dropdown-item px-2 d-flex align-items-center">
-                                      <input
-                                        className="form-check-input m-0 me-1"
-                                        type="checkbox"
-                                      />
-                                      <span className="avatar avatar-xs rounded-circle me-2">
-                                        <ImageWithBasePath
-                                          src="assets/img/users/user-10.jpg"
-                                          className="flex-shrink-0 rounded-circle"
-                                          alt="img"
-                                        />
-                                      </span>
-                                      Laura Bennett
                                     </label>
                                   </li>
                                 </ul>
@@ -1110,7 +930,7 @@ const LeadsList = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="dropdown">
+                  {/* <div className="dropdown">
                     <Link
                       to="#"
                       className="btn bg-soft-indigo px-2 border-0"
@@ -1249,9 +1069,9 @@ const LeadsList = () => {
                     >
                       <i className="ti ti-grid-dots" />
                     </Link>
-                  </div> 
-                </div>*/}
-              </div>
+                  </div>  */}
+                </div>
+              </div> 
               {/* table header */}
               {/* leads List */}
               <div className=" table-nowrap custom-table">

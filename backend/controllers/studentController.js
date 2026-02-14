@@ -3,6 +3,7 @@ const Student = require("../models/Student");
 const  Studentlog=require("../models/Studentlog");
 const mongoose = require("mongoose");
 const user = require("../models/User");
+const Lead = require("../models/Lead");
 exports.getStudents = async (req, res) => {
   try {
     const students = await Student.find()
@@ -106,6 +107,36 @@ exports.updateStudent = async (req, res) => {
       { new: true, runValidators: true }
     );
 
+    // 5.1️⃣ SYNC TO LEAD
+if (updatedStudent.leadId) {
+  await Lead.findByIdAndUpdate(
+    updatedStudent.leadId,
+    {
+      name: updatedStudent.name,
+      phone: updatedStudent.phone,
+      email: updatedStudent.email,
+      collegename: updatedStudent.collegename,
+      location: updatedStudent.location,
+      category: updatedStudent.category,
+      leadsource: updatedStudent.leadsource,
+      domain: updatedStudent.domain,
+      graduate: updatedStudent.graduate,
+      leadstatus: updatedStudent.leadstatus,
+      lookingfor: updatedStudent.lookingfor,
+      internshipduration: updatedStudent.internshipduration,
+      noofday: updatedStudent.noofday,
+      dateofjoin: updatedStudent.dateofjoin,
+      feetype: updatedStudent.feetype,
+      fees: updatedStudent.fees,
+      feepaid: updatedStudent.feepaid,
+      pendingfee: updatedStudent.pendingfee,
+      assignto: updatedStudent.assignto,
+      assignfrom: updatedStudent.assignfrom
+    }
+  );
+}
+
+
     // 6️⃣ log
     if (changes.length) {
       await Studentlog.create({
@@ -154,6 +185,17 @@ exports.payStudentFee = async (req, res) => {
     student.feepaid += amount;
     student.pendingfee -= amount;
     await student.save();
+    // 🔁 SYNC PAYMENT TO LEAD
+if (student.leadId) {
+  await Lead.findByIdAndUpdate(
+    student.leadId,
+    {
+      feepaid: student.feepaid,
+      pendingfee: student.pendingfee,
+      fees: student.fees
+    }
+  );
+}
 
     // ✅ STORE PAYMENT HISTORY
     await Studentlog.create({

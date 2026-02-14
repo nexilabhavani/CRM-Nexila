@@ -382,9 +382,12 @@ exports.updateLead = async (req, res) => {
     // }
 
 const existingStudent = await Student.findOne({
-  leadid: updatedLead._id
+  leadId: updatedLead._id
 });
 
+console.log("Lead ID:", updatedLead._id);
+console.log("Lead Status:", updatedLead.leadstatus);
+console.log("Existing Student:", existingStudent);
 
 
 // CASE 1: leadstatus → Student (CREATE)
@@ -414,7 +417,7 @@ if (updatedLead.leadstatus === "Student" && !existingStudent) {
       (Number(updatedLead.fees) || 0) -
       (Number(updatedLead.feepaid) || 0),
 
-    leadid: updatedLead._id
+    leadId: updatedLead._id
   };
 
   const student = await Student.create(studentData);
@@ -434,6 +437,8 @@ if (updatedLead.leadstatus === "Student" && !existingStudent) {
   //   source: "lead_update",
   //   updatedby: req.user?._id
   // });
+
+  
  
 await Studentlog.create({
   studentid: student._id,
@@ -456,6 +461,41 @@ if (paidDiff > 0) {
     updatedby: req.user?._id,
   });
 }
+}
+
+if (updatedLead.leadstatus === "Student" && existingStudent) {
+
+  const updateData = {
+    name: updatedLead.name,
+    phone: updatedLead.phone,
+    email: updatedLead.email,
+    collegename: updatedLead.collegename,
+    location: updatedLead.location,
+    category: updatedLead.category,
+    leadsource: updatedLead.leadsource,
+    domain: updatedLead.domain,
+    graduate: updatedLead.graduate,
+    leadstatus: updatedLead.leadstatus,
+    lookingfor: updatedLead.lookingfor,
+    internshipduration: updatedLead.internshipduration,
+    noofday: updatedLead.noofday,
+    dateofjoin: updatedLead.dateofjoin,
+    feetype: updatedLead.feetype,
+    fees: Number(updatedLead.fees) || 0,
+    feepaid: Number(updatedLead.feepaid) || 0,
+    pendingfee:
+      (Number(updatedLead.fees) || 0) -
+      (Number(updatedLead.feepaid) || 0),
+    assignfrom: updatedLead.assignfrom,
+    assignto: updatedLead.assignto,
+    leadId: updatedLead._id 
+  };
+
+  await Student.findByIdAndUpdate(
+    existingStudent._id,
+    updateData,
+    { new: true }
+  );
 }
 
 
